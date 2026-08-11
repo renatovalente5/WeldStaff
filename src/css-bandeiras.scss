@@ -9,13 +9,22 @@
 .fi {
     position: relative;
     display: inline-block;
-    width: 1.333333em;
+    width: 1.333333em;   /* proporção 4:3 das bandeiras */
+    height: 1em;
     line-height: 1em;
     background-size: contain;
     background-position: 50%;
     background-repeat: no-repeat;
 
-    &::before { content: ' '; }
+    /* O `height` acima é a razão de ser desta nota. No flag-icons a altura vem
+       apenas da caixa de linha gerada por este ::before, cujo conteúdo é um
+       espaço INQUEBRÁVEL (U+00A0) — um espaço normal colapsaria e o elemento
+       ficaria com altura zero. E como o `.lang-btn` é `display: flex`, os
+       filhos são blockificados (o inline-block passa a block), o que torna a
+       altura ainda mais dependente desse detalhe. Declarar `height: 1em`
+       explicitamente torna isto determinístico em qualquer contexto. */
+    &::before { content: '\00a0'; }
+
     &.fis { width: 1em; }
 }
 
