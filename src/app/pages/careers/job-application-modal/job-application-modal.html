@@ -1,0 +1,139 @@
+<ng-container *transloco="let t; read: 'careers.applicationModal'">
+    <div class="modal-overlay" (click)="closeModal()" (touchstart)="onOverlayTouch($event)">
+        <div class="modal-container" (click)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
+            <!-- Header -->
+            <div class="modal-header">
+                <div class="modal-header-content">
+                    <div class="modal-icon-wrapper">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10 9 9 9 8 9" />
+                        </svg>
+                    </div>
+                    <div class="modal-title-group">
+                        <span class="modal-title-prefix">{{ t('titlePrefix') }}</span>
+                        <span class="modal-title-job">{{ jobTitle }}</span>
+                    </div>
+                </div>
+                <button class="close-btn" (click)="closeModal()" (touchstart)="onCloseTouch($event)" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <form [formGroup]="applicationForm" (ngSubmit)="onSubmit()">
+                    <div class="form-grid">
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label for="name">{{ t('nameLabel') }}</label>
+                            <input type="text" id="name" formControlName="name" maxlength="25"
+                                [class.invalid]="applicationForm.get('name')?.invalid && applicationForm.get('name')?.touched">
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="form-group">
+                            <label for="phone">{{ t('phoneLabel') }}</label>
+                            <input type="tel" id="phone" formControlName="phone" maxlength="17"
+                                [class.invalid]="applicationForm.get('phone')?.invalid && applicationForm.get('phone')?.touched">
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">{{ t('emailLabel') }}</label>
+                        <input type="email" id="email" formControlName="email" maxlength="45"
+                            [class.invalid]="applicationForm.get('email')?.invalid && applicationForm.get('email')?.touched">
+                    </div>
+
+                    <!-- Files (Drag & Drop) -->
+                    <div class="form-group">
+                        <label>{{ t('filesLabel') }}</label>
+                        <div class="drop-zone" [class.dragging]="isDragging" (dragover)="onDragOver($event)"
+                            (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
+
+                            <input #fileInput type="file" multiple (change)="onFileSelected($event)"
+                                style="display: none" accept=".pdf,.doc,.docx,.jpg,.png">
+
+                            <div class="drop-content">
+                                <div class="drop-icon-wrapper">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="drop-icon">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                                    </svg>
+                                </div>
+                                <div class="drop-text-group">
+                                    <p class="drop-text">
+                                        <span>{{ t('filesClickToUpload') }}</span> {{ t('filesDragOrClick') }}
+                                    </p>
+                                    <p class="drop-hint">{{ t('filesInfo') }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- File List -->
+                        <div class="file-list" *ngIf="selectedFiles.length > 0">
+                            <div class="file-item" *ngFor="let file of selectedFiles; let i = index">
+                                <div class="file-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                    </svg>
+                                    <span class="file-name">{{ file.name }}</span>
+                                    <span class="file-size">({{ formatFileSize(file.size) }})</span>
+                                </div>
+                                <button type="button" class="remove-file" (click)="removeFile(i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RGPD Consent -->
+                    <div class="form-group consent-group">
+                        <label class="consent-label">
+                            <input type="checkbox" formControlName="consent"
+                                [class.invalid]="applicationForm.get('consent')?.invalid && applicationForm.get('consent')?.touched">
+                            <span [innerHTML]="'careers.applicationModal.consentHtml' | transloco"></span>
+                        </label>
+                    </div>
+
+                    <!-- Honeypot -->
+                    <div style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">
+                        <label for="website">Website</label>
+                        <input id="website" type="text" formControlName="website" autocomplete="off" tabindex="-1">
+                    </div>
+
+                    <!-- Turnstile (hidden) -->
+                    <app-turnstile [siteKey]="siteKey" (tokenChange)="onTokenChange($event)"></app-turnstile>
+
+                    <!-- Actions -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-ghost" (click)="closeModal()">{{ t('cancelButton')
+                            }}</button>
+                        <button type="submit" class="btn btn-primary"
+                            [disabled]="isSubmitting || applicationForm.invalid">
+                            <span *ngIf="!isSubmitting">{{ t('submitButton') }}</span>
+                            <span *ngIf="isSubmitting" class="btn-loading">
+                                <span class="spinner"></span>
+                                {{ t('submitting') }}
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-container>

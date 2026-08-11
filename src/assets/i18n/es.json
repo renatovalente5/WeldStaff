@@ -1,0 +1,484 @@
+{
+    "backToHome": "Volver al Inicio",
+    "nav": {
+        "home": "Inicio",
+        "contacts": "Contactos",
+        "careers": "Carreras",
+        "about": "Sobre Nosotros",
+        "services": "Servicios",
+        "cta": "Pedir contacto"
+    },
+    "common": {
+        "fileSize": {
+            "bytes": "Bytes",
+            "kb": "KB",
+            "mb": "MB",
+            "gb": "GB"
+        }
+    },
+    "home": {
+        "seo": {
+            "title": "WeldStaff - Soldadores Cualificados para su Empresa",
+            "description": "WeldStaff: Especialistas en Soldadura y Reclutamiento Industrial. Encuentre soldadores cualificados, tuberos y cerrajeros para proyectos en Portugal. Soluciones de outsourcing."
+        },
+        "hero": {
+            "title": "Soldadores Cualificados <br> <span class=\"text-secondary\">Para Su Proyecto</span>",
+            "subtitle": "Profesionales certificados listos para integrarse en su equipo.",
+            "cta": "Hablar con nosotros"
+        },
+        "stats": {
+            "projects": "Proyectos",
+            "collaborators": "Colaboradores",
+            "experience": "Años de Experiencia"
+        },
+        "about": {
+            "title": "Quiénes Somos",
+            "subtitle": "Especialistas en servicios industriales",
+            "text": "Nuestra empresa presta servicios tanto en la ejecución de trabajos industriales como en la cesión de profesionales cualificados, apoyando a empresas y proyectos que necesitan refuerzo técnico especializado. Disponemos de profesionales experimentados en las diversas vertientes de la metalmecánica, preparados para actuar en trabajos de fabricación, montaje y mantenimiento industrial, siempre con elevado rigor técnico, profesionalismo y cumplimiento de las normas de seguridad."
+        },
+        "services": {
+            "title": "Lo Que Hacemos",
+            "subtitle": "Soluciones completas para su industria",
+            "s1": {
+                "title": "Reclutamiento Especializado",
+                "desc": "Selección rigurosa de soldadores certificados para sus necesidades específicas."
+            },
+            "s2": {
+                "title": "Asignación Rápida",
+                "desc": "Respuesta ágil para proyectos urgentes, garantizando la continuidad en su producción."
+            },
+            "s3": {
+                "title": "Calidad y Seguridad",
+                "desc": "Profesionales con formación en HSE y certificaciones internacionales vigentes."
+            },
+            "s4": {
+                "title": "Proyectos Industriales",
+                "desc": "Equipos preparados para grandes obras en construcción naval, metalmecánica y más."
+            },
+            "s5": {
+                "title": "Equipos & Consumibles",
+                "desc": "Vendemos máquinas de soldadura, equipos de protección y todo tipo de consumibles para soldadura."
+            },
+            "s6": {
+                "title": "Ejecución de Trabajos",
+                "desc": "Además de proporcionar mano de obra, también ejecutamos trabajos y proyectos completos de soldadura."
+            }
+        },
+        "whyUs": {
+            "title": "¿Por qué WeldStaff?",
+            "subtitle": "Nuestro compromiso con la calidad",
+            "items": {
+                "1": "Profesionales altamente cualificados y probados.",
+                "2": "Rapidez en la movilización de equipos.",
+                "3": "Cumplimiento total de las normas laborales y de seguridad.",
+                "4": "Experiencia comprobada en proyectos internacionales."
+            }
+        },
+        "sectors": {
+            "title": "Sectores de Actuación",
+            "subtitle": "Experiencia transversal",
+            "items": {
+                "1": "Metalmecánica",
+                "2": "Construcción Naval",
+                "3": "Industria Farmacéutica y Química",
+                "4": "Mantenimiento Industrial",
+                "5": "Energía (Eólica / Hídrica)",
+                "6": "Industria Alimentaria"
+            }
+        },
+        "footerCta": {
+            "title": "¿Listo para reforzar su equipo?",
+            "subtitle": "Hable con nosotros y descubra cómo podemos ayudar a escalar su capacidad productiva.",
+            "button": "Pedir propuesta ahora"
+        }
+    },
+    "contacts": {
+        "seo": {
+            "title": "Contactos - WeldStaff",
+            "description": "Póngase en contacto con WeldStaff para servicios de soldadura y reclutamiento."
+        },
+        "title": "Contactos",
+        "subtitle": "Estamos aquí para ayudar",
+        "info": {
+            "aria": {
+                "call": "Llamar a WeldStaff",
+                "email": "Enviar email a WeldStaff"
+            },
+            "title": "Canales Directos",
+            "text": "¿Necesita servicios de soldadura? Rellene el formulario y le responderemos con la mejor solución para su proyecto.",
+            "emailLabel": "Email",
+            "emailValue": "geral@weldstaff.pt",
+            "emailDesc": "Envíenos un email",
+            "phoneLabel": "Teléfono",
+            "phoneValue": "+351 938 939 951",
+            "phoneDesc": "(Llamada a la red móvil nacional)",
+            "locationLabel": "Dirección",
+            "locationValue": "Rua Vasco da Gama 218, 3700-569, Arrifana, Santa Maria da Feira, Aveiro",
+            "locationDesc": "Visite nuestra oficina"
+        },
+        "form": {
+            "title": "Hable Con Nosotros",
+            "cardTitle": "Petición de Contacto",
+            "subtitle": "Rellene el formulario a continuación",
+            "labels": {
+                "name": "Nombre",
+                "email": "Email",
+                "phone": "Teléfono",
+                "subject": "Asunto",
+                "message": "Mensaje",
+                "consent": "He leído y acepto la política de privacidad y tratamiento de datos.",
+                "consentHtml": "He leído y acepto la <a href='/privacidade' target='_blank'>Política de Privacidad</a> y el tratamiento de mis datos personales."
+            },
+            "placeholders": {
+                "name": "Ej: Juan Pérez",
+                "email": "Ej: juan.perez@empresa.es",
+                "phone": "Ej: +34 612 345 678",
+                "message": "Escriba aquí su mensaje detallado..."
+            },
+            "options": {
+                "select": "Seleccione el motivo del contacto...",
+                "recruitment": "Reclutamiento / Candidatura",
+                "quote": "Petición de Presupuesto",
+                "partners": "Asociaciones Comerciales",
+                "other": "Otros Asuntos"
+            },
+            "errors": {
+                "required": "Este campo es obligatorio.",
+                "email": "Por favor, introduzca un email válido.",
+                "minLength": "El mensaje debe tener al menos 20 caracteres.",
+                "bot": "Por favor, confirme que no es un robot."
+            },
+            "success": "¡Mensaje enviado con éxito! Nos pondremos en contacto con usted en breve.",
+            "error": "Error al enviar el mensaje. Por favor, inténtelo de nuevo más tarde.",
+            "submit": "Enviar Mensaje",
+            "sending": "Enviando..."
+        },
+        "map": {
+            "iframeTitle": "Mapa de Localización",
+            "locationTitle": "Localización",
+            "viewOnMaps": "Ver en Google Maps",
+            "open": "Abrir en Google Maps",
+            "directions": "Cómo llegar"
+        }
+    },
+    "careers": {
+        "seo": {
+            "title": "Carreras - Únase a WeldStaff",
+            "description": "Vacantes para soldadores y profesionales de la industria. Envíe su candidatura."
+        },
+        "title": "Carreras",
+        "subtitle": "Únete a nuestra red de excelencia",
+        "intro": "Buscamos constantemente a los mejores profesionales en el sector de la metalmecánica. Si buscas retos en grandes proyectos industriales, nacionales e internacionales, WeldStaff es el lugar adecuado.",
+        "loading": "Cargando vacantes...",
+        "modal": {
+            "howTo": {
+                "title": "Cómo Inscribirse",
+                "emailText": "Envía tu CV a <a href='mailto:geral@weldstaff.pt' class='text-accent hover:underline'>geral@weldstaff.pt</a> con el asunto:",
+                "subjectPrefix": "Candidatura – ",
+                "formText": "O utiliza nuestro <a routerLink='/contactos' class='text-accent hover:underline'>formulario de contacto</a> seleccionando 'Reclutamiento'."
+            },
+            "close": "Cerrar"
+        },
+        "jobs": {
+            "foreman_piping": {
+                "title": "Encargado de Tubos",
+                "location": "",
+                "shortDesc": "Supervisión del montaje de tuberías industriales. Documentación europea obligatoria.",
+                "longDesc": "Buscamos Encargado de Tubos para proyecto de larga duración. Funciones: liderazgo de equipos, lectura de isométricos y garantía de cumplimiento de plazos. Requisito obligatorio: Documentación europea válida y experiencia comprobada en la función."
+            },
+            "welders_general": {
+                "title": "Soldadores",
+                "location": "",
+                "shortDesc": "Soldadores cualificados para proyecto estable y de larga duración.",
+                "longDesc": "Reclutamos Soldadores con experiencia comprobada. Proyecto prolongado con condiciones de estabilidad. Requisito obligatorio: Autorización para trabajar en la UE."
+            },
+            "helpers_ribatejo": {
+                "title": "Ayudantes Polivalentes",
+                "location": "",
+                "shortDesc": "Apoyo al montaje y trabajos generales. Corta duración con alojamiento incluido.",
+                "longDesc": "Ayudantes Polivalentes para obra en la zona de Ribatejo. Contrato de corta duración (aprox. 1 semana). Condiciones: Desplazamiento cubierto + Alojamiento + Comidas incluidas. Entrada inmediata."
+            },
+            "pipefitters_general": {
+                "title": "Tuberos",
+                "location": "",
+                "shortDesc": "Montaje de tubería industrial. Servicios de larga duración.",
+                "longDesc": "Tuberos con experiencia comprobada en montaje. Documentación europea obligatoria. Integración en proyectos de continuidad."
+            },
+            "tig_inox_setubal": {
+                "title": "Soldador TIG Inox",
+                "location": "",
+                "shortDesc": "Soldadura TIG en Acero Inoxidable. Se valora certificación.",
+                "longDesc": "Soldador especialista en TIG Inox para proyecto en Setúbal. Necesaria experiencia comprobada (se valora certificación). Entrada inmediata."
+            },
+            "admin_aveiro": {
+                "title": "Asistente Administrativo",
+                "location": "",
+                "shortDesc": "Apoyo administrativo y organización documental. Entrada inmediata.",
+                "longDesc": "Asistente para funciones administrativas y organización de documentación en Aveiro. Buscamos persona organizada y con experiencia previa en la función."
+            }
+        },
+        "tags": {
+            "international": "Proyecto Internacional",
+            "immediate": "Entrada Inmediata",
+            "safety": "Seguridad",
+            "piping": "Tubería",
+            "specialized": "Especializado",
+            "vca": "VCA",
+            "tech_drawing": "Dibujo Técnico",
+            "assembly": "Montaje",
+            "national": "Proyecto Nacional",
+            "long_term": "Larga Duración",
+            "documentation": "Doc. Europea",
+            "stable": "Proyecto Estable",
+            "experience": "Experiencia",
+            "short_term": "Corta Duración",
+            "accommodation": "Alojamiento Incluido",
+            "certification": "Certificación",
+            "office": "Oficina",
+            "organization": "Organización"
+        },
+        "openPosition": "Vacante Abierta",
+        "applyButton": "Inscribirme",
+        "applicationModal": {
+            "title": "Candidatura:",
+            "titlePrefix": "Candidatura: ",
+            "nameLabel": "Nombre",
+            "namePlaceholder": "Su nombre",
+            "nameRequired": "Campo obligatorio",
+            "emailLabel": "Email",
+            "emailPlaceholder": "su.email@ejemplo.com",
+            "emailInvalid": "Email inválido",
+            "phoneLabel": "Teléfono",
+            "phonePlaceholder": "+34 612 345 678",
+            "phoneRequired": "Campo obligatorio",
+            "filesLabel": "CV y Certificados (Máx. 3 archivos)",
+            "filesClickToUpload": "Haga clic para subir",
+            "filesDragOrClick": "o arrastre archivos",
+            "filesInfo": "PDF, DOC, JPG (Máx 5MB)",
+            "maxFilesError": "Máximo de {{max}} archivos permitidos.",
+            "consentHtml": "He leído y acepto la <a href='/privacidade' target='_blank'>Política de Privacidad</a> y autorizo el tratamiento de mis datos con fines de reclutamiento.",
+            "successMessage": "¡Candidatura enviada con éxito! Nos pondremos en contacto en breve.",
+            "errorMessage": "Ocurrió un error al enviar la candidatura. Por favor, inténtelo de nuevo.",
+            "cancelButton": "Cancelar",
+            "submitButton": "Enviar Candidatura",
+            "submitting": "Enviando..."
+        }
+    },
+    "footer": {
+        "rights": "Todos los derechos reservados.",
+        "tagline": "Profesionales de Soldadura para su Industria.",
+        "links": "Enlaces Rápidos",
+        "contact": "Contactos",
+        "about": "Sobre",
+        "privacy": "Política de Privacidad",
+        "cookies": "Política de Cookies",
+        "terms": "Términos y Condiciones",
+        "complaints": "Libro de Reclamaciones",
+        "mobileNetwork": "(Llamada a la red móvil nacional)"
+    },
+    "cookieConsent": {
+        "title": "Este sitio utiliza cookies",
+        "description": "Utilizamos cookies para mejorar su experiencia de navegación. Puede aceptar, rechazar o gestionar sus preferencias.",
+        "learnMore": "Saber más",
+        "accept": "Aceptar Todo",
+        "reject": "Rechazar",
+        "manage": "Gestionar",
+        "preferencesTitle": "Gestionar Preferencias de Cookies",
+        "alwaysOn": "Siempre activo",
+        "savePreferences": "Guardar Preferencias",
+        "categories": {
+            "essential": {
+                "name": "Esenciales",
+                "desc": "Necesarias para el funcionamiento del sitio. No se pueden desactivar."
+            },
+            "functional": {
+                "name": "Funcionales",
+                "desc": "Permiten funcionalidades adicionales como la preferencia de idioma."
+            }
+        }
+    },
+    "privacy": {
+        "seo": {
+            "title": "Política de Privacidad - WeldStaff",
+            "description": "Política de privacidad y protección de datos personales de WeldStaff."
+        },
+        "title": "Política de Privacidad",
+        "subtitle": "Protección de sus datos personales",
+        "lastUpdated": "Última actualización: abril de 2026",
+        "sections": {
+            "controller": {
+                "title": "1. Responsable del Tratamiento",
+                "text": "<strong>Weldstaff - Industrial Services, Lda</strong><br>NIF: 519246160<br>Dirección: Rua Vasco da Gama, Nº 218, 3700-569, Arrifana, Santa Maria da Feira, Aveiro, Portugal<br>Email: <a href='mailto:geral@weldstaff.pt'>geral@weldstaff.pt</a>"
+            },
+            "dataCollected": {
+                "title": "2. Datos Personales Recopilados",
+                "intro": "En el ámbito de la utilización de este sitio web, podremos recopilar los siguientes datos personales:",
+                "items": {
+                    "name": "Nombre",
+                    "email": "Dirección de email",
+                    "phone": "Número de teléfono",
+                    "message": "Contenido de mensajes enviados a través del formulario",
+                    "cv": "CV y certificados (para candidaturas)",
+                    "navigation": "Datos de navegación (dirección IP, tipo de navegador, páginas visitadas)"
+                }
+            },
+            "purpose": {
+                "title": "3. Finalidades del Tratamiento",
+                "items": {
+                    "contact": "Responder a solicitudes de contacto y presupuestos",
+                    "recruitment": "Procesar candidaturas de empleo",
+                    "improvement": "Mejorar el funcionamiento y la seguridad del sitio web"
+                }
+            },
+            "legalBasis": {
+                "title": "4. Base Legal",
+                "text": "El tratamiento de sus datos personales se basa en su consentimiento explícito, otorgado mediante la aceptación de esta política al enviar los formularios de nuestro sitio, de conformidad con el artículo 6(1)(a) del RGPD."
+            },
+            "retention": {
+                "title": "5. Conservación de los Datos",
+                "text": "Los datos personales se conservan únicamente durante el período necesario para la finalidad para la que fueron recopilados. Los datos de contacto se mantienen durante un período máximo de 24 meses. Los datos de candidaturas se mantienen durante un período máximo de 12 meses después del proceso de selección."
+            },
+            "sharing": {
+                "title": "6. Compartición de Datos",
+                "text": "Sus datos personales no se venden, comparten ni ceden a terceros, excepto cuando sea estrictamente necesario para los servicios prestados (ej: alojamiento web, servicio de email) o cuando lo exija la ley."
+            },
+            "rights": {
+                "title": "7. Derechos del Titular",
+                "intro": "De acuerdo con el RGPD, tiene derecho a:",
+                "items": {
+                    "access": "Acceder a sus datos personales",
+                    "rectification": "Solicitar la rectificación de datos incorrectos",
+                    "erasure": "Solicitar la eliminación de sus datos (\"derecho al olvido\")",
+                    "restriction": "Solicitar la limitación del tratamiento",
+                    "portability": "Portabilidad de los datos",
+                    "objection": "Oponerse al tratamiento"
+                },
+                "contact": "Para ejercer estos derechos, contáctenos a través de <a href='mailto:geral@weldstaff.pt'>geral@weldstaff.pt</a>."
+            },
+            "security": {
+                "title": "8. Seguridad",
+                "text": "Implementamos medidas técnicas y organizativas adecuadas para proteger sus datos personales contra acceso no autorizado, pérdida o destrucción, incluyendo encriptación SSL/TLS y almacenamiento seguro."
+            },
+            "authority": {
+                "title": "9. Autoridad de Control",
+                "text": "Si considera que el tratamiento de sus datos viola el RGPD, tiene derecho a presentar una reclamación ante la <a href='https://www.cnpd.pt/' target='_blank' rel='noopener noreferrer'>Comisión Nacional de Protección de Datos (CNPD)</a>."
+            },
+            "changes": {
+                "title": "10. Cambios en Esta Política",
+                "text": "Nos reservamos el derecho de actualizar esta política de privacidad en cualquier momento. La fecha de la última actualización se indicará siempre en la parte superior de esta página."
+            }
+        }
+    },
+    "cookiePolicy": {
+        "seo": {
+            "title": "Política de Cookies - WeldStaff",
+            "description": "Descubra cómo utilizamos cookies en el sitio web de WeldStaff."
+        },
+        "title": "Política de Cookies",
+        "subtitle": "Cómo utilizamos cookies",
+        "lastUpdated": "Última actualización: abril de 2026",
+        "sections": {
+            "what": {
+                "title": "1. ¿Qué Son las Cookies?",
+                "text": "Las cookies son pequeños archivos de texto que se almacenan en su dispositivo cuando visita un sitio web. Se utilizan ampliamente para hacer que los sitios web funcionen de manera más eficiente y proporcionar información a los propietarios del sitio."
+            },
+            "types": {
+                "title": "2. Tipos de Cookies",
+                "essential": {
+                    "title": "Esenciales",
+                    "text": "Necesarias para el funcionamiento básico del sitio web. Sin ellas, el sitio no funciona correctamente. Incluyen cookies de preferencia de consentimiento y seguridad."
+                },
+                "functional": {
+                    "title": "Funcionales",
+                    "text": "Permiten que el sitio web recuerde sus elecciones (como el idioma preferido) para ofrecer funcionalidades mejoradas y personalizadas."
+                },
+                "thirdParty": {
+                    "title": "Terceros",
+                    "text": "Este sitio utiliza el servicio Cloudflare Turnstile para la protección anti-spam en los formularios. Este servicio puede definir cookies en su dispositivo para verificar que es un usuario legítimo."
+                }
+            },
+            "used": {
+                "title": "3. Cookies Utilizadas",
+                "table": {
+                    "name": "Nombre",
+                    "provider": "Proveedor",
+                    "purpose": "Finalidad",
+                    "duration": "Duración",
+                    "type": "Tipo"
+                },
+                "cookies": {
+                    "consent": {
+                        "purpose": "Guarda las preferencias de cookies del usuario",
+                        "duration": "días"
+                    },
+                    "lang": {
+                        "purpose": "Guarda la preferencia de idioma"
+                    },
+                    "turnstile": {
+                        "purpose": "Protección anti-bot en formularios"
+                    }
+                }
+            },
+            "manage": {
+                "title": "4. Cómo Gestionar las Cookies",
+                "text": "Puede gestionar o desactivar las cookies a través de la configuración de su navegador. Tenga en cuenta que la desactivación de cookies esenciales puede afectar al funcionamiento del sitio. Para más información: <a href='https://support.google.com/chrome/answer/95647' target='_blank' rel='noopener noreferrer'>Chrome</a>, <a href='https://support.mozilla.org/es/kb/cookies-informacion-que-los-sitios-web-almacenan-en' target='_blank' rel='noopener noreferrer'>Firefox</a>, <a href='https://support.apple.com/es-es/guide/safari/sfri11471/mac' target='_blank' rel='noopener noreferrer'>Safari</a>."
+            },
+            "changes": {
+                "title": "5. Cambios",
+                "text": "Nos reservamos el derecho de actualizar esta política de cookies en cualquier momento."
+            }
+        }
+    },
+    "terms": {
+        "seo": {
+            "title": "Términos y Condiciones - WeldStaff",
+            "description": "Términos y condiciones de uso del sitio web WeldStaff."
+        },
+        "title": "Términos y Condiciones",
+        "subtitle": "Condiciones de uso del sitio web",
+        "lastUpdated": "Última actualización: abril de 2026",
+        "sections": {
+            "acceptance": {
+                "title": "1. Aceptación de los Términos",
+                "text": "Al acceder y utilizar este sitio web, acepta cumplir y quedar vinculado por estos Términos y Condiciones de Uso. Si no está de acuerdo con alguno de estos términos, no debe utilizar este sitio."
+            },
+            "identification": {
+                "title": "2. Identificación de la Empresa",
+                "text": "<strong>Weldstaff - Industrial Services, Lda</strong><br>NIF: 519246160<br>Sede: Rua Vasco da Gama, Nº 218, 3700-569, Arrifana, Santa Maria da Feira, Aveiro, Portugal<br>Email: <a href='mailto:geral@weldstaff.pt'>geral@weldstaff.pt</a><br>Forma Jurídica: Sociedad Limitada<br>Capital Social: €100,00"
+            },
+            "services": {
+                "title": "3. Descripción de los Servicios",
+                "text": "Este sitio web está destinado a presentar los servicios de WeldStaff en el área de soldadura, metalurgia y reclutamiento industrial, así como a facilitar el contacto con potenciales clientes y candidatos."
+            },
+            "ip": {
+                "title": "4. Propiedad Intelectual",
+                "text": "Todos los contenidos de este sitio web, incluyendo textos, imágenes, logotipos, diseño y código, son propiedad de Weldstaff - Industrial Services, Lda o de sus respectivos titulares y están protegidos por derechos de autor. La reproducción, distribución o uso no autorizado de cualquier contenido está estrictamente prohibido."
+            },
+            "usage": {
+                "title": "5. Uso del Sitio Web",
+                "text": "El usuario se compromete a utilizar este sitio web de forma lícita y adecuada, sin realizar actos que puedan dañar, desactivar o sobrecargar el sitio, ni utilizarlo para fines ilegales o no autorizados."
+            },
+            "liability": {
+                "title": "6. Limitación de Responsabilidad",
+                "text": "WeldStaff no se responsabiliza de eventuales errores, omisiones o contenidos desactualizados en el sitio web, ni de daños directos o indirectos resultantes del uso o imposibilidad de uso del sitio."
+            },
+            "links": {
+                "title": "7. Enlaces Externos",
+                "text": "Este sitio web puede contener enlaces a sitios de terceros. WeldStaff no se responsabiliza del contenido, políticas de privacidad o prácticas de esos sitios externos."
+            },
+            "law": {
+                "title": "8. Ley Aplicable y Jurisdicción",
+                "text": "Estos Términos y Condiciones se rigen por la legislación portuguesa. Para la resolución de cualquier litigio, son competentes los tribunales de Santa Maria da Feira."
+            },
+            "changes": {
+                "title": "9. Cambios en los Términos",
+                "text": "Nos reservamos el derecho de modificar estos Términos y Condiciones en cualquier momento, siendo los cambios efectivos desde su publicación en esta página."
+            }
+        }
+    },
+    "notFound": {
+        "title": "Página no encontrada",
+        "text": "La página que busca no existe o ha sido movida.",
+        "back": "Volver al Inicio"
+    }
+}

@@ -1,0 +1,25 @@
+/* =============================================================
+   Bandeiras do seletor de línguas.
+
+   Substitui o pacote `flag-icons` completo: as classes usadas são apenas
+   4 (.fi-pt, .fi-gb, .fi-fr, .fi-es), mas o CSS do pacote declara 257
+   bandeiras e o build copiava 542 SVGs (5,5 MB) para o output.
+   As regras base abaixo são as do flag-icons, para o aspeto não mudar.
+   ============================================================= */
+.fi {
+    position: relative;
+    display: inline-block;
+    width: 1.333333em;
+    line-height: 1em;
+    background-size: contain;
+    background-position: 50%;
+    background-repeat: no-repeat;
+
+    &::before { content: ' '; }
+    &.fis { width: 1em; }
+}
+
+.fi-pt { background-image: url('assets/img/flags/pt.svg'); }
+.fi-gb { background-image: url('assets/img/flags/gb.svg'); }
+.fi-fr { background-image: url('assets/img/flags/fr.svg'); }
+.fi-es { background-image: url('assets/img/flags/es.svg'); }

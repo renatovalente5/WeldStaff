@@ -1,0 +1,15 @@
+# Segredos do Cloudflare Worker "weld-staff-api".
+# Copiar para `worker/.dev.vars` (que está no .gitignore) para desenvolvimento local.
+# Em produção são definidos com: npx wrangler secret put <NOME>
+
+# Secret key do widget Turnstile (dashboard da Cloudflare > Turnstile)
+TURNSTILE_SECRET=0x0000000000000000000000000000000000000000
+
+# API key do Resend (dashboard do Resend > API Keys)
+RESEND_API_KEY=re_00000000_00000000000000000000000000
+
+# Caixa que recebe os pedidos de contacto e as candidaturas
+CONTACT_TO_EMAIL=geral@weldstaff.pt
+
+# Remetente — tem de estar num domínio VERIFICADO no Resend
+CONTACT_FROM_EMAIL=no-reply@weldstaff.pt

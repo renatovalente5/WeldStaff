@@ -1,0 +1,79 @@
+name: Publicar no GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Uma publicação de cada vez; não cancela a que já está a correr.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` completo: o @angular/build e o compilador são devDependencies
+      # e são precisos para compilar. Não usar --omit=dev.
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build com pré-renderização
+        run: npm run build
+
+      - name: Confirmar que as 6 rotas foram pré-renderizadas
+        run: |
+          cd dist/weld-staff/browser
+          faltam=0
+          for p in index.html contactos/index.html careers/index.html \
+                   privacidade/index.html cookies/index.html termos/index.html; do
+            if [ ! -f "$p" ]; then echo "::error::falta $p"; faltam=1; fi
+          done
+          [ "$faltam" = "0" ] || exit 1
+
+          # Nenhuma chave de tradução crua pode chegar a produção.
+          if grep -rlE '>[[:space:]]*[a-z]+(\.[a-zA-Z]+){2,}[[:space:]]*<' \
+               index.html contactos/index.html careers/index.html \
+               privacidade/index.html cookies/index.html termos/index.html; then
+            echo "::warning::há chaves de tradução não resolvidas no HTML pré-renderizado"
+          fi
+
+      - name: Preparar o output para o Pages
+        run: |
+          cd dist/weld-staff/browser
+          # URLs desconhecidos: o GitHub Pages serve 404.html com status 404 (correto).
+          # A shell sem pré-renderização é exatamente o que serve para isso.
+          cp index.csr.html 404.html
+          rm -f index.csr.html
+          # Impede qualquer processamento Jekyll (o glob de assets não copia dotfiles).
+          touch .nojekyll
+          ls -la
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/weld-staff/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

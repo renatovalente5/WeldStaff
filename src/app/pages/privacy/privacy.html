@@ -1,0 +1,83 @@
+<section class="hero-section">
+    <div class="container hero-content text-center">
+        <h1 class="hero-title" appScrollReveal>{{ 'privacy.title' | transloco }}</h1>
+        <p class="hero-subtitle" appScrollReveal>{{ 'privacy.subtitle' | transloco }}</p>
+        <div class="hero-divider"></div>
+    </div>
+</section>
+
+<section class="legal-content">
+    <div class="container">
+        <div class="legal-card">
+            <p class="legal-updated">{{ 'privacy.lastUpdated' | transloco }}</p>
+
+            <!-- 1. Responsável -->
+            <h2>{{ 'privacy.sections.controller.title' | transloco }}</h2>
+            <p [innerHTML]="'privacy.sections.controller.text' | transloco"></p>
+
+            <!-- 2. Dados Recolhidos -->
+            <h2>{{ 'privacy.sections.dataCollected.title' | transloco }}</h2>
+            <p>{{ 'privacy.sections.dataCollected.intro' | transloco }}</p>
+            <ul>
+                <li>{{ 'privacy.sections.dataCollected.items.name' | transloco }}</li>
+                <li>{{ 'privacy.sections.dataCollected.items.email' | transloco }}</li>
+                <li>{{ 'privacy.sections.dataCollected.items.phone' | transloco }}</li>
+                <li>{{ 'privacy.sections.dataCollected.items.message' | transloco }}</li>
+                <li>{{ 'privacy.sections.dataCollected.items.cv' | transloco }}</li>
+                <li>{{ 'privacy.sections.dataCollected.items.navigation' | transloco }}</li>
+            </ul>
+
+            <!-- 3. Finalidade -->
+            <h2>{{ 'privacy.sections.purpose.title' | transloco }}</h2>
+            <ul>
+                <li>{{ 'privacy.sections.purpose.items.contact' | transloco }}</li>
+                <li>{{ 'privacy.sections.purpose.items.recruitment' | transloco }}</li>
+                <li>{{ 'privacy.sections.purpose.items.improvement' | transloco }}</li>
+            </ul>
+
+            <!-- 4. Base Legal -->
+            <h2>{{ 'privacy.sections.legalBasis.title' | transloco }}</h2>
+            <p>{{ 'privacy.sections.legalBasis.text' | transloco }}</p>
+
+            <!-- 5. Conservação dos Dados -->
+            <h2>{{ 'privacy.sections.retention.title' | transloco }}</h2>
+            <p>{{ 'privacy.sections.retention.text' | transloco }}</p>
+
+            <!-- 6. Partilha de Dados -->
+            <h2>{{ 'privacy.sections.sharing.title' | transloco }}</h2>
+            <p>{{ 'privacy.sections.sharing.text' | transloco }}</p>
+
+            <!-- 7. Direitos do Titular -->
+            <h2>{{ 'privacy.sections.rights.title' | transloco }}</h2>
+            <p>{{ 'privacy.sections.rights.intro' | transloco }}</p>
+            <ul>
+                <li>{{ 'privacy.sections.rights.items.access' | transloco }}</li>
+                <li>{{ 'privacy.sections.rights.items.rectification' | transloco }}</li>
+                <li>{{ 'privacy.sections.rights.items.erasure' | transloco }}</li>
+                <li>{{ 'privacy.sections.rights.items.restriction' | transloco }}</li>
+                <li>{{ 'privacy.sections.rights.items.portability' | transloco }}</li>
+                <li>{{ 'privacy.sections.rights.items.objection' | transloco }}</li>
+            </ul>
+            <p [innerHTML]="'privacy.sections.rights.contact' | transloco"></p>
+
+            <!-- 8. Segurança -->
+            <h2>{{ 'privacy.sections.security.title' | transloco }}</h2>
+            <p>{{ 'privacy.sections.security.text' | transloco }}</p>
+
+            <!-- 9. CNPD -->
+            <h2>{{ 'privacy.sections.authority.title' | transloco }}</h2>
+            <p [innerHTML]="'privacy.sections.authority.text' | transloco"></p>
+
+            <!-- 10. Alterações -->
+            <h2>{{ 'privacy.sections.changes.title' | transloco }}</h2>
+            <p>{{ 'privacy.sections.changes.text' | transloco }}</p>
+
+            <div class="legal-back">
+                <a routerLink="/" class="btn-back-home">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    {{ 'backToHome' | transloco }}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

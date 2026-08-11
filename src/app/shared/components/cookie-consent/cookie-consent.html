@@ -1,0 +1,83 @@
+<div class="cookie-banner" *ngIf="isVisible" role="dialog" aria-label="Cookie consent" aria-modal="false">
+    <div class="cookie-banner-inner">
+        <!-- Main Banner -->
+        <div class="cookie-main" *ngIf="!showPreferences">
+            <div class="cookie-text">
+                <div class="cookie-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
+                        <path d="M8.5 8.5v.01" />
+                        <path d="M16 15.5v.01" />
+                        <path d="M12 12v.01" />
+                        <path d="M11 17v.01" />
+                        <path d="M7 14v.01" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="cookie-title">{{ 'cookieConsent.title' | transloco }}</p>
+                    <p class="cookie-desc">{{ 'cookieConsent.description' | transloco }}
+                        <a routerLink="/cookies" class="cookie-link">{{ 'cookieConsent.learnMore' | transloco }}</a>
+                    </p>
+                </div>
+            </div>
+            <div class="cookie-actions">
+                <button class="cookie-btn cookie-btn-reject" (click)="rejectNonEssential()">
+                    {{ 'cookieConsent.reject' | transloco }}
+                </button>
+                <button class="cookie-btn cookie-btn-manage" (click)="togglePreferences()">
+                    {{ 'cookieConsent.manage' | transloco }}
+                </button>
+                <button class="cookie-btn cookie-btn-accept" (click)="acceptAll()">
+                    {{ 'cookieConsent.accept' | transloco }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Preferences Panel -->
+        <div class="cookie-preferences" *ngIf="showPreferences">
+            <div class="prefs-header">
+                <h3>{{ 'cookieConsent.preferencesTitle' | transloco }}</h3>
+                <button class="prefs-close" (click)="togglePreferences()" aria-label="Close preferences">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="prefs-list">
+                <!-- Essential -->
+                <div class="pref-item">
+                    <div class="pref-info">
+                        <span class="pref-name">{{ 'cookieConsent.categories.essential.name' | transloco }}</span>
+                        <span class="pref-desc">{{ 'cookieConsent.categories.essential.desc' | transloco }}</span>
+                    </div>
+                    <div class="pref-toggle always-on">
+                        <span class="toggle-label">{{ 'cookieConsent.alwaysOn' | transloco }}</span>
+                    </div>
+                </div>
+
+                <!-- Functional -->
+                <div class="pref-item">
+                    <div class="pref-info">
+                        <span class="pref-name">{{ 'cookieConsent.categories.functional.name' | transloco }}</span>
+                        <span class="pref-desc">{{ 'cookieConsent.categories.functional.desc' | transloco }}</span>
+                    </div>
+                    <div class="pref-toggle">
+                        <label class="switch" for="functional-cookies">
+                            <input type="checkbox" id="functional-cookies" [(ngModel)]="preferences.functional">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prefs-actions">
+                <button class="cookie-btn cookie-btn-accept" (click)="savePreferences()">
+                    {{ 'cookieConsent.savePreferences' | transloco }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

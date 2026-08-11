@@ -1,0 +1,310 @@
+/* ========================================
+   HERO SECTION
+   ======================================== */
+
+.hero-section {
+    position: relative;
+    margin-top: -90px;
+    padding: 160px 0 80px;
+    min-height: 42vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.72)),
+        url('../../../assets/img/careers-jobs-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+    overflow: hidden;
+
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+        margin-top: -70px;
+        padding: 130px 1rem 60px;
+        min-height: 35vh;
+    }
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: var(--spacing-xs);
+    letter-spacing: -0.02em;
+
+    @media (max-width: 768px) {
+        font-size: 2.25rem;
+    }
+}
+
+.hero-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.hero-divider {
+    width: 60px;
+    height: 4px;
+    background: var(--secondary-color);
+    border-radius: 2px;
+    margin: 0 auto;
+}
+
+/* ========================================
+   CAREERS CONTENT SECTION
+   ======================================== */
+
+.careers-content {
+    background: #f8fafc;
+    padding: 64px 0 96px;
+
+    @media (max-width: 768px) {
+        padding: 40px 0 56px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 var(--spacing-lg);
+
+        @media (max-width: 640px) {
+            padding: 0 1rem;
+        }
+    }
+}
+
+.intro-text {
+    max-width: 700px;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    text-align: center;
+    margin: 0 auto var(--spacing-2xl);
+
+    p {
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        font-size: 0.9375rem;
+        margin-bottom: var(--spacing-xl);
+    }
+}
+
+/* ========================================
+   LOADING STATE
+   ======================================== */
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: 4rem 0;
+
+    .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid rgba(15, 23, 42, 0.1);
+        border-top-color: var(--secondary-color);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+    }
+
+    p {
+        color: var(--text-muted);
+        font-size: 0.9375rem;
+        margin: 0;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========================================
+   JOB CARDS GRID
+   ======================================== */
+
+.job-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+/* ========================================
+   JOB CARD — Premium Design
+   ======================================== */
+
+.job-card {
+    cursor: pointer;
+    border-radius: var(--radius-lg);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+        transform: translateY(-6px);
+
+        .job-card-inner {
+            box-shadow: 0 20px 48px rgba(15, 23, 42, 0.12);
+            border-color: rgba(245, 158, 11, 0.25);
+        }
+
+        .job-card-accent {
+            background: linear-gradient(180deg, var(--secondary-color), #d97706);
+            width: 4px;
+        }
+
+        .job-icon-wrapper {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: rgba(245, 158, 11, 0.25);
+            color: var(--secondary-color);
+        }
+
+        .apply-cta {
+            background: var(--primary-color);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+
+            svg {
+                transform: translateX(3px);
+            }
+        }
+    }
+}
+
+.job-card-inner {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-radius: var(--radius-lg);
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    transition: all 0.35s ease;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    overflow: hidden;
+}
+
+/* Left Accent Bar */
+.job-card-accent {
+    width: 3px;
+    background: rgba(15, 23, 42, 0.08);
+    flex-shrink: 0;
+    transition: all 0.35s ease;
+    border-radius: 0 2px 2px 0;
+}
+
+/* Card Body */
+.job-card-body {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.job-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.job-icon-wrapper {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.03);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-radius: 10px;
+    color: var(--primary-color);
+    transition: all 0.35s ease;
+    flex-shrink: 0;
+}
+
+.job-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.job-description {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin: 0;
+    flex: 1;
+}
+
+.job-card-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+/* Apply CTA */
+.apply-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    background: rgba(15, 23, 42, 0.04);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    svg {
+        transition: transform 0.3s ease;
+    }
+}
+
+/* ========================================
+   UTILITIES
+   ======================================== */
+
+.text-center {
+    text-align: center;
+}
+
+.text-xl {
+    font-size: 1.25rem;
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .job-card,
+    .job-card-inner,
+    .job-card-accent,
+    .job-icon-wrapper,
+    .apply-cta,
+    .apply-cta svg {
+        animation: none;
+        transition: none;
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "name": "weld-staff-api",
+    "main": "src/index.ts",
+    "compatibility_date": "2024-02-08",
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "observability": {
+        "enabled": true
+    },
+    "vars": {
+        "ALLOWED_ORIGIN": "https://weldstaff.pt,https://weldstaff.com"
+    }
+}

@@ -1,0 +1,85 @@
+<section class="hero-section">
+    <div class="container hero-content text-center">
+        <h1 class="hero-title" appScrollReveal>{{ 'cookiePolicy.title' | transloco }}</h1>
+        <p class="hero-subtitle" appScrollReveal>{{ 'cookiePolicy.subtitle' | transloco }}</p>
+        <div class="hero-divider"></div>
+    </div>
+</section>
+
+<section class="legal-content">
+    <div class="container">
+        <div class="legal-card">
+            <p class="legal-updated">{{ 'cookiePolicy.lastUpdated' | transloco }}</p>
+
+            <!-- 1. O que são cookies -->
+            <h2>{{ 'cookiePolicy.sections.what.title' | transloco }}</h2>
+            <p>{{ 'cookiePolicy.sections.what.text' | transloco }}</p>
+
+            <!-- 2. Tipos de cookies -->
+            <h2>{{ 'cookiePolicy.sections.types.title' | transloco }}</h2>
+
+            <h3>{{ 'cookiePolicy.sections.types.essential.title' | transloco }}</h3>
+            <p>{{ 'cookiePolicy.sections.types.essential.text' | transloco }}</p>
+
+            <h3>{{ 'cookiePolicy.sections.types.functional.title' | transloco }}</h3>
+            <p>{{ 'cookiePolicy.sections.types.functional.text' | transloco }}</p>
+
+            <h3>{{ 'cookiePolicy.sections.types.thirdParty.title' | transloco }}</h3>
+            <p>{{ 'cookiePolicy.sections.types.thirdParty.text' | transloco }}</p>
+
+            <!-- 3. Cookies utilizados -->
+            <h2>{{ 'cookiePolicy.sections.used.title' | transloco }}</h2>
+            <div class="cookie-table-wrapper">
+                <table class="cookie-table">
+                    <thead>
+                        <tr>
+                            <th>{{ 'cookiePolicy.sections.used.table.name' | transloco }}</th>
+                            <th>{{ 'cookiePolicy.sections.used.table.provider' | transloco }}</th>
+                            <th>{{ 'cookiePolicy.sections.used.table.purpose' | transloco }}</th>
+                            <th>{{ 'cookiePolicy.sections.used.table.duration' | transloco }}</th>
+                            <th>{{ 'cookiePolicy.sections.used.table.type' | transloco }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>cookie_consent</td>
+                            <td>WeldStaff</td>
+                            <td>{{ 'cookiePolicy.sections.used.cookies.consent.purpose' | transloco }}</td>
+                            <td>365 {{ 'cookiePolicy.sections.used.cookies.consent.duration' | transloco }}</td>
+                            <td>{{ 'cookiePolicy.sections.types.essential.title' | transloco }}</td>
+                        </tr>
+                        <tr>
+                            <td>lang</td>
+                            <td>WeldStaff</td>
+                            <td>{{ 'cookiePolicy.sections.used.cookies.lang.purpose' | transloco }}</td>
+                            <td>365 {{ 'cookiePolicy.sections.used.cookies.consent.duration' | transloco }}</td>
+                            <td>{{ 'cookiePolicy.sections.types.essential.title' | transloco }}</td>
+                        </tr>
+                        <tr>
+                            <td>cf_clearance</td>
+                            <td>Cloudflare</td>
+                            <td>{{ 'cookiePolicy.sections.used.cookies.turnstile.purpose' | transloco }}</td>
+                            <td>30 min</td>
+                            <td>{{ 'cookiePolicy.sections.types.essential.title' | transloco }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 4. Como gerir -->
+            <h2>{{ 'cookiePolicy.sections.manage.title' | transloco }}</h2>
+            <p [innerHTML]="'cookiePolicy.sections.manage.text' | transloco"></p>
+
+            <!-- 5. Alterações -->
+            <h2>{{ 'cookiePolicy.sections.changes.title' | transloco }}</h2>
+            <p>{{ 'cookiePolicy.sections.changes.text' | transloco }}</p>
+
+            <div class="legal-back">
+                <a routerLink="/" class="btn-back-home">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    {{ 'backToHome' | transloco }}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

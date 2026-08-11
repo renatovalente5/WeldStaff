@@ -1,0 +1,133 @@
+<header class="header" [class.scrolled]="isScrolled">
+    <div class="container flex justify-between items-center">
+        <!-- Logo -->
+        <a routerLink="/" class="logo logo-centered">
+            <img src="assets/img/weldstaff_full_logo.png" alt="WeldStaff" class="logo-img">
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="nav hidden-mobile" aria-label="Main navigation">
+            <ul class="flex gap-md items-center">
+                <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'nav.home'
+                        | transloco }}</a></li>
+                <li><a routerLink="/contactos" routerLinkActive="active">{{ 'nav.contacts' | transloco }}</a></li>
+                <li><a routerLink="/careers" routerLinkActive="active">{{ 'nav.careers' | transloco }}</a></li>
+
+                <!-- Divider -->
+                <li class="nav-divider" aria-hidden="true"></li>
+
+                <!-- Language Selector (Desktop) -->
+                <li class="lang-selector">
+                    <button class="lang-btn" (click)="toggleDropdown()" [class.active]="isLangDropdownOpen"
+                        [attr.aria-expanded]="isLangDropdownOpen" aria-haspopup="true" aria-label="Select language">
+                        <span [class]="getFlag(languageService.getActiveLang())"></span>
+                        <span class="lang-code">{{ languageService.getActiveLang().substring(0, 2).toUpperCase()
+                            }}</span>
+                        <svg class="lang-arrow" [class.rotated]="isLangDropdownOpen" width="12" height="12"
+                            viewBox="0 0 12 12" fill="none">
+                            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+
+                    <ul class="lang-dropdown" *ngIf="isLangDropdownOpen">
+                        <li>
+                            <button (click)="selectLang('pt-PT')"
+                                [class.selected]="languageService.getActiveLang() === 'pt-PT'">
+                                <span [class]="getFlag('pt-PT')"></span>
+                                <span class="lang-name">Português</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button (click)="selectLang('en')"
+                                [class.selected]="languageService.getActiveLang() === 'en'">
+                                <span [class]="getFlag('en')"></span>
+                                <span class="lang-name">English</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button (click)="selectLang('fr')"
+                                [class.selected]="languageService.getActiveLang() === 'fr'">
+                                <span [class]="getFlag('fr')"></span>
+                                <span class="lang-name">Français</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button (click)="selectLang('es')"
+                                [class.selected]="languageService.getActiveLang() === 'es'">
+                                <span [class]="getFlag('es')"></span>
+                                <span class="lang-name">Español</span>
+                            </button>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- CTA Button -->
+                <!-- <li>
+                    <a routerLink="/contactos" class="btn btn-primary header-cta">
+                        {{ 'nav.cta' | transloco }}
+                    </a>
+                </li> -->
+            </ul>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button class="hamburger-btn hidden-desktop" (click)="toggleMobileMenu()"
+            [attr.aria-expanded]="isMobileMenuOpen" aria-label="Toggle Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </div>
+
+    <!-- Mobile Menu Fullscreen Overlay -->
+    <div class="mobile-menu" [class.open]="isMobileMenuOpen" role="navigation" aria-label="Mobile navigation">
+        <div class="mobile-menu-header flex justify-between items-center">
+            <span class="logo-mobile">
+                <img src="assets/img/weldstaff_full_logo.png" alt="WeldStaff" class="logo-img-mobile">
+            </span>
+            <button class="close-btn" (click)="toggleMobileMenu()" aria-label="Close Menu">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+
+        <ul class="mobile-nav-links">
+            <li class="mobile-nav-item" style="--i: 0">
+                <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                    (click)="toggleMobileMenu()">{{ 'nav.home' | transloco }}</a>
+            </li>
+            <li class="mobile-nav-item" style="--i: 1">
+                <a routerLink="/contactos" routerLinkActive="active" (click)="toggleMobileMenu()">{{ 'nav.contacts' |
+                    transloco }}</a>
+            </li>
+            <li class="mobile-nav-item" style="--i: 2">
+                <a routerLink="/careers" routerLinkActive="active" (click)="toggleMobileMenu()">{{ 'nav.careers' |
+                    transloco }}</a>
+            </li>
+        </ul>
+
+        <div class="mobile-menu-footer">
+            <div class="mobile-lang-selector">
+                <button (click)="selectLang('pt-PT')" [class.active]="languageService.getActiveLang() === 'pt-PT'">
+                    <span [class]="getFlag('pt-PT')"></span> PT
+                </button>
+                <button (click)="selectLang('en')" [class.active]="languageService.getActiveLang() === 'en'">
+                    <span [class]="getFlag('en')"></span> EN
+                </button>
+                <button (click)="selectLang('fr')" [class.active]="languageService.getActiveLang() === 'fr'">
+                    <span [class]="getFlag('fr')"></span> FR
+                </button>
+                <button (click)="selectLang('es')" [class.active]="languageService.getActiveLang() === 'es'">
+                    <span [class]="getFlag('es')"></span> ES
+                </button>
+            </div>
+
+            <a routerLink="/contactos" class="btn btn-primary mobile-cta" (click)="toggleMobileMenu()">
+                {{ 'nav.cta' | transloco }}
+            </a>
+        </div>
+    </div>
+</header>
