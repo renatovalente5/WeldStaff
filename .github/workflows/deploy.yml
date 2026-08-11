@@ -54,10 +54,26 @@ jobs:
       - name: Preparar o output para o Pages
         run: |
           cd dist/weld-staff/browser
+
+          # O prerender gera <rota>/index.html, e para /<rota> (sem barra) o GitHub
+          # Pages responde 301 para /<rota>/. Os canonicals, o og:url e o sitemap
+          # declaram a forma SEM barra — que é também a que já está indexada.
+          # Publicar também <rota>.html faz /<rota> responder 200 direto, sem salto,
+          # e mantém /<rota>/ a funcionar para quem já tenha essa forma.
+          for d in contactos careers privacidade cookies termos; do
+            if [ -f "$d/index.html" ]; then
+              cp "$d/index.html" "$d.html"
+              echo "criado $d.html"
+            else
+              echo "::error::falta $d/index.html"; exit 1
+            fi
+          done
+
           # URLs desconhecidos: o GitHub Pages serve 404.html com status 404 (correto).
           # A shell sem pré-renderização é exatamente o que serve para isso.
           cp index.csr.html 404.html
           rm -f index.csr.html
+
           # Impede qualquer processamento Jekyll (o glob de assets não copia dotfiles).
           touch .nojekyll
           ls -la
