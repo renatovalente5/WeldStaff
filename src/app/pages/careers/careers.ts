@@ -9,6 +9,7 @@ import { staggerAnimation } from '../../core/animations/stagger-animations';
 import { JobApplicationModalComponent } from './job-application-modal/job-application-modal';
 
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco'; // Import TranslocoService
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-careers',
@@ -44,20 +45,25 @@ export class CareersComponent implements OnInit {
   }
 
   private updateSeoTags() {
-    this.seoService.updateMetaTags({
-      title: this.translocoService.translate('careers.seo.title'),
-      description: this.translocoService.translate('careers.seo.description'),
-      keywords: 'Jobs Welders, Welder Job, Emprego Soldador, Vagas Soldadura, Profissão Soldador, Weld Staff Careers, Trabalho Metalomecânica, Welders',
-      url: 'https://weldstaff.pt/careers',
-      image: 'https://weldstaff.pt/assets/img/og.jpg'
-    });
+    // selectTranslate só emite depois de o ficheiro de tradução estar carregado. Com o
+    // translate() síncrono, um JSON que chegasse tarde deixava a chave crua
+    // («careers.seo.title») no título e na description durante toda a sessão.
+    this.translocoService.selectTranslate('careers.seo.title').pipe(take(1)).subscribe(titulo => {
+      this.seoService.updateMetaTags({
+        title: titulo,
+        description: this.translocoService.translate('careers.seo.description'),
+        keywords: 'Jobs Welders, Welder Job, Emprego Soldador, Vagas Soldadura, Profissão Soldador, Weld Staff Careers, Trabalho Metalomecânica, Welders',
+        url: 'https://weldstaff.pt/careers',
+        image: 'https://weldstaff.pt/assets/img/og.jpg'
+      });
 
-    this.seoService.setStructuredData({
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      "name": "Carreiras WeldStaff",
-      "description": "Vagas disponíveis para profissionais de soldadura e metalomecânica.",
-      "url": "https://weldstaff.pt/careers"
+      this.seoService.setStructuredData({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Carreiras WeldStaff",
+        "description": "Vagas disponíveis para profissionais de soldadura e metalomecânica.",
+        "url": "https://weldstaff.pt/careers"
+      });
     });
   }
 

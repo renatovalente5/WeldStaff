@@ -5,6 +5,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { SeoService } from '../../core/services/seo.service';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cookies',
@@ -34,10 +35,15 @@ export class CookiesComponent implements OnInit, OnDestroy {
   }
 
   private updateSeo(): void {
-    this.seoService.updateMetaTags({
-      title: this.translocoService.translate('cookiePolicy.seo.title'),
-      description: this.translocoService.translate('cookiePolicy.seo.description'),
-      url: 'https://weldstaff.pt/cookies'
+    // selectTranslate só emite depois de o ficheiro de tradução estar carregado. Com o
+    // translate() síncrono, um JSON que chegasse tarde deixava a chave crua
+    // («cookiePolicy.seo.title») no título e na description durante toda a sessão.
+    this.translocoService.selectTranslate('cookiePolicy.seo.title').pipe(take(1)).subscribe(titulo => {
+      this.seoService.updateMetaTags({
+        title: titulo,
+        description: this.translocoService.translate('cookiePolicy.seo.description'),
+        url: 'https://weldstaff.pt/cookies'
+      });
     });
   }
 }

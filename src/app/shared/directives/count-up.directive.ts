@@ -13,10 +13,17 @@ export class CountUpDirective {
     private hasAnimated = false;
 
     constructor(private el: ElementRef, private renderer: Renderer2) {
-        // O IntersectionObserver e o requestAnimationFrame não existem em Node.
-        // No HTML pré-renderizado fica o valor que está no template; a contagem
-        // arranca no browser, quando o elemento entra no ecrã.
-        afterNextRender(() => this.createObserver());
+        // O IntersectionObserver e o requestAnimationFrame não existem em Node, por isso
+        // isto só corre no browser.
+        //
+        // O template traz o valor FINAL (ex.: "+1000"): é esse que fica no HTML
+        // pré-renderizado, que é o que os motores de busca leem. Se ficasse "0", o site
+        // estático anunciava zero projetos e zero colaboradores. Aqui, já no browser,
+        // pomos o valor inicial imediatamente antes de animar.
+        afterNextRender(() => {
+            this.renderer.setProperty(this.el.nativeElement, 'innerText', `${this.prefix}0${this.suffix}`);
+            this.createObserver();
+        });
     }
 
     private createObserver() {
