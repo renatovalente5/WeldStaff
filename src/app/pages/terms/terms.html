@@ -47,9 +47,16 @@
             <h2>{{ 'terms.sections.changes.title' | transloco }}</h2>
             <p>{{ 'terms.sections.changes.text' | transloco }}</p>
 
-            <!-- 10. Resolução Alternativa de Litígios (RAL) -->
-            <h2>{{ 'terms.sections.ral.title' | transloco }}</h2>
-            <p [innerHTML]="'terms.sections.ral.text' | transloco"></p>
+            <!-- Removida a secção 10 (Resolução Alternativa de Litígios).
+                 As chaves terms.sections.ral.title/.text nunca existiram em nenhum dos
+                 quatro ficheiros de i18n, pelo que a página mostrava os identificadores
+                 em cru ao utilizador. O dever de informação sobre RAL (artigo 18.º da
+                 Lei 144/2015) aplica-se a relações de CONSUMO — o consumidor é a pessoa
+                 singular a agir fora da sua atividade profissional. A WeldStaff presta
+                 serviços a empresas e recruta trabalhadores, e nenhuma dessas é relação
+                 de consumo. Se algum dia houver contratação com consumidores, repor a
+                 secção com o texto oficial e a entidade RAL competente, e acrescentar as
+                 chaves às quatro traduções. -->
 
             <div class="legal-back">
                 <a routerLink="/" class="btn-back-home">
