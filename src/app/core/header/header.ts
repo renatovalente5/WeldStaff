@@ -33,6 +33,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.emBrowser && window.scrollY > 50;
   }
 
+  /**
+   * O `router.url` traz a query string e o fragmento, pelo que comparar o URL
+   * inteiro com '/' fazia a barra transparente da página inicial desaparecer em
+   * qualquer visita com parâmetros — `/?utm_source=...` de uma campanha, por
+   * exemplo, entrava com a barra branca por cima do herói.
+   */
+  private ehPaginaInicial(url: string): boolean {
+    const caminho = url.split(/[?#]/)[0];
+    return caminho === '/' || caminho === '';
+  }
+
   ngOnInit() {
     this.routerSub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -44,7 +55,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const url = navEvent.urlAfterRedirects;
 
       // Only the home page uses the transparent navbar at the top
-      this.isHomePage = url === '/' || url === '';
+      this.isHomePage = this.ehPaginaInicial(url);
       this.isTransparentPage = this.isHomePage;
 
       if (!this.isTransparentPage) {
@@ -56,7 +67,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     // Initial route check
     const url = this.router.url;
-    this.isHomePage = url === '/' || url === '';
+    this.isHomePage = this.ehPaginaInicial(url);
     this.isTransparentPage = this.isHomePage;
     if (!this.isTransparentPage) {
       this.isScrolled = true;

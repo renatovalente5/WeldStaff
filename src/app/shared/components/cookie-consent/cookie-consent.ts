@@ -1,4 +1,4 @@
-import { Component, afterNextRender } from '@angular/core';
+import { ChangeDetectorRef, Component, afterNextRender, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -20,6 +20,8 @@ export class CookieConsentComponent {
     functional: true
   };
 
+  private readonly cdr = inject(ChangeDetectorRef);
+
   constructor() {
     // O localStorage não existe durante a pré-renderização estática, por isso
     // a decisão de mostrar o banner só é tomada depois do render no browser.
@@ -29,6 +31,15 @@ export class CookieConsentComponent {
         // Small delay so banner doesn't flash on page load
         setTimeout(() => {
           this.isVisible = true;
+
+          // É o markForCheck que faz o banner aparecer. Esta aplicação corre
+          // sem zone.js (o Angular 21 é zoneless por omissão), pelo que a
+          // deteção de alterações só acontece quando alguém a pede: sinais,
+          // listeners declarados no template, async pipe ou este aviso. Um
+          // setTimeout a mexer num campo simples não avisa ninguém, e o
+          // isVisible ficava a true sem que o *ngIf alguma vez reavaliasse —
+          // o banner nunca chegou a aparecer a ninguém.
+          this.cdr.markForCheck();
         }, 800);
       }
     });

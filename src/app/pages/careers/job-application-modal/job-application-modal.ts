@@ -147,6 +147,7 @@ export class JobApplicationModalComponent {
         });
         this.closeModal();
         this.isSubmitting = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Application error:', error);
@@ -155,6 +156,9 @@ export class JobApplicationModalComponent {
         // Reset token so next attempt triggers a new challenge
         this.turnstileToken = '';
         this.turnstileWidget?.reset();
+        // Sem isto o botão ficava preso em «A enviar...» por trás do alerta de
+        // erro: sem zone.js, a resposta do subscribe não pede deteção nenhuma.
+        this.cdr.markForCheck();
       }
     });
   }
