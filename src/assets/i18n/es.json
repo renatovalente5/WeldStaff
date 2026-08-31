@@ -98,8 +98,8 @@
         },
         "footerCta": {
             "title": "¿Listo para reforzar su equipo?",
-            "subtitle": "Hable con nosotros y descubra cómo podemos ayudar a escalar su capacidad productiva.",
-            "button": "Pedir propuesta ahora"
+            "subtitle": "Hable con nosotros y descubra cómo podemos ayudarle a escalar su capacidad productiva.",
+            "button": "Solicitar presupuesto ahora"
         }
     },
     "contacts": {
@@ -173,8 +173,8 @@
     },
     "careers": {
         "seo": {
-            "title": "Carreras - Únase a WeldStaff",
-            "description": "Vacantes para soldadores y profesionales de la industria. Envíe su candidatura."
+            "title": "Empleo - Únete a WeldStaff",
+            "description": "Vacantes para soldadores y profesionales de la industria. Envía tu candidatura."
         },
         "title": "Empleo",
         "subtitle": "Únete a nuestra red de excelencia",
@@ -351,7 +351,7 @@
                 "text": "Los datos personales se conservan únicamente durante el período necesario para la finalidad para la que fueron recopilados. Los datos de contacto se mantienen durante un período máximo de 24 meses. Los datos de candidaturas se mantienen durante un período máximo de 12 meses después del proceso de selección."
             },
             "sharing": {
-                "title": "6. Compartición de Datos",
+                "title": "6. Comunicación de Datos",
                 "text": "Sus datos personales no se venden, comparten ni ceden a terceros, excepto cuando sea estrictamente necesario para los servicios prestados (p. ej.: alojamiento web, servicio de correo electrónico) o cuando lo exija la ley."
             },
             "rights": {
@@ -384,10 +384,10 @@
     "cookiePolicy": {
         "seo": {
             "title": "Política de Cookies - WeldStaff",
-            "description": "Descubra cómo utilizamos cookies en el sitio web de WeldStaff."
+            "description": "Descubra cómo utilizamos las cookies en el sitio web de WeldStaff."
         },
         "title": "Política de Cookies",
-        "subtitle": "Cómo utilizamos cookies",
+        "subtitle": "Cómo utilizamos las cookies",
         "lastUpdated": "Última actualización: abril de 2026",
         "sections": {
             "what": {
