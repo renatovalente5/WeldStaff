@@ -5,11 +5,12 @@ import { FooterComponent } from './core/footer/footer';
 import { CookieConsentComponent } from './shared/components/cookie-consent/cookie-consent';
 import { LanguageService } from './core/services/language';
 import { routeAnimations } from './core/animations/route-animations';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, CookieConsentComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, CookieConsentComponent, TranslocoPipe],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   animations: [routeAnimations]

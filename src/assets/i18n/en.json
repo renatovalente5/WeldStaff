@@ -14,7 +14,8 @@
             "kb": "KB",
             "mb": "MB",
             "gb": "GB"
-        }
+        },
+        "skipToContent": "Skip to content"
     },
     "home": {
         "seo": {
