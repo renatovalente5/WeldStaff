@@ -1,112 +1,75 @@
-# Migração para o GitHub Pages — o que falta fazer
+# WeldStaff no GitHub Pages
 
-Tudo o que depende de código está feito e publicado. O site já está a ser servido pelo GitHub
-Pages e foi testado com o cabeçalho `Host: weldstaff.pt` **antes** de mexer no DNS. Falta a
-mudança de DNS, que é a única coisa que muda o que o público vê.
+A migração está **concluída**. O site é servido pelo GitHub Pages a partir do repositório
+[WeldStaff](https://github.com/renatovalente5/WeldStaff), em `https://weldstaff.pt`, com
+certificado emitido pelo GitHub. O `weldstaff.com` faz 301 para o `.pt` pela Cloudflare. O
+email continua na Hostinger, independente do alojamento do site.
 
----
+O que ficou feito, por ordem: DNS migrado do `host-redirect.com` para a Hostinger, HTTPS ligado,
+as 6 rotas confirmadas a 200 sem redirecionamento, formulário de contacto reparado (estava a
+falhar em silêncio desde fevereiro de 2026, por falta de `turnstile.execute()`) e confirmado a
+receber candidaturas reais, chave da Google Maps apagada, e a VPS desligada.
 
-## 1. Mudar o DNS
-
-Os nameservers do `weldstaff.pt` são `dns1..4.host-redirect.com`. No painel onde geres esse DNS:
-
-**Apagar:**
-
-| Tipo | Nome | Conteúdo |
-|---|---|---|
-| A | `@` | `38.242.203.192` (a VPS) |
-| A ou CNAME | `www` | o que apontar para a VPS |
-
-**Criar** — quatro registos `A` no nome `@`, com TTL 300 enquanto propaga:
-
-```
-185.199.108.153
-185.199.109.153
-185.199.110.153
-185.199.111.153
-```
-
-**Criar** — um `CNAME` no nome `www` para:
-
-```
-renatovalente5.github.io
-```
-
-**Não tocar** nos registos de email: os dois `MX` da Hostinger, o `TXT` do SPF e o TXT de
-verificação. O alojamento do site muda; o email é independente e continua na Hostinger.
-
-Confirmar quando propagar:
-
-```bash
-dig +short weldstaff.pt A
-```
-
-## 2. Ligar o HTTPS
-
-Assim que o DNS apontar para o GitHub, ir a **Settings → Pages** do repositório
-[WeldStaff](https://github.com/renatovalente5/WeldStaff) e ligar **Enforce HTTPS**. A opção só
-aparece depois de o GitHub emitir o certificado Let's Encrypt, o que leva alguns minutos. O
-certificado cobre `weldstaff.pt` e `www.weldstaff.pt` e renova-se sozinho — não é preciso
-certbot nem nada na VPS.
-
-> O certificado atual da VPS expira a **13 de agosto de 2026, 22:23 UTC**. Se a mudança de DNS
-> ficar feita antes disso, não há nada a renovar.
-
-## 3. Testar em produção
-
-```bash
-for p in / /contactos /careers /privacidade /cookies /termos; do
-  printf "%-14s %s\n" "$p" "$(curl -s -o /dev/null -w '%{http_code}' https://weldstaff.pt$p)"
-done
-```
-
-Todos devem dar **200**. Depois, o teste que mais importa: **submeter o formulário de contacto em
-`https://weldstaff.pt/contactos` e confirmar que o email chega a geral@weldstaff.pt.** Esse
-formulário estava a falhar em silêncio desde fevereiro; a correção está feita e testada
-localmente, mas o Turnstile só valida os domínios autorizados no painel da Cloudflare — por isso
-tem de ser confirmado no domínio real.
-
-Se der erro, verificar em **Cloudflare → Turnstile → widget `0x4AAAAAACZQ10coPVfv7XWU` →
-Hostname Management** que `weldstaff.pt` está na lista.
-
-## 4. Redirecionar o weldstaff.com
-
-O GitHub Pages só serve um domínio por repositório. Hoje o `weldstaff.com` aponta para a VPS e faz
-301 para o `.pt` — quando a VPS for desligada, deixa de responder. Configurar o redirecionamento
-no registrar do `.com`, para `https://weldstaff.pt`.
-
-Nota: o `weeldstaff.com`, que aparecia nas regras antigas do nginx, **não está registado**. Essas
-regras protegiam um domínio que não existe.
-
-## 5. Só depois: desligar a VPS
-
-Confirmar primeiro que o `weldstaff.pt` responde pelo GitHub (`curl -sI https://weldstaff.pt | grep -i server`
-deve dizer `GitHub.com`) e que o formulário de contacto envia. Só então desligar o contentor.
-
-A VPS também aloja o `sininhosoportunos.pt`, no mesmo IP — confirmar que esse já está migrado
-antes de a desligar de vez.
+O histórico dos passos de DNS está no git, no commit que criou este ficheiro.
 
 ---
 
-## Fora do código, e só tu podes fazer
+## Fora do código
 
-1. **Apagar a chave da Google Maps** `AIzaSyAZmE3DtwTFTPZno9AZpINJzECQIhSIloI` na Google Cloud.
-   Está confirmadamente **sem restrições** (responde a Static Maps com qualquer referenciador) e
-   é facturada ao teu projeto. O site já não a usa — o mapa é um iframe sem chave —, mas a chave
-   continua válida para quem a tenha copiado do HTML antigo.
-
-2. **Decidir o texto da secção RAL de `/termos`.** A página mostra literalmente
-   `terms.sections.ral.title` e `terms.sections.ral.text`, nas 4 línguas — já hoje, em produção.
-   As chaves não existem em nenhum ficheiro de tradução. Não inventei texto legal: ou fornecês o
-   texto oficial da entidade RAL competente, ou confirmas com aconselhamento jurídico que a
-   Lei 144/2015 não se aplica (é sobre relações de consumo, e a WeldStaff é B2B + recrutamento) e
-   removem-se as duas linhas de `terms.html:51-52`.
-
-3. **Espanhol:** 30 dos 296 textos do `es.json` estão em português, incluindo o botão
-   «Pedir contacto» do menu e o modal de candidatura. Ou se revê, ou se retira o espanhol.
-
-4. **Anexos das candidaturas (Worker):** não mexi no `worker/`, porque não o consigo testar nem
+1. **Anexos das candidaturas (Worker):** não mexi no `worker/`, porque não o consigo testar nem
    publicar. Ficam anotados dois pontos: os anexos são serializados como `Buffer` em JSON (3,57x
    de expansão, e no máximo que a interface permite — 3 ficheiros de 5 MB — o pico de memória
    ronda 137 MB contra o limite de 128 MB do isolate), e não existe validação de tamanho do lado
    do servidor. Passar a base64 e impor um teto resolve.
+
+2. **Publicar o Worker.** A capitalização da marca nos emails («Weldstaff» → «WeldStaff», três
+   sítios, incluindo o assunto) está corrigida no código mas **não entra em vigor sem um
+   `wrangler deploy`** na pasta `worker/`. Até lá os emails continuam a chegar como estão. Os
+   filtros que criaste no Hostinger continuam a apanhá-los: a correspondência de assunto não
+   distingue maiúsculas.
+
+---
+
+## Decisões de texto que ficaram para ti
+
+Saíram da revisão linguística das quatro línguas. Nenhuma é um defeito — são escolhas que só o
+dono do site pode fazer, e todas foram deixadas como estavam.
+
+1. **Capitalização.** O site usa Maiúsculas De Título à inglesa em títulos e botões. Em português
+   e em francês isso é incorreto (só a primeira palavra leva maiúscula); em espanhol é comum em
+   marketing. Corrigir metade fica pior do que não corrigir nada, por isso é uma decisão em bloco,
+   por língua. São cerca de 60 chaves.
+
+2. **Variante do inglês.** O `en.json` é coerentemente americano (16 ocorrências de `-iz-`, zero
+   de `-is-`). Sendo a empresa europeia e o público da UE, o britânico defende-se — mas é uma
+   passagem global às 16 ocorrências, não a meia dúzia de chaves.
+
+3. **Espaços insecáveis em francês.** A norma francesa manda espaço insecável antes de `:` `;`
+   `!` `?`. O ficheiro tem zero. São cerca de 39 sítios, também tudo ou nada.
+
+4. **Grafia da morada.** Há duas no site: «Rua Vasco da Gama 218» (contactos, mapa, rodapé) e
+   «Rua Vasco da Gama, Nº 218» (privacidade e termos). Além disso o en/fr/es acrescentam
+   «, Portugal» nas páginas legais e o pt-PT não. Convém fixar uma forma e usar `n.º` em vez
+   de `Nº`.
+
+5. **Título da página inicial.** Existem três em circulação: «WeldStaff - Soluções de Soldadura»
+   (no `index.html` e na rota) e «WeldStaff - Soldadores Qualificados para a Sua Empresa» (em
+   `home.seo.title`, que é o que fica no separador). Decidir qual é o canónico.
+
+6. **Localização das vagas.** As 6 chaves `careers.jobs.*.location` estão vazias e o
+   `locationKey` nunca é preenchido. Três das vagas dizem a localização no próprio título
+   (Ribatejo, Setúbal, Aveiro); as outras três não a têm em lado nenhum, e não a inventei.
+
+7. **Mensagens de validação do modal de candidatura.** Estão traduzidas nas 4 línguas mas o
+   template nunca as mostra: o candidato vê a borda vermelha e o botão desativado sem saber o
+   que está mal. A correção é mostrá-las por baixo de cada campo, não apagar as chaves.
+
+8. **Cerca de 25 chaves por língua estão mortas** — nenhum template as usa. Entre elas os 7
+   `placeholder` (nenhum template tem esse atributo), as 5 `contacts.form.options.*` (o
+   formulário não tem `<select>`) e todo o ramo `careers.modal.*`. Se este voltar a ser ligado,
+   atenção: o `routerLink='/contactos'` lá dentro fica **inerte**, porque o Angular não compila
+   diretivas em conteúdo injetado por `[innerHTML]` — tem de passar a `href='/contactos'`.
+
+9. **Língua dos emails internos.** Uma candidatura submetida em francês chega a
+   `geral@weldstaff.pt` com o título da vaga em francês, pelo que a mesma vaga aparece com
+   quatro nomes e não se consegue agrupar. Convinha enviar sempre a designação em português.
