@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { SeoService } from '../../core/services/seo.service';
 
 @Component({
   selector: 'app-not-found',
@@ -38,4 +40,23 @@ import { TranslocoPipe } from '@jsverse/transloco';
     .mt-md { margin-top: 2rem; }
   `]
 })
-export class NotFoundComponent { }
+export class NotFoundComponent implements OnInit, OnDestroy {
+  private seoSub?: Subscription;
+
+  constructor(
+    private translocoService: TranslocoService,
+    private seoService: SeoService
+  ) { }
+
+  // Era a única das sete páginas sem tratamento de SEO: o corpo aparecia
+  // traduzido e o separador do browser ficava em português em qualquer língua.
+  ngOnInit(): void {
+    this.seoSub = this.translocoService
+      .selectTranslate('notFound.title')
+      .subscribe(titulo => this.seoService.updateTitle(`${titulo} - WeldStaff`));
+  }
+
+  ngOnDestroy(): void {
+    this.seoSub?.unsubscribe();
+  }
+}

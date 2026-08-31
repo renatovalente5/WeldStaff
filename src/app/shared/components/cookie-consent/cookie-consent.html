@@ -1,4 +1,4 @@
-<div class="cookie-banner" *ngIf="isVisible" role="dialog" aria-label="Cookie consent" aria-modal="false">
+<div class="cookie-banner" *ngIf="isVisible" role="dialog" [attr.aria-label]="'cookieConsent.title' | transloco" aria-modal="false">
     <div class="cookie-banner-inner">
         <!-- Main Banner -->
         <div class="cookie-main" *ngIf="!showPreferences">
@@ -38,7 +38,7 @@
         <div class="cookie-preferences" *ngIf="showPreferences">
             <div class="prefs-header">
                 <h3>{{ 'cookieConsent.preferencesTitle' | transloco }}</h3>
-                <button class="prefs-close" (click)="togglePreferences()" aria-label="Close preferences">
+                <button class="prefs-close" (click)="togglePreferences()" [attr.aria-label]="'cookieConsent.closePreferences' | transloco">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18M6 6l12 12" />

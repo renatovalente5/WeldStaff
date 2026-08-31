@@ -6,7 +6,7 @@
         </a>
 
         <!-- Desktop Navigation -->
-        <nav class="nav hidden-mobile" aria-label="Main navigation">
+        <nav class="nav hidden-mobile" [attr.aria-label]="'a11y.mainNav' | transloco">
             <ul class="flex gap-md items-center">
                 <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'nav.home'
                         | transloco }}</a></li>
@@ -19,7 +19,7 @@
                 <!-- Language Selector (Desktop) -->
                 <li class="lang-selector">
                     <button class="lang-btn" (click)="toggleDropdown()" [class.active]="isLangDropdownOpen"
-                        [attr.aria-expanded]="isLangDropdownOpen" aria-haspopup="true" aria-label="Select language">
+                        [attr.aria-expanded]="isLangDropdownOpen" aria-haspopup="true" [attr.aria-label]="'a11y.selectLanguage' | transloco">
                         <span [class]="getFlag(languageService.getActiveLang())"></span>
                         <span class="lang-code">{{ languageService.getActiveLang().substring(0, 2).toUpperCase()
                             }}</span>
@@ -73,7 +73,7 @@
 
         <!-- Mobile Menu Button -->
         <button class="hamburger-btn hidden-desktop" (click)="toggleMobileMenu()"
-            [attr.aria-expanded]="isMobileMenuOpen" aria-label="Toggle Menu">
+            [attr.aria-expanded]="isMobileMenuOpen" [attr.aria-label]="'a11y.toggleMenu' | transloco">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
@@ -81,12 +81,12 @@
     </div>
 
     <!-- Mobile Menu Fullscreen Overlay -->
-    <div class="mobile-menu" [class.open]="isMobileMenuOpen" role="navigation" aria-label="Mobile navigation">
+    <div class="mobile-menu" [class.open]="isMobileMenuOpen" role="navigation" [attr.aria-label]="'a11y.mobileNav' | transloco">
         <div class="mobile-menu-header flex justify-between items-center">
             <span class="logo-mobile">
                 <img src="assets/img/weldstaff_full_logo.png" alt="WeldStaff" class="logo-img-mobile">
             </span>
-            <button class="close-btn" (click)="toggleMobileMenu()" aria-label="Close Menu">
+            <button class="close-btn" (click)="toggleMobileMenu()" [attr.aria-label]="'a11y.closeMenu' | transloco">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" />

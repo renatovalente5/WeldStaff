@@ -89,7 +89,6 @@ export class CareersComponent implements OnInit {
   }
 
   onApplicationSubmit(event: { form: any, files: File[] }) {
-    console.log('Application Submitted:', event);
     this.closeApplicationModal();
   }
 }

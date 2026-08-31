@@ -1,5 +1,5 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { TranslocoService } from '@jsverse/transloco';
 
 const LINGUAS_PERMITIDAS = ['pt-PT', 'en', 'fr', 'es'];
@@ -11,6 +11,7 @@ const LINGUA_PREDEFINIDA = 'pt-PT';
 export class LanguageService {
     private readonly LANG_KEY = 'lang';
     private readonly emBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+    private readonly doc = inject(DOCUMENT);
 
     constructor(private translocoService: TranslocoService) {
         this.initLanguage();
@@ -34,6 +35,12 @@ export class LanguageService {
 
     setActiveLang(lang: string) {
         this.translocoService.setActiveLang(lang);
+
+        // Sem isto o <html lang> ficava preso em pt-PT: um visitante em English
+        // tinha a página declarada como portuguesa e o leitor de ecrã lia inglês
+        // com fonética portuguesa. Vai por DOCUMENT para correr na pré-renderização.
+        this.doc.documentElement.lang = lang;
+
         if (this.emBrowser) {
             localStorage.setItem(this.LANG_KEY, lang);
         }

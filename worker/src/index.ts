@@ -85,7 +85,7 @@ async function handleContact(request: Request, env: Env, allowedOrigin: string):
 
     // Send Email
     const html = `
-    <h2>Novo pedido de contacto (Weldstaff)</h2>
+    <h2>Novo pedido de contacto (WeldStaff)</h2>
     <p><b>Nome:</b> ${escapeHtml(name)}</p>
     <p><b>Email:</b> ${escapeHtml(email)}</p>
     <p><b>Telefone:</b> ${escapeHtml(phone || "-")}</p>
@@ -96,7 +96,7 @@ async function handleContact(request: Request, env: Env, allowedOrigin: string):
     <p style="font-size:12px;color:#666">IP: ${escapeHtml(ip ?? "-")}</p>
   `;
 
-    return sendEmail(env, email, `[Weldstaff] ${subject}`, html, [], allowedOrigin);
+    return sendEmail(env, email, `[WeldStaff] ${subject}`, html, [], allowedOrigin);
 }
 
 async function handleApply(request: Request, env: Env, allowedOrigin: string): Promise<Response> {
@@ -144,7 +144,7 @@ async function handleApply(request: Request, env: Env, allowedOrigin: string): P
     }
 
     const html = `
-    <h2>Nova Candidatura (Weldstaff)</h2>
+    <h2>Nova Candidatura (WeldStaff)</h2>
     <p><b>Vaga:</b> ${escapeHtml(jobTitle)}</p>
     <p><b>Nome:</b> ${escapeHtml(name)}</p>
     <p><b>Email:</b> ${escapeHtml(email)}</p>

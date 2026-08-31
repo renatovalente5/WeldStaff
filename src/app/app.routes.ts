@@ -11,36 +11,36 @@ export const routes: Routes = [
     {
         path: 'contactos',
         loadComponent: () => import('./pages/contact/contact').then(m => m.ContactComponent),
-        title: 'WeldStaff - Contactos',
+        title: 'Contactos - WeldStaff',
         data: { animation: 'ContactPage' }
     },
     {
         path: 'careers',
         loadComponent: () => import('./pages/careers/careers').then(m => m.CareersComponent),
-        title: 'WeldStaff - Carreiras',
+        title: 'Carreiras - WeldStaff',
         data: { animation: 'CareersPage' }
     },
     {
         path: 'privacidade',
         loadComponent: () => import('./pages/privacy/privacy').then(m => m.PrivacyComponent),
-        title: 'WeldStaff - Política de Privacidade',
+        title: 'Política de Privacidade - WeldStaff',
         data: { animation: 'LegalPage' }
     },
     {
         path: 'cookies',
         loadComponent: () => import('./pages/cookies/cookies').then(m => m.CookiesComponent),
-        title: 'WeldStaff - Política de Cookies',
+        title: 'Política de Cookies - WeldStaff',
         data: { animation: 'LegalPage' }
     },
     {
         path: 'termos',
         loadComponent: () => import('./pages/terms/terms').then(m => m.TermsComponent),
-        title: 'WeldStaff - Termos e Condições',
+        title: 'Termos e Condições - WeldStaff',
         data: { animation: 'LegalPage' }
     },
     {
         path: '**',
         component: NotFoundComponent,
-        title: 'WeldStaff - Página não encontrada'
+        title: 'Página não encontrada - WeldStaff'
     }
 ];

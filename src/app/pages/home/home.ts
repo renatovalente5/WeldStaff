@@ -82,7 +82,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       "name": "WeldStaff",
       "url": "https://weldstaff.pt",
       "logo": "https://weldstaff.pt/assets/img/weldstaff_logo.png",
-      "description": "Líder em outsourcing de soldadura em Portugal.",
+      "description": "Especialistas em outsourcing de soldadura em Portugal.",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Rua Vasco da Gama 218",
