@@ -61,12 +61,17 @@
                 <!-- Functional -->
                 <div class="pref-item">
                     <div class="pref-info">
-                        <span class="pref-name">{{ 'cookieConsent.categories.functional.name' | transloco }}</span>
+                        <span class="pref-name" id="pref-funcionais">{{ 'cookieConsent.categories.functional.name' | transloco }}</span>
                         <span class="pref-desc">{{ 'cookieConsent.categories.functional.desc' | transloco }}</span>
                     </div>
                     <div class="pref-toggle">
+                        <!-- O <label> só contém o input e o <span class="slider">, que é
+                             decorativo e vazio: sem o aria-labelledby a apontar para o
+                             rótulo visível ao lado, um leitor de ecrã anunciava apenas
+                             «caixa de verificação», sem dizer do que era. -->
                         <label class="switch" for="functional-cookies">
-                            <input type="checkbox" id="functional-cookies" [(ngModel)]="preferences.functional">
+                            <input type="checkbox" id="functional-cookies" aria-labelledby="pref-funcionais"
+                                   [(ngModel)]="preferences.functional">
                             <span class="slider"></span>
                         </label>
                     </div>

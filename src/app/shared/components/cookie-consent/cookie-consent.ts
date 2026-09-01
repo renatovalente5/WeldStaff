@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { LanguageService } from '../../../core/services/language';
+import { CHAVE_CONSENTIMENTO, consentiu, jaRespondeu } from '../../../core/services/consent';
 
 @Component({
   selector: 'app-cookie-consent',
@@ -21,13 +23,13 @@ export class CookieConsentComponent {
   };
 
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly languageService = inject(LanguageService);
 
   constructor() {
     // O localStorage não existe durante a pré-renderização estática, por isso
     // a decisão de mostrar o banner só é tomada depois do render no browser.
     afterNextRender(() => {
-      const consent = localStorage.getItem('cookie_consent');
-      if (!consent) {
+      if (!jaRespondeu()) {
         // Small delay so banner doesn't flash on page load
         setTimeout(() => {
           this.isVisible = true;
@@ -56,11 +58,16 @@ export class CookieConsentComponent {
   }
 
   savePreferences(): void {
-    localStorage.setItem('cookie_consent', JSON.stringify({
+    localStorage.setItem(CHAVE_CONSENTIMENTO, JSON.stringify({
       essential: true,
       functional: this.preferences.functional,
       timestamp: new Date().toISOString()
     }));
+
+    // A resposta tem de ter efeito imediato, e não só na visita seguinte: é
+    // aqui que a preferência de idioma passa a ser gravada, ou é apagada.
+    this.languageService.aplicarConsentimento();
+
     this.isVisible = false;
     this.showPreferences = false;
   }
@@ -69,18 +76,11 @@ export class CookieConsentComponent {
     this.showPreferences = !this.showPreferences;
   }
 
-  static hasConsent(category: string): boolean {
-    try {
-      const consent = localStorage.getItem('cookie_consent');
-      if (!consent) return false;
-      const parsed = JSON.parse(consent);
-      return parsed[category] === true;
-    } catch {
-      return false;
-    }
+  static hasConsent(category: 'essential' | 'functional'): boolean {
+    return consentiu(category);
   }
 
   static hasAnyConsent(): boolean {
-    return localStorage.getItem('cookie_consent') !== null;
+    return jaRespondeu();
   }
 }
