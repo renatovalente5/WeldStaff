@@ -18,8 +18,15 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      indexnow: ${{ steps.indexnow.outputs.payload }}
     steps:
+      # fetch-depth: 0 porque o sitemap é gerado a partir das datas dos commits
+      # (ver _source/gerar-sitemap.mjs). Com a clonagem rasa só existe um commit e
+      # as seis páginas ficariam todas com a mesma data — falsa.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -31,6 +38,7 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
+      # O "prebuild" do package.json regenera o src/sitemap.xml antes de compilar.
       - name: Build com pré-renderização
         run: npm run build
 
@@ -50,6 +58,49 @@ jobs:
                privacidade/index.html cookies/index.html termos/index.html; then
             echo "::warning::há chaves de tradução não resolvidas no HTML pré-renderizado"
           fi
+
+      # Um sitemap que aponta para uma página que não existe, ou uma página que
+      # existe e não está no sitemap, são os dois erros silenciosos que só se
+      # descobrem meses depois no Search Console. A guarda corre nos dois sentidos.
+      - name: Confirmar que o sitemap e as páginas dizem o mesmo
+        run: |
+          cd dist/weld-staff/browser
+
+          for f in sitemap.xml robots.txt f363101b1f43316221e322a2e3089d45.txt; do
+            [ -f "$f" ] || { echo "::error::falta $f no output"; exit 1; }
+          done
+
+          # <loc> → o ficheiro que serve esse URL
+          sed -n 's|.*<loc>https://weldstaff\.pt\(.*\)</loc>.*|\1|p' sitemap.xml \
+            | sed -e 's|^/$|index.html|' -e 's|^/\(.*\)$|\1/index.html|' \
+            | sort > /tmp/do-sitemap.txt
+
+          # As páginas que o prerender produziu. Corre ANTES de criar os <rota>.html,
+          # por isso há exatamente um index.html por rota.
+          find . -name index.html | sed 's|^\./||' | sort > /tmp/construidas.txt
+
+          if ! diff -u /tmp/do-sitemap.txt /tmp/construidas.txt; then
+            echo "::error::o sitemap e as páginas construídas não coincidem (- sitemap, + construídas)"
+            exit 1
+          fi
+          echo "sitemap e páginas coincidem: $(wc -l < /tmp/construidas.txt) URLs"
+
+          # O robots.txt tem de apontar para o sitemap, senão o Bing nunca o encontra
+          # sem submissão manual.
+          grep -qi '^Sitemap: https://weldstaff\.pt/sitemap\.xml$' robots.txt \
+            || { echo "::error::o robots.txt não declara o sitemap"; exit 1; }
+
+      # Compara o sitemap novo com o que está NO AR (ainda não publicámos) e guarda
+      # só os URLs que mudaram. O aviso ao IndexNow é dado depois do deploy.
+      - name: Calcular o que mudou (IndexNow)
+        id: indexnow
+        run: |
+          {
+            echo 'payload<<FIM_DO_PAYLOAD'
+            node _source/indexnow.mjs payload
+            echo
+            echo 'FIM_DO_PAYLOAD'
+          } >> "$GITHUB_OUTPUT"
 
       - name: Preparar o output para o Pages
         run: |
@@ -93,3 +144,23 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+      # Só depois de o conteúdo novo estar no ar. Um aviso ao IndexNow antes do
+      # deploy faria o Bing vir buscar a versão antiga.
+      - name: Avisar o IndexNow (Bing, Yandex, Seznam)
+        if: ${{ needs.build.outputs.indexnow != '' }}
+        env:
+          PAYLOAD: ${{ needs.build.outputs.indexnow }}
+        run: |
+          codigo=$(curl -sS -o /tmp/resposta.txt -w '%{http_code}' \
+            -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data-raw "$PAYLOAD") || true
+          echo "IndexNow respondeu $codigo"
+          cat /tmp/resposta.txt || true
+          # 200 e 202 são aceites; qualquer outra coisa é um aviso, nunca uma falha:
+          # o site já está no ar e a indexação normal continua a acontecer.
+          case "$codigo" in
+            200|202) ;;
+            *) echo "::warning::o IndexNow respondeu $codigo" ;;
+          esac
