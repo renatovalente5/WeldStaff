@@ -9,6 +9,10 @@ export interface Env {
     // Hostinger não estiver provado em produção). Vive no wrangler.jsonc.
     EMAIL_PROVIDER?: string;
 
+    // Durante a transição: "resend" faz com que uma falha do Hostinger seja reenviada pelo
+    // Resend, com um aviso no próprio email. Vazio desliga. Sai com o Resend (MIGRACAO.md).
+    EMAIL_FALLBACK?: string;
+
     // Hostinger Mail API. O token é da encomenda de email weldstaff.pt (hPanel >
     // Emails > weldstaff.pt > Programadores > Chaves de API) e é um segredo.
     HOSTINGER_API_TOKEN?: string;
@@ -428,6 +432,24 @@ async function handleApply(request: Request, env: Env, allowedOrigin: string): P
     }));
 }
 
+function querReserva(env: Env) {
+    return (env.EMAIL_FALLBACK || "").trim().toLowerCase() === "resend";
+}
+
+/**
+ * A mensagem que segue pela reserva leva à cabeça a razão por que lá foi parar. Uma
+ * reserva silenciosa escondia uma falha do Hostinger para sempre; assim, quem abre o
+ * email vê-a — e sabe que, desta vez, o «Responder» vai mesmo para o visitante.
+ */
+function comAvisoDeReserva(m: Mensagem, motivo: string): Mensagem {
+    const aviso = `Este email chegou pelo Resend (reserva) porque o envio pelo Hostinger falhou: ${umaLinha(motivo).slice(0, 200)}. O «Responder» vai para o visitante. Avisar quem mantém o site.`;
+    return {
+        ...m,
+        html: `<p style="margin:0 0 16px;padding:10px 12px;background:#fff4d6;border:1px solid #d9a400;border-radius:6px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5a4300">${escapeHtml(aviso)}</p>${m.html}`,
+        text: `${aviso}\n\n${m.text}`,
+    };
+}
+
 /**
  * Envia e responde ao browser. Os pormenores de uma falha vão para os logs do Worker
  * e não para a resposta: o erro do Hostinger pode listar as caixas que o token vê.
@@ -444,7 +466,17 @@ async function enviar(
         if (fornecedor === "hostinger") await enviarPeloHostinger(env, mensagem);
         else await enviarPeloResend(env, mensagem);
     } catch (erro) {
-        console.error(`Envio falhou (${fornecedor}):`, erro instanceof Error ? erro.message : erro);
+        const motivo = erro instanceof Error ? erro.message : String(erro);
+        console.error(`Envio falhou (${fornecedor}):`, motivo);
+        if (fornecedor === "hostinger" && querReserva(env)) {
+            try {
+                await enviarPeloResend(env, comAvisoDeReserva(montar("resend"), motivo));
+                console.error("Entregue pela reserva (Resend) depois da falha do Hostinger.");
+                return json({ ok: true }, 200, corsHeaders(allowedOrigin));
+            } catch (erroReserva) {
+                console.error("A reserva (Resend) também falhou:", erroReserva instanceof Error ? erroReserva.message : erroReserva);
+            }
+        }
         return json({ ok: false, error: "Falha ao enviar email" }, 502, corsHeaders(allowedOrigin));
     }
     return json({ ok: true }, 200, corsHeaders(allowedOrigin));

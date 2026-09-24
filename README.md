@@ -86,6 +86,9 @@ Endpoints: `POST /contact` (JSON) e `POST /apply` (multipart, até 3 anexos com 
 cada, dos tipos da lista `TIPOS_ANEXO`). Ambos validam o Turnstile e enviam email pela
 **Hostinger Mail API**, a partir da caixa `HOSTINGER_SENDER` (`geral@weldstaff.pt`) para
 `CONTACT_TO_EMAIL`. O Resend fica como caminho de volta: `EMAIL_PROVIDER` no `wrangler.jsonc`.
+Durante a transição há também uma **reserva** (`EMAIL_FALLBACK: "resend"`): se o Hostinger
+falhar, o email segue pelo Resend com um aviso amarelo à cabeça a dizer porquê. Nenhum
+formulário se perde, e a falha vê-se na própria caixa. Sai com o Resend.
 
 **Não há Reply-To.** A API do Hostinger não o tem (nem `from`, nem cabeçalhos), por isso o
 «Responder» do programa de email vai para a própria caixa. Cada email traz um botão «Responder a

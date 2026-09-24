@@ -50,7 +50,13 @@ try {
     process.exit(1);
 }
 
-const faltam = PRECISA[fornecedor].filter((n) => !nomes.includes(n));
+const reserva = String(config.vars?.EMAIL_FALLBACK ?? '').toLowerCase();
+if (reserva && reserva !== 'resend') {
+    console.error(`✗ EMAIL_FALLBACK desconhecido: «${reserva}» (só "resend" ou vazio)`);
+    process.exit(1);
+}
+const precisa = [...new Set([...PRECISA[fornecedor], ...(reserva === 'resend' ? PRECISA.resend : [])])];
+const faltam = precisa.filter((n) => !nomes.includes(n));
 if (faltam.length) {
     console.error(`✗ EMAIL_PROVIDER=${fornecedor}, mas faltam segredos no Worker: ${faltam.join(', ')}`);
     console.error(`  Pôr primeiro, por exemplo: pbpaste | npx wrangler secret put ${faltam[0]}`);
@@ -59,4 +65,4 @@ if (faltam.length) {
 const deTeste = ['HOSTINGER_API_BASE', 'RESEND_API_BASE'].filter((n) => nomes.includes(n) || config.vars?.[n]);
 if (deTeste.length) console.warn(`⚠ ${deTeste.join(', ')} são só para testes locais; em produção o Worker ignora-os.`);
 
-console.log(`✓ EMAIL_PROVIDER=${fornecedor}; segredos presentes: ${PRECISA[fornecedor].join(', ')}`);
+console.log(`✓ EMAIL_PROVIDER=${fornecedor}${reserva ? `, reserva=${reserva}` : ''}; segredos presentes: ${precisa.join(', ')}`);

@@ -31,7 +31,10 @@ O histórico dos passos de DNS está no git, no commit que criou este ficheiro.
 
 3. **Retirar o Resend — só depois de o Hostinger estar provado** (umas duas semanas de
    formulários a chegar), e por esta ordem, porque cada passo desliga o caminho de volta:
-   1. Tirar o ramo `resend` do Worker e publicar (`npm run deploy`).
+   0. Procurar na caixa emails com o aviso amarelo «chegou pelo Resend (reserva)». Se houver,
+      o Hostinger falhou algures e a razão está no aviso — resolver antes de continuar.
+   1. Tirar o ramo `resend` e a reserva (`EMAIL_FALLBACK`) do Worker e publicar
+      (`npm run deploy`).
    2. `npx wrangler secret delete RESEND_API_KEY` e `CONTACT_FROM_EMAIL`.
    3. **Revogar** a chave no painel do Resend (apagar o segredo no Worker não a invalida).
    4. Remover o domínio `weldstaff.pt` no Resend.

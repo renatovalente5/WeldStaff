@@ -17,6 +17,9 @@
         "EMAIL_PROVIDER": "hostinger",
         // A caixa que envia. O Worker procura-a pelo endereço entre as que o token vê,
         // e recusa enviar se não a encontrar.
-        "HOSTINGER_SENDER": "geral@weldstaff.pt"
+        "HOSTINGER_SENDER": "geral@weldstaff.pt",
+        // Transição: se o Hostinger falhar, o email segue pelo Resend com um aviso no
+        // corpo. Tirar ("") quando o Hostinger estiver provado — ver MIGRACAO.md.
+        "EMAIL_FALLBACK": "resend"
     }
 }
