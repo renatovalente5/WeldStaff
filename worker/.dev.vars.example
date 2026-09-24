@@ -1,15 +1,23 @@
 # Segredos do Cloudflare Worker "weld-staff-api".
 # Copiar para `worker/.dev.vars` (que está no .gitignore) para desenvolvimento local.
 # Em produção são definidos com: npx wrangler secret put <NOME>
+# (EMAIL_PROVIDER e HOSTINGER_SENDER não são segredos: estão no wrangler.jsonc.)
 
-# Secret key do widget Turnstile (dashboard da Cloudflare > Turnstile)
+# Secret key do widget Turnstile (dashboard da Cloudflare > Turnstile).
+# Para testes locais, 1x0000000000000000000000000000000AA passa sempre.
 TURNSTILE_SECRET=0x0000000000000000000000000000000000000000
-
-# API key do Resend (dashboard do Resend > API Keys)
-RESEND_API_KEY=re_00000000_00000000000000000000000000
 
 # Caixa que recebe os pedidos de contacto e as candidaturas
 CONTACT_TO_EMAIL=geral@weldstaff.pt
 
+# Token da Hostinger Mail API, da encomenda weldstaff.pt
+# (hPanel > Emails > weldstaff.pt > Programadores > Chaves de API).
+# Não há permissão «só enviar»: o token lê e apaga tudo nas caixas que abrange.
+# Para o Worker, restringir a chave à caixa de HOSTINGER_SENDER.
+HOSTINGER_API_TOKEN=
+
+# Resend — o caminho de volta (EMAIL_PROVIDER=resend). Só se retira depois de o
+# Hostinger estar provado em produção, e pela ordem do MIGRACAO.md (o DNS é o último).
+RESEND_API_KEY=re_00000000_00000000000000000000000000
 # Remetente — tem de estar num domínio VERIFICADO no Resend
 CONTACT_FROM_EMAIL=no-reply@weldstaff.pt

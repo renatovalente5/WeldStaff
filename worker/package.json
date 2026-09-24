@@ -3,9 +3,10 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "deploy": "wrangler deploy",
+        "deploy": "node scripts/verificar-antes-de-publicar.mjs && wrangler deploy",
         "dev": "wrangler dev",
-        "start": "wrangler dev"
+        "start": "wrangler dev",
+        "test": "node test/bateria.mjs"
     },
     "devDependencies": {
         "@cloudflare/workers-types": "^4.20240208.0",

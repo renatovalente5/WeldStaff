@@ -16,17 +16,29 @@ O histórico dos passos de DNS está no git, no commit que criou este ficheiro.
 
 ## Fora do código
 
-1. **Anexos das candidaturas (Worker):** não mexi no `worker/`, porque não o consigo testar nem
-   publicar. Ficam anotados dois pontos: os anexos são serializados como `Buffer` em JSON (3,57x
-   de expansão, e no máximo que a interface permite — 3 ficheiros de 5 MB — o pico de memória
-   ronda 137 MB contra o limite de 128 MB do isolate), e não existe validação de tamanho do lado
-   do servidor. Passar a base64 e impor um teto resolve.
+1. **Anexos das candidaturas (Worker):** resolvido em setembro de 2026, na passagem do Resend para
+   o Hostinger. Os anexos seguem em base64 (1,33x em vez de 3,57x), o Worker impõe os mesmos
+   limites da interface (3 ficheiros, cada um com menos de 5 MiB) e lê o corpo só até ao teto,
+   mesmo quando o pedido não declara o tamanho. O caminho de volta pelo Resend também passou a
+   base64: com o Buffer em JSON, 15 MB de CVs davam ~54 MB, acima dos 40 MB que o Resend aceita.
+   Pelas contas, as candidaturas maiores já falhavam antes da troca — não foi confirmado em
+   produção.
 
-2. **Publicar o Worker.** A capitalização da marca nos emails («Weldstaff» → «WeldStaff», três
-   sítios, incluindo o assunto) está corrigida no código mas **não entra em vigor sem um
-   `wrangler deploy`** na pasta `worker/`. Até lá os emails continuam a chegar como estão. Os
-   filtros que criaste no Hostinger continuam a apanhá-los: a correspondência de assunto não
-   distingue maiúsculas.
+2. **Publicar o Worker.** A capitalização «Weldstaff» → «WeldStaff» entra em vigor com o deploy da
+   troca para o Hostinger. Os filtros por assunto continuam a apanhar os emails: os assuntos
+   ficaram exatamente iguais. O que muda é o remetente — `geral@weldstaff.pt`, com o nome
+   «Formulário WeldStaff», em vez de `no-reply@weldstaff.pt`.
+
+3. **Retirar o Resend — só depois de o Hostinger estar provado** (umas duas semanas de
+   formulários a chegar), e por esta ordem, porque cada passo desliga o caminho de volta:
+   1. Tirar o ramo `resend` do Worker e publicar (`npm run deploy`).
+   2. `npx wrangler secret delete RESEND_API_KEY` e `CONTACT_FROM_EMAIL`.
+   3. **Revogar** a chave no painel do Resend (apagar o segredo no Worker não a invalida).
+   4. Remover o domínio `weldstaff.pt` no Resend.
+   5. Só no fim, no DNS do Hostinger: o TXT `send`, o MX `send` e o TXT `resend._domainkey`.
+      Com o DNS apagado primeiro, o Resend dá o domínio como falhado ao fim de 72 horas e o
+      caminho de volta morre sem aviso. **Nunca** mexer no SPF do `@`, nos `hostingermail-a/b/c`,
+      no `_dmarc` nem no `google-site-verification`.
 
 ---
 

@@ -8,7 +8,15 @@
     "observability": {
         "enabled": true
     },
+    // Tudo o que está aqui SUBSTITUI o que estiver no painel da Cloudflare a cada
+    // `wrangler deploy`. Mudar de fornecedor de email é mudar EMAIL_PROVIDER aqui e
+    // publicar — no painel perde-se no deploy seguinte.
     "vars": {
-        "ALLOWED_ORIGIN": "https://weldstaff.pt,https://weldstaff.com"
+        "ALLOWED_ORIGIN": "https://weldstaff.pt,https://weldstaff.com",
+        // "hostinger" ou "resend" (o caminho de volta, até o Hostinger estar provado).
+        "EMAIL_PROVIDER": "hostinger",
+        // A caixa que envia. O Worker procura-a pelo endereço entre as que o token vê,
+        // e recusa enviar se não a encontrar.
+        "HOSTINGER_SENDER": "geral@weldstaff.pt"
     }
 }

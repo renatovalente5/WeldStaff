@@ -7,6 +7,17 @@ import { TurnstileComponent } from '../../../shared/turnstile/turnstile.componen
 import { CareerService } from '../../../core/services/career';
 import { environment } from '../../../../environments/environment';
 
+
+// A mesma lista que o Worker aceita (worker/src/index.ts, TIPOS_ANEXO). O `accept` do
+// input só vale para o seletor de ficheiros; quem arrasta pode trazer qualquer coisa, e o
+// Worker recusava sem que o candidato soubesse porquê. A bateria do Worker compara as três.
+const EXTENSOES_ACEITES = ['pdf', 'doc', 'docx', 'odt', 'rtf', 'txt', 'pages', 'jpg', 'jpeg', 'png', 'heic', 'heif', 'webp'];
+
+function extensaoAceite(nome: string): boolean {
+  const ponto = nome.lastIndexOf('.');
+  return ponto > 0 && EXTENSOES_ACEITES.includes(nome.slice(ponto + 1).toLowerCase());
+}
+
 @Component({
   selector: 'app-job-application-modal',
   standalone: true,
@@ -88,9 +99,16 @@ export class JobApplicationModalComponent {
   }
 
   handleFiles(files: File[]) {
+    const recusados = files.filter(file => !extensaoAceite(file.name));
+    if (recusados.length) {
+      alert(this.translocoService.translate('careers.applicationModal.fileTypeError', {
+        files: recusados.map(f => f.name).join(', ')
+      }));
+    }
+
     const validFiles = files.filter(file => {
       // Limit size to 5MB
-      return file.size < 5 * 1024 * 1024;
+      return extensaoAceite(file.name) && file.size < 5 * 1024 * 1024;
     });
 
     if (this.selectedFiles.length + validFiles.length > this.maxFiles) {

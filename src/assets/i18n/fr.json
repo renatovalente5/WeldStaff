@@ -266,6 +266,7 @@
             "filesDragOrClick": "ou glissez-déposez vos fichiers",
             "filesInfo": "PDF, DOC, JPG (Max 5MB)",
             "maxFilesError": "Maximum de {{max}} fichiers autorisés.",
+            "fileTypeError": "Fichier non accepté : {{files}}. Envoyez un PDF, Word, ODT, RTF, TXT, Pages ou une image (JPG, PNG, HEIC, WEBP).",
             "consentHtml": "J'ai lu et j'accepte la <a href='/privacidade' target='_blank'>Politique de Confidentialité</a> et j'autorise le traitement de mes données à des fins de recrutement.",
             "successMessage": "Candidature envoyée avec succès ! Nous vous contacterons bientôt.",
             "errorMessage": "Une erreur s'est produite lors de l'envoi de la candidature. Veuillez réessayer.",

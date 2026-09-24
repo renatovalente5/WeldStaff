@@ -266,6 +266,7 @@
             "filesDragOrClick": "or drag and drop files here",
             "filesInfo": "PDF, DOC, JPG (Max. 5 MB)",
             "maxFilesError": "Maximum of {{max}} files allowed.",
+            "fileTypeError": "File not accepted: {{files}}. Please send a PDF, Word, ODT, RTF, TXT or Pages file, or an image (JPG, PNG, HEIC, WEBP).",
             "consentHtml": "I have read and accept the <a href='/privacidade' target='_blank'>Privacy Policy</a> and authorize the processing of my personal data for recruitment purposes.",
             "successMessage": "Application sent successfully! We will contact you soon.",
             "errorMessage": "There was a problem sending your application. Please try again later.",

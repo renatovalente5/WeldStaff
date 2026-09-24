@@ -77,15 +77,37 @@ _source/                imagens originais em resolução alta (não é publicado
 ```bash
 cd worker
 npm ci
+npm test               # o Worker verdadeiro contra um Hostinger e um Resend falsos — não envia email
 npm run dev            # http://localhost:8787
-npm run deploy         # npx wrangler deploy
+npm run deploy         # confirma os segredos e só depois faz `wrangler deploy`
 ```
 
-Endpoints: `POST /contact` (JSON) e `POST /apply` (multipart, com anexos). Ambos validam o
-Turnstile e enviam email pelo Resend.
+Endpoints: `POST /contact` (JSON) e `POST /apply` (multipart, até 3 anexos com menos de 5 MiB
+cada, dos tipos da lista `TIPOS_ANEXO`). Ambos validam o Turnstile e enviam email pela
+**Hostinger Mail API**, a partir da caixa `HOSTINGER_SENDER` (`geral@weldstaff.pt`) para
+`CONTACT_TO_EMAIL`. O Resend fica como caminho de volta: `EMAIL_PROVIDER` no `wrangler.jsonc`.
 
-Os quatro segredos estão listados em [`worker/.dev.vars.example`](worker/.dev.vars.example) e
-definem-se em produção com `npx wrangler secret put <NOME>`. **Não estão neste repositório.**
+**Não há Reply-To.** A API do Hostinger não o tem (nem `from`, nem cabeçalhos), por isso o
+«Responder» do programa de email vai para a própria caixa. Cada email traz um botão «Responder a
+&lt;nome&gt;» com o endereço do visitante, e o remetente chama-se «Formulário WeldStaff» para não
+parecer que o «Responder» vai para o candidato. SMTP não é alternativa: `smtp.hostinger.com` está
+atrás da Cloudflare, e um Worker não pode abrir ligações para IPs da Cloudflare.
+
+Cada envio deixa uma cópia na pasta **Enviados** da `geral@`, com os anexos. A política de
+privacidade promete apagar candidaturas ao fim de 12 meses: essa pasta conta.
+
+A bateria precisa de rede: o Turnstile usa as chaves de teste da Cloudflare, e um dos casos faz
+um pedido com um token inválido à API do Hostinger (para provar que uma morada de teste posta em
+produção é ignorada). Não envia email nenhum.
+
+Os segredos estão listados em [`worker/.dev.vars.example`](worker/.dev.vars.example) e definem-se
+com `pbpaste | npx wrangler secret put <NOME>`. **Não estão neste repositório.** O
+`HOSTINGER_API_TOKEN` cria-se em hPanel → Emails → weldstaff.pt → Programadores → Chaves de API,
+restrito à caixa que envia: não existe permissão «só enviar», e o token lê e apaga tudo nas caixas
+que abrange. `npm run deploy` recusa publicar se faltar um segredo de que o fornecedor precisa.
+
+Mudar `EMAIL_PROVIDER` só no painel da Cloudflare não dura: o `wrangler.jsonc` substitui as
+variáveis do painel a cada deploy.
 
 ## Formulários
 
