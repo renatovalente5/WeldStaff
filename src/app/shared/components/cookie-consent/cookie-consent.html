@@ -1,4 +1,4 @@
-<div class="cookie-banner" *ngIf="isVisible" role="dialog" [attr.aria-label]="'cookieConsent.title' | transloco" aria-modal="false">
+<div #aviso class="cookie-banner" *ngIf="isVisible" role="dialog" [attr.aria-label]="'cookieConsent.title' | transloco" aria-modal="false">
     <div class="cookie-banner-inner">
         <!-- Main Banner -->
         <div class="cookie-main" *ngIf="!showPreferences">

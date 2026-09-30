@@ -27,6 +27,10 @@ export class CareersComponent implements OnInit {
   isModalOpen = false;
   selectedJobTitle = '';
 
+  // O botão que abriu a candidatura: é para lá que o foco volta quando ela fecha. Sem
+  // isto, quem usa o teclado recomeçava no topo da página a cada candidatura.
+  private origemDoModal: HTMLElement | null = null;
+
   constructor(
     private careerService: CareerService,
     private cdr: ChangeDetectorRef,
@@ -76,7 +80,9 @@ export class CareersComponent implements OnInit {
     });
   }
 
-  openApplicationModal(job: Job) {
+  openApplicationModal(job: Job, evento?: Event) {
+    // Lido já, antes de qualquer espera: depois de um await o currentTarget é null.
+    this.origemDoModal = (evento?.currentTarget as HTMLElement | null) ?? null;
     // Translate the title key to get the actual string
     this.selectedJobTitle = this.translocoService.translate('careers.' + job.titleKey);
     this.isModalOpen = true;
@@ -86,6 +92,16 @@ export class CareersComponent implements OnInit {
   closeApplicationModal() {
     this.isModalOpen = false;
     this.cdr.markForCheck();
+
+    // O <dialog> nativo já devolve o foco a quem o abriu ao fechar; isto é a rede para
+    // os caminhos em que o elemento é retirado sem passar pelo close().
+    const origem = this.origemDoModal;
+    this.origemDoModal = null;
+    if (origem && typeof window !== 'undefined') {
+      setTimeout(() => {
+        if (origem.isConnected && document.activeElement !== origem) origem.focus();
+      });
+    }
   }
 
   onApplicationSubmit(event: { form: any, files: File[] }) {

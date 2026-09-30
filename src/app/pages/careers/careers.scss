@@ -135,6 +135,9 @@
    ======================================== */
 
 .job-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
@@ -154,11 +157,16 @@
    ======================================== */
 
 .job-card {
+    // O ::after do botão cobre o cartão; este é o seu bloco de referência. Tem de ficar
+    // FORA do .job-card-inner, cujo overflow: hidden cortaria a cobertura e o anel de foco.
+    position: relative;
     cursor: pointer;
     border-radius: var(--radius-lg);
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 
-    &:hover {
+    // O teclado vê o mesmo que o rato. :is() aceita a lista mesmo num browser sem :has(),
+    // que perderia só o realce do teclado e não o do rato.
+    &:is(:hover, :has(.apply-cta:focus-visible)) {
         transform: translateY(-6px);
 
         .job-card-inner {
@@ -262,8 +270,11 @@
     border-top: 1px solid rgba(15, 23, 42, 0.05);
 }
 
-/* Apply CTA */
+/* Apply CTA — um <button>, esticado por cima do cartão */
 .apply-cta {
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
@@ -277,6 +288,25 @@
 
     svg {
         transition: transform 0.3s ease;
+    }
+
+    // O «link esticado»: a área de clique do botão passa a ser o cartão inteiro.
+    // O botão NÃO pode ter position, senão o ::after encolhia para o tamanho dele.
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: var(--radius-lg);
+    }
+
+    // O anel de foco desenha-se à volta do cartão, e não do botão pequeno lá dentro.
+    &:focus-visible {
+        outline: none;
+    }
+
+    &:focus-visible::after {
+        outline: 3px solid var(--accent-color);
+        outline-offset: 3px;
     }
 }
 

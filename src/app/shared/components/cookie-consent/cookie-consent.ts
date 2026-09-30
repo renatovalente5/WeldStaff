@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, afterNextRender, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild, afterNextRender, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -24,6 +24,29 @@ export class CookieConsentComponent {
 
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly languageService = inject(LanguageService);
+
+  private observador?: ResizeObserver;
+
+  /**
+   * Enquanto o aviso está à vista, a página guarda-lhe o espaço em baixo (scroll-padding no
+   * styles.scss), para o Tab não pôr o foco atrás dele. A altura muda com a largura e ao
+   * abrir as preferências — por isso é medida, e não escrita à mão.
+   */
+  @ViewChild('aviso') set refAviso(ref: ElementRef<HTMLElement> | undefined) {
+    this.observador?.disconnect();
+    this.observador = undefined;
+    const raiz = typeof document !== 'undefined' ? document.documentElement : null;
+    if (!raiz) return;
+    if (!ref || typeof ResizeObserver === 'undefined') {
+      raiz.style.removeProperty('--altura-aviso-cookies');
+      return;
+    }
+    this.observador = new ResizeObserver(([entrada]) => {
+      const altura = Math.ceil(entrada.target.getBoundingClientRect().height);
+      raiz.style.setProperty('--altura-aviso-cookies', `${altura}px`);
+    });
+    this.observador.observe(ref.nativeElement);
+  }
 
   constructor() {
     // O localStorage não existe durante a pré-renderização estática, por isso

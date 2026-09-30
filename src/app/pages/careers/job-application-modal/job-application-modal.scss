@@ -15,7 +15,14 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
    OVERLAY
    ======================================== */
 
+// É um <dialog>. As primeiras linhas desfazem o aspeto que o browser lhe dá (margem,
+// borda, fundo branco, tamanho máximo), para ele continuar a ser o véu de ecrã inteiro.
 .modal-overlay {
+    margin: 0;
+    border: 0;
+    max-width: none;
+    max-height: none;
+    color: inherit;
     position: fixed;
     top: 0;
     left: 0;
@@ -29,6 +36,17 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     align-items: center;
     padding: 1rem;
     animation: fadeIn 0.25s ease-out forwards;
+
+    // O display: flex de cima ganhava ao display: none que o browser dá a um <dialog>
+    // fechado, e ele aparecia antes do showModal().
+    &:not([open]) {
+        display: none;
+    }
+
+    // O véu é o próprio <dialog>; o ::backdrop fica transparente para não escurecer duas vezes.
+    &::backdrop {
+        background: transparent;
+    }
 }
 
 /* ========================================
@@ -85,6 +103,14 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 
 .modal-title-group {
     min-width: 0;
+    // Passou de <div> a <h2> (é o nome do diálogo): sem o aspeto de título — nem o do
+    // browser nem o global do site, que lhe mudava a letra para a dos títulos.
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
 }
 
 .modal-title-prefix {
@@ -242,6 +268,11 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
    ======================================== */
 
 .drop-zone {
+    // O campo de ficheiros (.sr-only, position: absolute) tem de se posicionar AQUI, dentro
+    // do .modal-body que rola. Sem isto posicionava-se no .modal-container: ao receber o foco
+    // num ecrã baixo, o browser rolava o contentor (overflow: hidden) e o cabeçalho e o ×
+    // saíam por cima, enquanto a zona ficava fora da vista.
+    position: relative;
     border: 2px dashed $border-color;
     border-radius: $radius-input;
     padding: 1rem 1.25rem;
@@ -266,6 +297,15 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         border-color: var(--primary-color);
         background-color: #eff6ff;
         transform: scale(0.99);
+    }
+
+    // O campo de ficheiros está escondido à vista; quando o teclado lhe chega, é a zona
+    // inteira que mostra o foco. :focus-within e não :has(): o campo é o único elemento
+    // focável da zona, e assim o anel existe também nos browsers sem :has().
+    &:focus-within {
+        border-color: var(--primary-color);
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
     }
 }
 
@@ -376,7 +416,7 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     border: none;
     cursor: pointer;
     color: #94a3b8;
-    padding: 4px;
+    padding: 5px; // 14 + 2×5 = 24 px, o alvo mínimo para um dedo (WCAG 2.5.8)
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -428,7 +468,8 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     justify-content: center;
     border: none;
 
-    &:disabled {
+    &:disabled,
+    &[aria-disabled="true"] {
         opacity: 0.5;
         cursor: not-allowed;
     }
@@ -451,13 +492,13 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     color: #0f172a;
     box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not([aria-disabled="true"]) {
         filter: brightness(1.08);
         transform: translateY(-1px);
         box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
     }
 
-    &:active:not(:disabled) {
+    &:active:not(:disabled):not([aria-disabled="true"]) {
         transform: translateY(0);
     }
 }

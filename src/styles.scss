@@ -230,6 +230,31 @@ button {
     outline-offset: 2px;
 }
 
+/* O cabeçalho e o aviso de cookies são fixos. Sem folga, o Tab punha o foco debaixo deles:
+   no telemóvel, com o aviso aberto (309 px de 700), metade das vagas recebia o foco
+   completamente tapada (WCAG 2.4.11). O cabeçalho mede 77 px no computador e 85 no
+   telemóvel; o aviso publica a sua altura em --altura-aviso-cookies enquanto está à vista. */
+html {
+    scroll-padding-top: 96px;
+    scroll-padding-bottom: calc(var(--altura-aviso-cookies, 0px) + 12px);
+}
+
+/* Texto que só os leitores de ecrã leem: fica no nome acessível, não se vê. Não serve
+   para esconder campos-armadilha (honeypot) — esses levam aria-hidden, senão um leitor
+   de ecrã lê-os e o candidato preenche-os. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
 /* Utilities */
 .container {
     max-width: var(--container-width);
@@ -341,11 +366,14 @@ button {
     position: relative;
     overflow: hidden;
 
-    &:active:not(:disabled) {
+    // aria-disabled conta como disabled: os formulários usam-no para o botão não perder o
+    // foco enquanto envia, e sem isto ele levantava e brilhava ao passar o rato.
+    &:active:not(:disabled):not([aria-disabled="true"]) {
         transform: scale(var(--scale-button-active));
     }
 
-    &:disabled {
+    &:disabled,
+    &[aria-disabled="true"] {
         opacity: 0.6;
         cursor: not-allowed;
     }
@@ -370,7 +398,7 @@ button {
         transition: 0.5s;
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not([aria-disabled="true"]) {
         background-color: var(--secondary-color);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
@@ -386,7 +414,7 @@ button {
     color: white;
     border: 1px solid transparent;
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not([aria-disabled="true"]) {
         background-color: var(--primary-light);
         box-shadow: var(--shadow-md);
     }
@@ -397,7 +425,7 @@ button {
     color: var(--primary-color);
     background: transparent;
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not([aria-disabled="true"]) {
         background-color: var(--primary-color);
         color: white;
     }

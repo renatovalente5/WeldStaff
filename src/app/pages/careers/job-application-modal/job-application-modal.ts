@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -41,6 +41,24 @@ export class JobApplicationModalComponent {
   private pendingSubmit = false; // Waiting for Turnstile token after execute()
 
   @ViewChild(TurnstileComponent) turnstileWidget!: TurnstileComponent;
+  @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
+
+  private dialogo?: HTMLDialogElement;
+
+  // Um setter e não o ngAfterViewInit: o <dialog> vive dentro do *transloco, e só existe
+  // quando as traduções chegam. Abre-se no instante em que aparece.
+  @ViewChild('dialogo') set refDialogo(ref: ElementRef<HTMLDialogElement> | undefined) {
+    this.dialogo = ref?.nativeElement;
+    const d = this.dialogo;
+    if (d && !d.open && typeof d.showModal === 'function') {
+      queueMicrotask(() => { if (d.isConnected && !d.open) d.showModal(); });
+    }
+  }
+
+  // Pela ordem em que aparecem no formulário: é o primeiro inválido que recebe o foco.
+  private readonly camposPorOrdem: [string, string][] = [
+    ['name', 'name'], ['phone', 'phone'], ['email', 'email'], ['consent', 'candidatura-consentimento'],
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -74,6 +92,15 @@ export class JobApplicationModalComponent {
     if (files) {
       this.handleFiles(Array.from(files));
     }
+    // Esvaziar, para que voltar a escolher o mesmo ficheiro (depois de o remover) dispare
+    // outra vez o change.
+    event.target.value = '';
+  }
+
+  /** A zona inteira abre o seletor; o clique que vem do próprio <input> já o abriu. */
+  abrirSeletor(evento: Event) {
+    const campo = this.fileInput?.nativeElement;
+    if (campo && evento.target !== campo) campo.click();
   }
 
   onDragOver(event: DragEvent) {
@@ -121,11 +148,21 @@ export class JobApplicationModalComponent {
 
   removeFile(index: number) {
     this.selectedFiles.splice(index, 1);
+    // O botão carregado desaparece com a linha; sem isto o foco caía no body.
+    this.fileInput?.nativeElement.focus();
   }
 
   onSubmit() {
+    if (this.isSubmitting) return; // aria-disabled não impede o clique: esta guarda sim
+
     if (!this.applicationForm.valid) {
       this.applicationForm.markAllAsTouched();
+      // O botão continua focável com o formulário incompleto; ao carregar, o foco vai para
+      // o primeiro campo em falta, que o leitor de ecrã anuncia como inválido.
+      const primeiro = this.camposPorOrdem.find(([nome]) => this.applicationForm.get(nome)?.invalid);
+      // Dentro do diálogo: «name» e «email» são ids genéricos, e um homónimo na página por
+      // trás (inerte) engolia o foco.
+      if (primeiro) this.dialogo?.querySelector<HTMLElement>(`#${primeiro[1]}`)?.focus();
       return;
     }
 
@@ -182,7 +219,18 @@ export class JobApplicationModalComponent {
   }
 
 
+  /**
+   * Todos os caminhos de fecho passam aqui: o ×, o «Cancelar», o clique no véu, o fim do
+   * envio. Fechar pelo próprio <dialog> devolve o foco a quem o abriu; o aviso chega ao pai
+   * pelo evento close, que também é o que o Escape dispara.
+   */
   closeModal() {
+    const d = this.dialogo;
+    if (d?.open) d.close();
+    else this.close.emit();
+  }
+
+  aoFechar() {
     this.close.emit();
   }
 
