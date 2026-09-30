@@ -298,7 +298,45 @@ try {
         await tecla('Escape'); await esperar(300);
     }
 
-    console.log('\n11. Sem erros');
+    // ═══ 11. O Turnstile nunca responde: a candidatura não fica presa ═════════
+    // Uma extensão que bloqueia o Turnstile (ou um desafio que precisa de um clique, no
+    // contentor escondido) deixava o botão em «A enviar…» para sempre. O Worker fica
+    // bloqueado também: este caso nunca pode enviar uma candidatura a sério.
+    console.log('\n11. Turnstile bloqueado: ao fim de 20 s a candidatura avisa e liberta o botão');
+    await enviar('Network.enable', {}, s);
+    await enviar('Network.setBlockedURLs', { urls: ['*challenges.cloudflare.com*', '*weld-staff-api*'] }, s);
+    const pedidosAoWorker = [];
+    enviar.ouvintes.add((m) => { if (m.sessionId === s && m.method === 'Network.requestWillBeSent' && /weld-staff-api/.test(m.params.request.url)) pedidosAoWorker.push(m.params.request.url); });
+    await enviar('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false }, s);
+    await enviar('Page.navigate', { url: `${BASE}/careers` }, s);
+    for (let i = 0; i < 60; i++) {
+        if (await js(`return !!document.querySelector('app-root')?.getAttribute('ng-version') && document.querySelectorAll('.apply-cta').length === 6;`).catch(() => false)) break;
+        await esperar(250);
+    }
+    await esperar(1000);
+    await js(`window.__alertas = []; window.alert = (m) => window.__alertas.push(String(m)); document.querySelector('.apply-cta').focus(); return true;`);
+    await tecla('Enter'); await esperar(400);
+    for (const [id, texto] of [['name', 'Teste Teclado'], ['phone', '912345678'], ['email', 'teste@exemplo.pt']]) {
+        await js(`document.querySelector('dialog #${id}').focus(); return true;`);
+        await enviar('Input.insertText', { text: texto }, s); await esperar(60);
+    }
+    await js(`document.querySelector('dialog #candidatura-consentimento').focus(); return true;`);
+    await tecla('Espaco');
+    const marcado = await js(`return document.querySelector('dialog #candidatura-consentimento').checked;`);
+    certo(marcado, 'o consentimento marca-se com Espaço', marcado);
+    await js(`document.querySelector('dialog .btn-primary').focus(); return true;`);
+    await tecla('Enter'); await esperar(300);
+    const aEnviar = await js(`return document.querySelector('dialog .btn-primary').getAttribute('aria-disabled');`);
+    certo(aEnviar === 'true', 'com o formulário completo, o envio começa (botão aria-disabled)', aEnviar);
+    let alertas = [];
+    for (let i = 0; i < 30 && !alertas.length; i++) { await esperar(1000); alertas = await js(`return window.__alertas;`); }
+    const botao = await js(`return document.querySelector('dialog .btn-primary')?.getAttribute('aria-disabled');`);
+    certo(alertas.length === 1 && /erro ao enviar/.test(alertas[0]), `ao fim de ~20 s aparece o aviso de erro («${(alertas[0] || '').slice(0, 45)}…»)`, alertas);
+    certo(botao === null, 'e o botão volta a estar disponível, para tentar outra vez', botao);
+    certo(pedidosAoWorker.length === 0, 'e nada chegou ao Worker (sem token, nada se envia)', pedidosAoWorker);
+    await enviar('Network.setBlockedURLs', { urls: [] }, s);
+
+    console.log('\n12. Sem erros');
     certo(excecoes.length === 0, 'nenhuma excepção por apanhar em toda a corrida', excecoes);
 } catch (erro) {
     falhas++; console.error('\nA bateria rebentou:', erro);

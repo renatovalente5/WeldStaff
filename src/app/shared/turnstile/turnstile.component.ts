@@ -51,7 +51,10 @@ export class TurnstileComponent implements OnDestroy {
             this.widgetId = window.turnstile!.render(this.container.nativeElement, {
                 sitekey: this.siteKey,
                 theme: 'light',
-                size: 'invisible',
+                // Sem `size`: o Turnstile só aceita normal, flexible ou compact, e o «invisible»
+                // que aqui estava lançava um TurnstileError em todas as páginas com formulário
+                // (o browser mostrava-o como «Script error.»). O widget já vive num contentor
+                // escondido; o modo invisível decide-se no painel da Cloudflare, não aqui.
                 execution: 'execute', // Do NOT challenge automatically on render
                 callback: (token: string) => {
                     this.zone.run(() => this.tokenChange.emit(token));

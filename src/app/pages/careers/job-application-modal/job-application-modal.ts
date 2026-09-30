@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectorRef, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -25,7 +25,7 @@ function extensaoAceite(nome: string): boolean {
   templateUrl: './job-application-modal.html',
   styleUrls: ['./job-application-modal.scss']
 })
-export class JobApplicationModalComponent {
+export class JobApplicationModalComponent implements OnDestroy {
   @Input() jobTitle: string = '';
   @Output() close = new EventEmitter<void>();
   @Output() submitApplication = new EventEmitter<{ form: any, files: File[] }>();
@@ -39,6 +39,7 @@ export class JobApplicationModalComponent {
   siteKey = environment.turnstileSiteKey;
   turnstileToken = '';
   private pendingSubmit = false; // Waiting for Turnstile token after execute()
+  private temporizadorToken?: ReturnType<typeof setTimeout>;
 
   @ViewChild(TurnstileComponent) turnstileWidget!: TurnstileComponent;
   @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
@@ -83,6 +84,7 @@ export class JobApplicationModalComponent {
     // If submit was waiting for the token, proceed now
     if (this.pendingSubmit && token) {
       this.pendingSubmit = false;
+      clearTimeout(this.temporizadorToken);
       this.doSubmit();
     }
   }
@@ -175,6 +177,20 @@ export class JobApplicationModalComponent {
       // Trigger Turnstile challenge now — doSubmit called via onTokenChange
       this.pendingSubmit = true;
       this.turnstileWidget?.execute();
+
+      // A mesma guarda do formulário de contacto: se o Turnstile nunca responder (script
+      // bloqueado por uma extensão, rede que o corta, desafio que precisa de um clique), o
+      // botão ficava em «A enviar…» para sempre e o candidato achava que estava a enviar.
+      clearTimeout(this.temporizadorToken);
+      this.temporizadorToken = setTimeout(() => {
+        if (!this.pendingSubmit) return;
+        this.pendingSubmit = false;
+        this.isSubmitting = false;
+        this.turnstileToken = '';
+        this.turnstileWidget?.reset();
+        this.cdr.markForCheck();
+        alert(this.translocoService.translate('careers.applicationModal.errorMessage'));
+      }, 20000);
     }
   }
 
@@ -232,6 +248,11 @@ export class JobApplicationModalComponent {
 
   aoFechar() {
     this.close.emit();
+  }
+
+  ngOnDestroy(): void {
+    // Fechar a candidatura à espera do token não pode deixar um alerta para mais tarde.
+    clearTimeout(this.temporizadorToken);
   }
 
   /**
