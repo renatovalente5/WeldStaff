@@ -23,7 +23,7 @@ jobs:
     steps:
       # fetch-depth: 0 porque o sitemap é gerado a partir das datas dos commits
       # (ver _source/gerar-sitemap.mjs). Com a clonagem rasa só existe um commit e
-      # as seis páginas ficariam todas com a mesma data — falsa.
+      # as páginas ficariam todas com a mesma data — falsa.
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
@@ -42,20 +42,23 @@ jobs:
       - name: Build com pré-renderização
         run: npm run build
 
-      - name: Confirmar que as 6 rotas foram pré-renderizadas
+      # As seis páginas em cada uma das quatro línguas: o português na raiz, as
+      # outras com prefixo (/en/careers). Cada uma é um ficheiro que o Google indexa.
+      - name: Confirmar que as 24 páginas foram pré-renderizadas
         run: |
           cd dist/weld-staff/browser
           faltam=0
-          for p in index.html contactos/index.html careers/index.html \
-                   privacidade/index.html cookies/index.html termos/index.html; do
-            if [ ! -f "$p" ]; then echo "::error::falta $p"; faltam=1; fi
+          for lingua in "" en/ fr/ es/; do
+            for p in "" contactos/ careers/ privacidade/ cookies/ termos/; do
+              f="${lingua}${p}index.html"
+              if [ ! -f "$f" ]; then echo "::error::falta $f"; faltam=1; fi
+            done
           done
           [ "$faltam" = "0" ] || exit 1
 
           # Nenhuma chave de tradução crua pode chegar a produção.
-          if grep -rlE '>[[:space:]]*[a-z]+(\.[a-zA-Z]+){2,}[[:space:]]*<' \
-               index.html contactos/index.html careers/index.html \
-               privacidade/index.html cookies/index.html termos/index.html; then
+          if find . -name index.html -print0 \
+               | xargs -0 grep -lE '>[[:space:]]*[a-z]+(\.[a-zA-Z]+){2,}[[:space:]]*<'; then
             echo "::warning::há chaves de tradução não resolvidas no HTML pré-renderizado"
           fi
 
@@ -90,6 +93,9 @@ jobs:
           grep -qi '^Sitemap: https://weldstaff\.pt/sitemap\.xml$' robots.txt \
             || { echo "::error::o robots.txt não declara o sitemap"; exit 1; }
 
+          # E cada página diz o mesmo que o sitemap: língua, canónico e alternativas.
+          cd "$GITHUB_WORKSPACE" && node _source/verificar-paginas.mjs
+
       # Compara o sitemap novo com o que está NO AR (ainda não publicámos) e guarda
       # só os URLs que mudaram. O aviso ao IndexNow é dado depois do deploy.
       - name: Calcular o que mudou (IndexNow)
@@ -110,15 +116,17 @@ jobs:
           # Pages responde 301 para /<rota>/. Os canonicals, o og:url e o sitemap
           # declaram a forma SEM barra — que é também a que já está indexada.
           # Publicar também <rota>.html faz /<rota> responder 200 direto, sem salto,
-          # e mantém /<rota>/ a funcionar para quem já tenha essa forma.
-          for d in contactos careers privacidade cookies termos; do
-            if [ -f "$d/index.html" ]; then
-              cp "$d/index.html" "$d.html"
-              echo "criado $d.html"
-            else
-              echo "::error::falta $d/index.html"; exit 1
-            fi
+          # e mantém /<rota>/ a funcionar para quem já tenha essa forma. Vale para
+          # todas as páginas menos a raiz: en/careers/index.html → en/careers.html,
+          # en/index.html → en.html.
+          criados=0
+          for f in $(find . -mindepth 2 -name index.html | sed 's|^\./||' | sort); do
+            d="${f%/index.html}"
+            cp "$f" "$d.html"
+            criados=$((criados + 1))
           done
+          echo "criados $criados ficheiros <rota>.html"
+          [ "$criados" = "23" ] || { echo "::error::esperava 23 <rota>.html, criei $criados"; exit 1; }
 
           # URLs desconhecidos: o GitHub Pages serve 404.html com status 404 (correto).
           # A shell sem pré-renderização é exatamente o que serve para isso.

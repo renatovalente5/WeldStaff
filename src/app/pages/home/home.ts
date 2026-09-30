@@ -9,11 +9,12 @@ import { CountUpDirective } from '../../shared/directives/count-up.directive';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { SeoService } from '../../core/services/seo.service';
+import { NaLinguaPipe } from '../../shared/pipes/na-lingua.pipe';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, SectionTitleComponent, TranslocoPipe, ScrollRevealDirective, CountUpDirective],
+  imports: [CommonModule, RouterLink, SectionTitleComponent, TranslocoPipe, ScrollRevealDirective, CountUpDirective, NaLinguaPipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -5,7 +5,8 @@
 //
 //   npm run build && node _dev/bateria-teclado.mjs
 //
-// Serve o dist/ numa porta sorteada. Não envia candidatura nenhuma.
+// Serve o dist/ numa porta sorteada. Não envia candidatura nenhuma. A secção 15 percorre
+// as línguas (/en, /fr, /es): o seletor, as ligações, a preferência guardada e o 404.
 
 import { createServer } from 'node:http';
 import { readFileSync, existsSync, statSync, writeFileSync, mkdtempSync } from 'node:fs';
@@ -22,13 +23,19 @@ if (!existsSync(join(RAIZ, 'careers/index.html'))) {
 const TIPOS = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css',
     '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml',
     '.ico': 'image/x-icon', '.webp': 'image/webp', '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.txt': 'text/plain' };
+// A secção 15 atrasa as traduções para apanhar texto que pisque antes de a língua chegar.
+let atrasoDasTraducoes = 0;
 const servidor = createServer((req, res) => {
     const caminho = decodeURIComponent(new URL(req.url, 'http://x').pathname);
     let f = join(RAIZ, caminho);
     if (existsSync(f) && statSync(f).isDirectory()) f = join(f, 'index.html');
     if (!existsSync(f)) f = join(RAIZ, 'index.csr.html');
-    res.writeHead(200, { 'Content-Type': TIPOS[extname(f)] || 'application/octet-stream' });
-    res.end(readFileSync(f));
+    const responder = () => {
+        res.writeHead(200, { 'Content-Type': TIPOS[extname(f)] || 'application/octet-stream' });
+        res.end(readFileSync(f));
+    };
+    if (atrasoDasTraducoes && caminho.startsWith('/assets/i18n/')) setTimeout(responder, atrasoDasTraducoes);
+    else responder();
 });
 await new Promise((r) => servidor.listen(0, '127.0.0.1', r));
 const BASE = `http://127.0.0.1:${servidor.address().port}`;
@@ -422,7 +429,167 @@ try {
     await enviar('Page.removeScriptToEvaluateOnNewDocument', { identifier: ident }, s);
     await enviar('Network.setBlockedURLs', { urls: [] }, s);
 
-    console.log('\n15. Sem erros');
+    // ═══ 15. Cada língua tem a sua morada ═══════════════════════════════════
+    // Antes a língua mudava só no browser e o Google só conhecia o português. Agora
+    // /en/careers é uma página: o seletor leva à mesma página na outra língua, as ligações
+    // ficam na língua, e quem ESCOLHEU uma língua (e autorizou guardá-la) volta a ela.
+    console.log('\n15. Cada língua tem a sua morada');
+    const errosNaConsola = [];
+    const ouvirConsola = (m) => { if (m.sessionId === s && m.method === 'Runtime.consoleAPICalled' && m.params.type === 'error') errosNaConsola.push(m.params.args.map((a) => a.value ?? a.description).join(' ').slice(0, 200)); };
+    enviar.ouvintes.add(ouvirConsola);
+    // O Worker e o Turnstile ficam de fora: nada aqui envia, e o /contactos tem o widget.
+    await enviar('Network.setBlockedURLs', { urls: ['*weld-staff-api*', '*challenges.cloudflare.com*'] }, s);
+    await enviar('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false }, s);
+    const abrir = async (caminho, condicao = 'true') => {
+        await enviar('Page.navigate', { url: `${BASE}${caminho}` }, s);
+        for (let i = 0; i < 60; i++) {
+            if (await js(`return !!document.querySelector('app-root')?.getAttribute('ng-version') && (${condicao});`).catch(() => false)) break;
+            await esperar(250);
+        }
+        await esperar(700);
+    };
+    const pagina = () => js(`const q = (x) => document.querySelector(x), txt = (e) => e?.textContent.replace(/\\s+/g, ' ').trim() ?? null;
+        return { caminho: location.pathname, lang: document.documentElement.lang, h1: txt(q('h1')), titulo: document.title,
+                 canonica: q('link[rel=canonical]')?.getAttribute('href'),
+                 alternativas: [...document.querySelectorAll('link[rel=alternate][hreflang]')].map((l) => l.hreflang + ' ' + new URL(l.href).pathname),
+                 ligacoes: [...document.querySelectorAll('app-header a[href^="/"], app-footer a[href^="/"]')].map((a) => a.getAttribute('href')) };`);
+    // Em português ('') nenhuma ligação pode ter prefixo; nas outras, todas o têm.
+    const naLingua = (ligacoes, prefixo) => ligacoes.length >= 8 && ligacoes.every((h) =>
+        prefixo ? h === prefixo || h.startsWith(prefixo + '/') : !/^\/(en|fr|es)(\/|$)/.test(h));
+    const guardada = () => js(`return localStorage.getItem('lang');`);
+    async function escolherLingua(nome) {
+        await js(`document.querySelector('.lang-btn').focus(); return true;`);
+        await tecla('Enter'); await esperar(200);
+        let chegou = false;
+        for (let i = 0; i < 6 && !chegou; i++) {
+            await tecla('Tab');
+            chegou = await js(`const a = document.activeElement; return !!a?.closest('.lang-dropdown') && a.textContent.includes(${JSON.stringify(nome)});`);
+        }
+        if (chegou) await tecla('Enter');
+        return chegou;
+    }
+    const esperarCaminho = async (caminho) => {
+        for (let i = 0; i < 50 && (await js(`return location.pathname;`)) !== caminho; i++) await esperar(100);
+        await esperar(700);
+    };
+
+    // Começa do zero: sem consentimento e sem língua guardada.
+    await abrir('/en/careers');
+    await js(`localStorage.clear(); return true;`);
+    // As traduções chegam 600 ms atrasadas: o que pintar antes da língua certa, vê-se.
+    atrasoDasTraducoes = 600;
+    const vigia = (await enviar('Page.addScriptToEvaluateOnNewDocument', { source: `window.__textos = []; (() => { const t0 = performance.now();
+        const passo = () => { const t = (q) => document.querySelector(q)?.textContent.replace(/\\s+/g, ' ').trim() ?? null;
+            const l = JSON.stringify([t('app-header nav a[href$="careers"]'), t('app-footer h4'), t('h1')]);
+            if (window.__textos.at(-1) !== l) window.__textos.push(l);
+            if (performance.now() - t0 < 3000) requestAnimationFrame(passo); };
+        document.addEventListener('DOMContentLoaded', passo); })();` }, s)).identifier;
+    await abrir('/en/careers', `document.querySelectorAll('.apply-cta').length === 6`);
+    await esperar(2500);
+    const textos = await js(`return window.__textos;`);
+    await enviar('Page.removeScriptToEvaluateOnNewDocument', { identifier: vigia }, s);
+    atrasoDasTraducoes = 0;
+    certo(textos.length === 1 && JSON.parse(textos[0]).every((x) => x && !/Carreiras|Links Rápidos/.test(x)),
+        'com as traduções atrasadas, o menu e o rodapé nunca ficam em branco nem passam pelo português', textos);
+
+    let p = await pagina();
+    certo(p.lang === 'en' && p.h1 === 'Careers' && p.titulo === 'Careers - Join WeldStaff', '/en/careers abre em inglês: lang, título e h1', p);
+    certo(p.canonica === 'https://weldstaff.pt/en/careers', 'o canónico é a morada inglesa', p.canonica);
+    certo(JSON.stringify(p.alternativas) === JSON.stringify(['pt-PT /careers', 'en /en/careers', 'fr /fr/careers', 'es /es/careers', 'x-default /careers']),
+        'as alternativas dão as quatro línguas, e o português por omissão', p.alternativas);
+    certo(naLingua(p.ligacoes, '/en'), `as ${p.ligacoes.length} ligações do cabeçalho e do rodapé ficam em /en`, p.ligacoes);
+    const nomeEn = await nomeAcessivel('.job-card:nth-child(1) .apply-cta');
+    certo(nomeEn === 'Apply Now: Piping Foreman', `o cartão diz a vaga em inglês a um leitor de ecrã («${nomeEn}»)`, nomeEn);
+
+    // O seletor, só com o teclado. Ainda sem consentimento: a escolha vale, mas não se grava.
+    let chegou = await escolherLingua('Français');
+    await esperarCaminho('/fr/careers');
+    p = await pagina();
+    certo(chegou && p.caminho === '/fr/careers' && p.lang === 'fr' && p.h1 === 'Carrières',
+        'o seletor abre com Enter, o Tab chega a «Français» e o Enter leva a /fr/careers', { chegou, ...p });
+    certo(p.titulo === 'Carrières - Rejoignez WeldStaff' && p.canonica === 'https://weldstaff.pt/fr/careers',
+        'o título e o canónico passam ao francês (não fica o título português da rota)', { titulo: p.titulo, canonica: p.canonica });
+    certo(naLingua(p.ligacoes, '/fr'), 'as ligações passam a /fr', p.ligacoes);
+    certo(await guardada() === null, 'sem consentimento, a escolha não fica gravada', await guardada());
+
+    // Aceitar os cookies depois de escolher grava a escolha (categoria «Funcionais»).
+    await js(`document.querySelector('.cookie-actions .cookie-btn-accept').focus(); return true;`);
+    await tecla('Enter'); await esperar(300);
+    certo(await guardada() === 'fr', 'ao aceitar os cookies, a língua escolhida fica gravada', await guardada());
+
+    // Voltar ao português não pode ser desfeito pela preferência gravada.
+    chegou = await escolherLingua('Português');
+    await esperarCaminho('/careers');
+    await esperar(800);
+    p = await pagina();
+    certo(chegou && p.caminho === '/careers' && p.lang === 'pt-PT' && p.h1 === 'Carreiras',
+        'escolher «Português» leva a /careers e fica lá (a preferência gravada não o devolve ao francês)', { chegou, ...p });
+    certo(await guardada() === 'pt-PT' && naLingua(p.ligacoes, ''), 'a preferência passa a português, e as ligações perdem o prefixo', { guardada: await guardada(), ligacoes: p.ligacoes });
+
+    // O «Voltar» depois de mudar de língua regressa à página de antes, na língua de antes:
+    // a preferência só decide a primeira página de uma visita, não o histórico.
+    chegou = await escolherLingua('Español');
+    await esperarCaminho('/es/careers');
+    await js(`history.back(); return true;`);
+    await esperar(1500);
+    p = await pagina();
+    certo(chegou && p.caminho === '/careers' && p.lang === 'pt-PT' && await guardada() === 'es',
+        'escolher «Español» e carregar em Voltar regressa a /careers em português (a escolha fica gravada)', { chegou, ...p, guardada: await guardada() });
+
+    // Noutra visita: quem escolheu espanhol e abre uma morada portuguesa volta ao espanhol…
+    await js(`localStorage.setItem('lang', 'es'); return true;`);
+    await abrir('/contactos', `location.pathname === '/es/contactos'`);
+    p = await pagina();
+    certo(p.caminho === '/es/contactos' && p.lang === 'es' && p.h1 === 'Contacto', 'quem escolheu espanhol e abre /contactos numa visita nova vai para /es/contactos', p);
+    const historico = await enviar('Page.getNavigationHistory', {}, s);
+    const anterior = historico.entries[historico.currentIndex - 1]?.url ?? '';
+    certo(!/\/contactos$/.test(anterior), 'e a morada portuguesa sai do histórico: o Voltar leva à página de onde se veio', { anterior, atual: historico.entries[historico.currentIndex]?.url });
+    // …mas uma morada com língua é respeitada, e não lhe muda a preferência.
+    await abrir('/en/termos');
+    p = await pagina();
+    certo(p.caminho === '/en/termos' && p.lang === 'en' && await guardada() === 'es',
+        'uma ligação para /en/termos abre em inglês e não apaga a escolha do espanhol', { ...p, guardada: await guardada() });
+
+    // O 404 na língua da morada.
+    await abrir('/en/naoexiste', `!!document.querySelector('app-not-found')`);
+    const nf = await js(`const a = document.querySelector('app-not-found a');
+        return { lang: document.documentElement.lang, h2: document.querySelector('app-not-found h2')?.textContent.trim(),
+                 titulo: document.title, voltar: a?.getAttribute('href'), texto: a?.textContent.trim() };`);
+    certo(nf.lang === 'en' && nf.h2 === 'Page Not Found' && nf.titulo === 'Page Not Found - WeldStaff', 'uma morada inglesa que não existe dá o 404 em inglês', nf);
+    certo(nf.voltar === '/en' && nf.texto === 'Back to Home', '«Back to Home» leva à página inicial inglesa, e não à portuguesa', nf);
+
+    // A página inicial inglesa tem a barra transparente da portuguesa, e a transição anima.
+    await abrir('/en');
+    const barra = await js(`window.scrollTo(0, 0); await new Promise((r) => setTimeout(r, 300)); return document.querySelector('app-header header').className;`);
+    certo(!/\bscrolled\b/.test(barra), 'em /en, no topo, a barra é transparente como em /', barra);
+    await js(`window.__vistos = []; const t0 = performance.now(); (function passo() {
+        window.__vistos.push([...document.querySelector('main').children].filter((e) => e.tagName !== 'ROUTER-OUTLET').map((e) => e.tagName.toLowerCase()).join('+'));
+        if (performance.now() - t0 < 2000) requestAnimationFrame(passo); })(); return true;`);
+    const alvo = await js(`const a = [...document.querySelectorAll('app-header a[href="/en/careers"]')].find((e) => e.getBoundingClientRect().width > 0);
+        const r = a.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 };`);
+    await clicar(alvo.x, alvo.y);
+    await esperar(2300);
+    const vistos = [...new Set(await js(`return window.__vistos;`))];
+    const onde = await js(`return location.pathname;`);
+    certo(onde === '/en/careers' && vistos.some((v) => v.includes('+')), 'clicar em «Careers» leva a /en/careers com a transição animada (as duas páginas cruzam-se)', { onde, vistos });
+
+    // Uma navegação que reaproveita a página (de /en/careers?utm_source=… para /en/careers) não
+    // a volta a criar, e o título tem de sobreviver: o Angular repunha o título português da rota.
+    await abrir('/en/careers?utm_source=teste', `document.querySelectorAll('.apply-cta').length === 6`);
+    const alvo2 = await js(`const a = [...document.querySelectorAll('app-header a[href="/en/careers"]')].find((e) => e.getBoundingClientRect().width > 0);
+        const r = a.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 };`);
+    await clicar(alvo2.x, alvo2.y);
+    await esperar(1200);
+    const reaproveitada = await js(`return { morada: location.pathname + location.search, titulo: document.title };`);
+    certo(reaproveitada.morada === '/en/careers' && reaproveitada.titulo === 'Careers - Join WeldStaff',
+        'vindo de /en/careers?utm_source=…, clicar em «Careers» deixa o título em inglês', reaproveitada);
+
+    certo(errosNaConsola.length === 0, 'nenhum erro na consola em toda a secção (hidratação incluída)', errosNaConsola);
+    enviar.ouvintes.delete(ouvirConsola);
+    await js(`localStorage.clear(); return true;`);
+    await enviar('Network.setBlockedURLs', { urls: [] }, s);
+
+    console.log('\n16. Sem erros');
     certo(excecoes.length === 0, 'nenhuma excepção por apanhar em toda a corrida', excecoes);
 } catch (erro) {
     falhas++; console.error('\nA bateria rebentou:', erro);

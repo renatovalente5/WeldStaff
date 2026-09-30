@@ -6,11 +6,12 @@ import { SeoService } from '../../core/services/seo.service';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { NaLinguaPipe } from '../../shared/pipes/na-lingua.pipe';
 
 @Component({
   selector: 'app-terms',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoPipe, ScrollRevealDirective],
+  imports: [CommonModule, RouterModule, TranslocoPipe, ScrollRevealDirective, NaLinguaPipe],
   templateUrl: './terms.html',
   styleUrl: './terms.scss'
 })

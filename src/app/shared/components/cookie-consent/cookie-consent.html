@@ -17,7 +17,7 @@
                 <div>
                     <p class="cookie-title">{{ 'cookieConsent.title' | transloco }}</p>
                     <p class="cookie-desc">{{ 'cookieConsent.description' | transloco }}
-                        <a routerLink="/cookies" class="cookie-link">{{ 'cookieConsent.learnMore' | transloco }}</a>
+                        <a [routerLink]="'/cookies' | naLingua" class="cookie-link">{{ 'cookieConsent.learnMore' | transloco }}</a>
                     </p>
                 </div>
             </div>

@@ -137,7 +137,7 @@
                 "subject": "Asunto",
                 "message": "Mensaje",
                 "consent": "He leído y acepto la política de privacidad y tratamiento de datos.",
-                "consentHtml": "He leído y acepto la <a href='/privacidade' target='_blank'>Política de Privacidad</a> y el tratamiento de mis datos personales."
+                "consentHtml": "He leído y acepto la <a href='/es/privacidade' target='_blank'>Política de Privacidad</a> y el tratamiento de mis datos personales."
             },
             "placeholders": {
                 "name": "Ej.: Juan Pérez",
@@ -268,7 +268,7 @@
             "maxFilesError": "Máximo de {{max}} archivos permitidos.",
             "fileTypeError": "Archivo no aceptado: {{files}}. Envía un PDF, Word, ODT, RTF, TXT, Pages o una imagen (JPG, PNG, HEIC, WEBP).",
             "removeFileAria": "Quitar {{name}}",
-            "consentHtml": "He leído y acepto la <a href='/privacidade' target='_blank'>Política de Privacidad</a> y autorizo el tratamiento de mis datos con fines de reclutamiento.",
+            "consentHtml": "He leído y acepto la <a href='/es/privacidade' target='_blank'>Política de Privacidad</a> y autorizo el tratamiento de mis datos con fines de reclutamiento.",
             "successMessage": "¡Candidatura enviada con éxito! Nos pondremos en contacto contigo en breve.",
             "errorMessage": "Se ha producido un error al enviar la candidatura. Por favor, inténtalo de nuevo.",
             "cancelButton": "Cancelar",

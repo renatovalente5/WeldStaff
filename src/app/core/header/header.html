@@ -1,17 +1,17 @@
 <header class="header" [class.scrolled]="isScrolled">
     <div class="container flex justify-between items-center">
         <!-- Logo -->
-        <a routerLink="/" class="logo logo-centered">
+        <a [routerLink]="'/' | naLingua" class="logo logo-centered">
             <img src="assets/img/weldstaff_full_logo.png" alt="WeldStaff" class="logo-img">
         </a>
 
         <!-- Desktop Navigation -->
         <nav class="nav hidden-mobile" [attr.aria-label]="'a11y.mainNav' | transloco">
             <ul class="flex gap-md items-center">
-                <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'nav.home'
+                <li><a [routerLink]="'/' | naLingua" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'nav.home'
                         | transloco }}</a></li>
-                <li><a routerLink="/contactos" routerLinkActive="active">{{ 'nav.contacts' | transloco }}</a></li>
-                <li><a routerLink="/careers" routerLinkActive="active">{{ 'nav.careers' | transloco }}</a></li>
+                <li><a [routerLink]="'/contactos' | naLingua" routerLinkActive="active">{{ 'nav.contacts' | transloco }}</a></li>
+                <li><a [routerLink]="'/careers' | naLingua" routerLinkActive="active">{{ 'nav.careers' | transloco }}</a></li>
 
                 <!-- Divider -->
                 <li class="nav-divider" aria-hidden="true"></li>
@@ -64,7 +64,7 @@
 
                 <!-- CTA Button -->
                 <!-- <li>
-                    <a routerLink="/contactos" class="btn btn-primary header-cta">
+                    <a [routerLink]="'/contactos' | naLingua" class="btn btn-primary header-cta">
                         {{ 'nav.cta' | transloco }}
                     </a>
                 </li> -->
@@ -96,15 +96,15 @@
 
         <ul class="mobile-nav-links">
             <li class="mobile-nav-item" style="--i: 0">
-                <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                <a [routerLink]="'/' | naLingua" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
                     (click)="toggleMobileMenu()">{{ 'nav.home' | transloco }}</a>
             </li>
             <li class="mobile-nav-item" style="--i: 1">
-                <a routerLink="/contactos" routerLinkActive="active" (click)="toggleMobileMenu()">{{ 'nav.contacts' |
+                <a [routerLink]="'/contactos' | naLingua" routerLinkActive="active" (click)="toggleMobileMenu()">{{ 'nav.contacts' |
                     transloco }}</a>
             </li>
             <li class="mobile-nav-item" style="--i: 2">
-                <a routerLink="/careers" routerLinkActive="active" (click)="toggleMobileMenu()">{{ 'nav.careers' |
+                <a [routerLink]="'/careers' | naLingua" routerLinkActive="active" (click)="toggleMobileMenu()">{{ 'nav.careers' |
                     transloco }}</a>
             </li>
         </ul>
@@ -125,7 +125,7 @@
                 </button>
             </div>
 
-            <a routerLink="/contactos" class="btn btn-primary mobile-cta" (click)="toggleMobileMenu()">
+            <a [routerLink]="'/contactos' | naLingua" class="btn btn-primary mobile-cta" (click)="toggleMobileMenu()">
                 {{ 'nav.cta' | transloco }}
             </a>
         </div>

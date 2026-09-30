@@ -3,7 +3,7 @@
         <div class="footer-grid">
             <!-- Brand Column -->
             <div class="footer-col brand-col">
-                <a routerLink="/" class="footer-logo" [attr.aria-label]="'a11y.homeLink' | transloco">
+                <a [routerLink]="'/' | naLingua" class="footer-logo" [attr.aria-label]="'a11y.homeLink' | transloco">
                     <img src="assets/img/weldstaff_full_logo.png" alt="WeldStaff" class="logo-img-footer">
                 </a>
                 <p class="footer-tagline">{{ 'footer.tagline' | transloco }}</p>
@@ -17,10 +17,10 @@
             <div class="footer-col">
                 <h4 class="footer-heading">{{ 'footer.links' | transloco }}</h4>
                 <ul class="footer-links">
-                    <li><a routerLink="/" (click)="scrollTop()">{{ 'nav.home' | transloco }}</a></li>
-                    <li><a routerLink="/contactos" (click)="scrollTop()">{{ 'nav.contacts' | transloco }}</a></li>
+                    <li><a [routerLink]="'/' | naLingua" (click)="scrollTop()">{{ 'nav.home' | transloco }}</a></li>
+                    <li><a [routerLink]="'/contactos' | naLingua" (click)="scrollTop()">{{ 'nav.contacts' | transloco }}</a></li>
                     <li><a (click)="scrollToAbout()" style="cursor:pointer">{{ 'nav.about' | transloco }}</a></li>
-                    <li><a routerLink="/careers" (click)="scrollTop()">{{ 'nav.careers' | transloco }}</a></li>
+                    <li><a [routerLink]="'/careers' | naLingua" (click)="scrollTop()">{{ 'nav.careers' | transloco }}</a></li>
                 </ul>
             </div>
 
@@ -68,11 +68,11 @@
         <!-- Legal Links Row -->
         <div class="footer-legal">
             <div class="footer-legal-links">
-                <a routerLink="/privacidade" (click)="scrollTop()">{{ 'footer.privacy' | transloco }}</a>
+                <a [routerLink]="'/privacidade' | naLingua" (click)="scrollTop()">{{ 'footer.privacy' | transloco }}</a>
                 <span class="legal-sep" aria-hidden="true">|</span>
-                <a routerLink="/cookies" (click)="scrollTop()">{{ 'footer.cookies' | transloco }}</a>
+                <a [routerLink]="'/cookies' | naLingua" (click)="scrollTop()">{{ 'footer.cookies' | transloco }}</a>
                 <span class="legal-sep" aria-hidden="true">|</span>
-                <a routerLink="/termos" (click)="scrollTop()">{{ 'footer.terms' | transloco }}</a>
+                <a [routerLink]="'/termos' | naLingua" (click)="scrollTop()">{{ 'footer.terms' | transloco }}</a>
                 <span class="legal-sep" aria-hidden="true">|</span>
                 <a href="https://www.livroreclamacoes.pt/" target="_blank" rel="noopener noreferrer" class="complaints-link">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"

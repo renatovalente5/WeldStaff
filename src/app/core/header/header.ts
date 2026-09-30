@@ -2,14 +2,15 @@ import { Component, OnInit, OnDestroy, HostListener, ElementRef, PLATFORM_ID, in
 import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { LanguageService } from '../services/language';
+import { LanguageService, caminhoNaLingua, caminhoSemLingua } from '../services/language';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { NaLinguaPipe } from '../../shared/pipes/na-lingua.pipe';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, TranslocoPipe],
+  imports: [CommonModule, RouterLink, RouterLinkActive, TranslocoPipe, NaLinguaPipe],
   templateUrl: './header.html',
   styleUrl: './header.scss'
 })
@@ -37,10 +38,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * O `router.url` traz a query string e o fragmento, pelo que comparar o URL
    * inteiro com '/' fazia a barra transparente da página inicial desaparecer em
    * qualquer visita com parâmetros — `/?utm_source=...` de uma campanha, por
-   * exemplo, entrava com a barra branca por cima do herói.
+   * exemplo, entrava com a barra branca por cima do herói. O prefixo da língua também
+   * sai: /en é a página inicial em inglês e leva a mesma barra.
    */
   private ehPaginaInicial(url: string): boolean {
-    const caminho = url.split(/[?#]/)[0];
+    const caminho = caminhoSemLingua(url).split(/[?#]/)[0];
     return caminho === '/' || caminho === '';
   }
 
@@ -90,9 +92,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
+  /** A mesma página na outra língua: de /careers para /en/careers. A guarda da rota faz o resto. */
   selectLang(lang: string) {
-    this.languageService.setActiveLang(lang);
     this.isLangDropdownOpen = false;
+    this.isMobileMenuOpen = false;
+    this.languageService.guardarEscolha(lang);
+    const destino = caminhoNaLingua(this.router.url, lang);
+    if (destino !== this.router.url) this.router.navigateByUrl(destino);
   }
 
   @HostListener('window:resize', ['$event'])

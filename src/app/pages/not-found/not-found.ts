@@ -5,18 +5,19 @@ import { Subscription } from 'rxjs';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { SeoService } from '../../core/services/seo.service';
+import { NaLinguaPipe } from '../../shared/pipes/na-lingua.pipe';
 
 @Component({
   selector: 'app-not-found',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslocoPipe],
+  imports: [CommonModule, RouterLink, TranslocoPipe, NaLinguaPipe],
   template: `
     <div class="container text-center section">
       <h1 class="error-code">404</h1>
       <h2 class="error-msg">{{ 'notFound.title' | transloco }}</h2>
       <p class="description">{{ 'notFound.text' | transloco }}</p>
       <div class="mt-md">
-        <a routerLink="/" class="btn btn-primary">{{ 'notFound.back' | transloco }}</a>
+        <a [routerLink]="'/' | naLingua" class="btn btn-primary">{{ 'notFound.back' | transloco }}</a>
       </div>
     </div>
   `,

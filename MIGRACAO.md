@@ -37,6 +37,13 @@ O histórico dos passos de DNS está no git, no commit que criou este ficheiro.
    remover o domínio `weldstaff.pt` — a conta do Resend da WeldStaff não é a que está aberta no
    Chrome. Sem os registos DNS, essa chave já não consegue enviar em nome da weldstaff.pt.
 
+4. **Línguas com morada própria (30 de setembro de 2026).** Até aqui o inglês, o francês e o
+   espanhol só existiam no browser, depois de escolhidos no seletor: o Google via uma página em
+   português por morada. Passaram a ter 18 moradas novas (`/en/…`, `/fr/…`, `/es/…`), com
+   `hreflang` nas páginas e no sitemap. O Bing recebe-as pelo IndexNow no deploy; o Google volta a
+   ler o sitemap sozinho (a última leitura tinha sido a 29 de setembro). No Search Console, em
+   Páginas, as 24 devem aparecer nas semanas seguintes.
+
 ---
 
 ## Decisões de texto que ficaram para ti
@@ -61,9 +68,10 @@ dono do site pode fazer, e todas foram deixadas como estavam.
    «, Portugal» nas páginas legais e o pt-PT não. Convém fixar uma forma e usar `n.º` em vez
    de `Nº`.
 
-5. **Título da página inicial.** Existem três em circulação: «WeldStaff - Soluções de Soldadura»
-   (no `index.html` e na rota) e «WeldStaff - Soldadores Qualificados para a Sua Empresa» (em
-   `home.seo.title`, que é o que fica no separador). Decidir qual é o canónico.
+5. **Título da página inicial.** Existem dois em circulação: «WeldStaff - Soluções de Soldadura»
+   (no `index.html`) e «WeldStaff - Soldadores Qualificados para a Sua Empresa» (em
+   `home.seo.title`, que é o que fica no separador). Decidir qual é o canónico. (O terceiro, o
+   `title` da rota, saiu a 30 de setembro de 2026: repunha-se por cima do traduzido.)
 
 6. **Localização das vagas.** As 6 chaves `careers.jobs.*.location` estão vazias e o
    `locationKey` nunca é preenchido. Três das vagas dizem a localização no próprio título
@@ -77,7 +85,8 @@ dono do site pode fazer, e todas foram deixadas como estavam.
    `placeholder` (nenhum template tem esse atributo), as 5 `contacts.form.options.*` (o
    formulário não tem `<select>`) e todo o ramo `careers.modal.*`. Se este voltar a ser ligado,
    atenção: o `routerLink='/contactos'` lá dentro fica **inerte**, porque o Angular não compila
-   diretivas em conteúdo injetado por `[innerHTML]` — tem de passar a `href='/contactos'`.
+   diretivas em conteúdo injetado por `[innerHTML]` — tem de passar a `href='/contactos'`, com o
+   prefixo da língua nas outras (`href='/en/contactos'` no `en.json`).
 
 9. **Língua dos emails internos.** Uma candidatura submetida em francês chega a
    `geral@weldstaff.pt` com o título da vaga em francês, pelo que a mesma vaga aparece com

@@ -5,11 +5,12 @@ import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LanguageService } from '../../../core/services/language';
 import { CHAVE_CONSENTIMENTO, consentiu, jaRespondeu } from '../../../core/services/consent';
+import { NaLinguaPipe } from '../../pipes/na-lingua.pipe';
 
 @Component({
   selector: 'app-cookie-consent',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslocoPipe],
+  imports: [CommonModule, FormsModule, RouterLink, TranslocoPipe, NaLinguaPipe],
   templateUrl: './cookie-consent.html',
   styleUrl: './cookie-consent.scss'
 })

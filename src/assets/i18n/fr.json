@@ -137,7 +137,7 @@
                 "subject": "Objet",
                 "message": "Message",
                 "consent": "J'ai lu et j'accepte la politique de confidentialité et de traitement des données.",
-                "consentHtml": "J'ai lu et j'accepte la <a href='/privacidade' target='_blank'>Politique de Confidentialité</a> et le traitement de mes données personnelles."
+                "consentHtml": "J'ai lu et j'accepte la <a href='/fr/privacidade' target='_blank'>Politique de Confidentialité</a> et le traitement de mes données personnelles."
             },
             "placeholders": {
                 "name": "Ex. : Jean Dupont",
@@ -268,7 +268,7 @@
             "maxFilesError": "Maximum de {{max}} fichiers autorisés.",
             "fileTypeError": "Fichier non accepté : {{files}}. Envoyez un PDF, Word, ODT, RTF, TXT, Pages ou une image (JPG, PNG, HEIC, WEBP).",
             "removeFileAria": "Retirer {{name}}",
-            "consentHtml": "J'ai lu et j'accepte la <a href='/privacidade' target='_blank'>Politique de Confidentialité</a> et j'autorise le traitement de mes données à des fins de recrutement.",
+            "consentHtml": "J'ai lu et j'accepte la <a href='/fr/privacidade' target='_blank'>Politique de Confidentialité</a> et j'autorise le traitement de mes données à des fins de recrutement.",
             "successMessage": "Candidature envoyée avec succès ! Nous vous contacterons bientôt.",
             "errorMessage": "Une erreur s'est produite lors de l'envoi de la candidature. Veuillez réessayer.",
             "cancelButton": "Annuler",

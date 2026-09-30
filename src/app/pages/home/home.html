@@ -12,7 +12,7 @@
         <h1 class="hero-title text-white mb-md" [innerHTML]="'home.hero.title' | transloco" appScrollReveal></h1>
         <p class="hero-subtitle mb-lg" appScrollReveal>{{ 'home.hero.subtitle' | transloco }}</p>
         <div class="hero-actions">
-            <a routerLink="/contactos" class="btn btn-primary btn-lg">{{ 'home.hero.cta' | transloco }}</a>
+            <a [routerLink]="'/contactos' | naLingua" class="btn btn-primary btn-lg">{{ 'home.hero.cta' | transloco }}</a>
         </div>
     </div>
 
@@ -229,7 +229,7 @@
     <div class="container text-center">
         <h2 class="cta-title">{{ 'home.footerCta.title' | transloco }}</h2>
         <p class="cta-subtitle">{{ 'home.footerCta.subtitle' | transloco }}</p>
-        <a routerLink="/contactos" class="btn btn-primary btn-lg cta-button">{{ 'home.footerCta.button' | transloco
+        <a [routerLink]="'/contactos' | naLingua" class="btn btn-primary btn-lg cta-button">{{ 'home.footerCta.button' | transloco
             }}</a>
     </div>
 </section>

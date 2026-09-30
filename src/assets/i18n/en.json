@@ -137,7 +137,7 @@
                 "subject": "Subject",
                 "message": "Message",
                 "consent": "I have read and accept the privacy policy and the processing of my personal data.",
-                "consentHtml": "I have read and accept the <a href='/privacidade' target='_blank'>Privacy Policy</a> and the processing of my personal data."
+                "consentHtml": "I have read and accept the <a href='/en/privacidade' target='_blank'>Privacy Policy</a> and the processing of my personal data."
             },
             "placeholders": {
                 "name": "e.g. John Smith",
@@ -268,7 +268,7 @@
             "maxFilesError": "Maximum of {{max}} files allowed.",
             "fileTypeError": "File not accepted: {{files}}. Please send a PDF, Word, ODT, RTF, TXT or Pages file, or an image (JPG, PNG, HEIC, WEBP).",
             "removeFileAria": "Remove {{name}}",
-            "consentHtml": "I have read and accept the <a href='/privacidade' target='_blank'>Privacy Policy</a> and authorize the processing of my personal data for recruitment purposes.",
+            "consentHtml": "I have read and accept the <a href='/en/privacidade' target='_blank'>Privacy Policy</a> and authorize the processing of my personal data for recruitment purposes.",
             "successMessage": "Application sent successfully! We will contact you soon.",
             "errorMessage": "There was a problem sending your application. Please try again later.",
             "cancelButton": "Cancel",

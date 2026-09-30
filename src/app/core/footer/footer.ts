@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 
 import { TranslocoPipe } from '@jsverse/transloco';
+import { NaLinguaPipe } from '../../shared/pipes/na-lingua.pipe';
+import { caminhoNaLingua, caminhoSemLingua, linguaDoCaminho } from '../services/language';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslocoPipe],
+  imports: [CommonModule, RouterLink, TranslocoPipe, NaLinguaPipe],
   templateUrl: './footer.html',
   styleUrl: './footer.scss'
 })
@@ -31,10 +33,11 @@ export class FooterComponent {
       }
     };
 
-    if (this.router.url === '/' || this.router.url === '') {
+    const inicio = caminhoNaLingua('/', linguaDoCaminho(this.router.url));
+    if (caminhoSemLingua(this.router.url).split(/[?#]/)[0] === '/') {
       doScroll();
     } else {
-      this.router.navigate(['/']).then(() => setTimeout(doScroll, 150));
+      this.router.navigateByUrl(inicio).then(() => setTimeout(doScroll, 150));
     }
   }
 }

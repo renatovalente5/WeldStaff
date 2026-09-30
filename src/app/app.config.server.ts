@@ -15,10 +15,9 @@ const serverConfig: ApplicationConfig = {
     // Vem depois do appConfig, por isso é este que vale na pré-renderização.
     { provide: TRANSLOCO_LOADER, useClass: TranslocoDiskLoader },
 
-    // Vários componentes chamam `translate()` de forma síncrona no ngOnInit. Sem
-    // as traduções em cache, isso devolveria a chave crua e era ISSO que ficava
-    // gravado no HTML estático (títulos e descrições incluídos). Carregar a língua
-    // antes do arranque garante que o HTML pré-renderizado sai em português.
+    // O cabeçalho e o rodapé pintam antes de a rota decidir a língua; com o português
+    // já em cache nunca saem com chaves cruas. A língua de cada página (/en, /fr, /es)
+    // é carregada pela guarda da rota (app.routes.ts) antes de a página se desenhar.
     provideAppInitializer(() => inject(TranslocoService).load(LINGUA_PRE_RENDERIZADA)),
   ]
 };

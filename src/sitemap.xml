@@ -1,27 +1,219 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://weldstaff.pt/</loc>
         <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/en</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/fr</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/es</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/"/>
     </url>
     <url>
         <loc>https://weldstaff.pt/contactos</loc>
         <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/contactos"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/contactos"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/contactos"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/contactos"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/contactos"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/en/contactos</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/contactos"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/contactos"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/contactos"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/contactos"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/contactos"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/fr/contactos</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/contactos"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/contactos"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/contactos"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/contactos"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/contactos"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/es/contactos</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/contactos"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/contactos"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/contactos"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/contactos"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/contactos"/>
     </url>
     <url>
         <loc>https://weldstaff.pt/careers</loc>
         <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/careers"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/careers"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/careers"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/careers"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/careers"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/en/careers</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/careers"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/careers"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/careers"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/careers"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/careers"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/fr/careers</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/careers"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/careers"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/careers"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/careers"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/careers"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/es/careers</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/careers"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/careers"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/careers"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/careers"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/careers"/>
     </url>
     <url>
         <loc>https://weldstaff.pt/privacidade</loc>
         <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/privacidade"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/en/privacidade</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/privacidade"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/fr/privacidade</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/privacidade"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/es/privacidade</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/privacidade"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/privacidade"/>
     </url>
     <url>
         <loc>https://weldstaff.pt/cookies</loc>
         <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/cookies"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/cookies"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/cookies"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/cookies"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/cookies"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/en/cookies</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/cookies"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/cookies"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/cookies"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/cookies"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/cookies"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/fr/cookies</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/cookies"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/cookies"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/cookies"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/cookies"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/cookies"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/es/cookies</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/cookies"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/cookies"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/cookies"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/cookies"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/cookies"/>
     </url>
     <url>
         <loc>https://weldstaff.pt/termos</loc>
         <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/termos"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/termos"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/termos"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/termos"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/termos"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/en/termos</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/termos"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/termos"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/termos"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/termos"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/termos"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/fr/termos</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/termos"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/termos"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/termos"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/termos"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/termos"/>
+    </url>
+    <url>
+        <loc>https://weldstaff.pt/es/termos</loc>
+        <lastmod>2026-09-30</lastmod>
+        <xhtml:link rel="alternate" hreflang="pt-PT" href="https://weldstaff.pt/termos"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weldstaff.pt/en/termos"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://weldstaff.pt/fr/termos"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://weldstaff.pt/es/termos"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weldstaff.pt/termos"/>
     </url>
 </urlset>

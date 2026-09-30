@@ -1,6 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { TranslocoService } from '@jsverse/transloco';
+import { caminhoNaLingua } from './language';
+
+const ORIGEM = 'https://weldstaff.pt';
+const LINGUAS = ['pt-PT', 'en', 'fr', 'es'];
+const LOCALES: Record<string, string> = { 'pt-PT': 'pt_PT', en: 'en_GB', fr: 'fr_FR', es: 'es_ES' };
 
 @Injectable({
     providedIn: 'root'
@@ -10,8 +16,34 @@ export class SeoService {
     constructor(
         private titleService: Title,
         private metaService: Meta,
+        private transloco: TranslocoService,
         @Inject(DOCUMENT) private doc: Document
     ) { }
+
+    /**
+     * As páginas passam a morada portuguesa (https://weldstaff.pt/careers); aqui passa à da
+     * língua que está a ser vista (https://weldstaff.pt/en/careers). Moradas de fora ficam iguais.
+     */
+    private naLingua(url: string, lingua: string): string {
+        if (!url.startsWith(ORIGEM)) return url;
+        const localizado = caminhoNaLingua(url.slice(ORIGEM.length) || '/', lingua);
+        return ORIGEM + localizado;
+    }
+
+    /**
+     * As quatro versões da página, e a portuguesa como x-default. É isto que diz ao Google
+     * que /careers e /en/careers são a mesma página noutra língua, e não conteúdo repetido.
+     */
+    private definirAlternativas(urlPortugues: string) {
+        this.doc.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach((l) => l.remove());
+        for (const [codigo, lingua] of [...LINGUAS.map((l) => [l, l]), ['x-default', 'pt-PT']]) {
+            const link = this.doc.createElement('link');
+            link.setAttribute('rel', 'alternate');
+            link.setAttribute('hreflang', codigo);
+            link.setAttribute('href', this.naLingua(urlPortugues, lingua));
+            this.doc.head.appendChild(link);
+        }
+    }
 
     updateTitle(title: string) {
         this.titleService.setTitle(title);
@@ -50,10 +82,14 @@ export class SeoService {
             this.metaService.updateTag({ name: 'twitter:image', content: config.image });
         }
 
-        // URL
+        // URL — a canónica é a da língua em que a página está; as alternativas, as quatro.
         if (config.url) {
-            this.metaService.updateTag({ property: 'og:url', content: config.url });
-            this.createCanonicalLink(config.url);
+            const lingua = this.transloco.getActiveLang();
+            const canonica = this.naLingua(config.url, lingua);
+            this.metaService.updateTag({ property: 'og:url', content: canonica });
+            this.metaService.updateTag({ property: 'og:locale', content: LOCALES[lingua] ?? 'pt_PT' });
+            this.createCanonicalLink(canonica);
+            this.definirAlternativas(config.url);
         }
 
         // Type
@@ -79,6 +115,11 @@ export class SeoService {
         const existing = this.doc.head.querySelector('script[data-structured]');
         if (existing) {
             existing.remove();
+        }
+
+        // A página (ContactPage, CollectionPage…) tem a morada da língua; a Organization não.
+        if (typeof data?.url === 'string' && data['@type'] !== 'Organization') {
+            data = { ...data, url: this.naLingua(data.url, this.transloco.getActiveLang()) };
         }
 
         const script = this.doc.createElement('script');

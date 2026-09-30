@@ -4,8 +4,8 @@ Site institucional da **WeldStaff Industrial Services** — outsourcing de solda
 industrial (soldadores, tubistas, serralheiros), em Santa Maria da Feira.
 
 - **Domínio:** [weldstaff.pt](https://weldstaff.pt/)
-- **Frontend:** Angular 21 (standalone components, Transloco i18n em PT/EN/FR/ES), **pré-renderizado
-  estaticamente** e alojado no **GitHub Pages**.
+- **Frontend:** Angular 21 (standalone components, Transloco i18n em PT/EN/FR/ES, cada língua com
+  morada própria), **pré-renderizado estaticamente** e alojado no **GitHub Pages**.
 - **Backend:** Cloudflare Worker `weld-staff-api` (pasta `worker/`), que trata do formulário de
   contacto e das candidaturas. Vive fora deste alojamento e é publicado à parte.
 
@@ -22,7 +22,14 @@ npm start          # http://localhost:4200
 Build de produção, igual ao que é publicado:
 
 ```bash
-npm run build      # gera dist/weld-staff/browser, já com as 6 rotas pré-renderizadas
+npm run build      # gera dist/weld-staff/browser, já com as 24 páginas pré-renderizadas
+```
+
+Depois do build, as verificações que o CI também corre, e a bateria do browser:
+
+```bash
+node _source/verificar-paginas.mjs    # língua, canónico e hreflang de cada página batem com o sitemap
+node _dev/bateria-teclado.mjs         # Chrome sem interface: teclado, Turnstile e línguas (~4 min)
 ```
 
 Para servir o build localmente (com fallback de SPA):
@@ -34,8 +41,9 @@ python3 _dev/serve-dist.py    # http://localhost:8140
 ## Como é publicado
 
 Qualquer push para `main` dispara [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), que
-faz `npm ci`, `npm run build`, verifica que as 6 rotas foram pré-renderizadas, prepara o output e
-publica no GitHub Pages.
+faz `npm ci`, `npm run build`, verifica que as 24 páginas foram pré-renderizadas e dizem o mesmo que
+o sitemap, prepara o output e publica no GitHub Pages. Depois avisa o IndexNow (Bing) das páginas
+cujo `lastmod` mudou.
 
 O domínio personalizado vem de `public/CNAME` (**`weldstaff.pt`**, o apex). Não mudar para `www`
 sem alinhar ao mesmo tempo o `canonical`, o `og:url`, o `sitemap.xml` e o `ALLOWED_ORIGIN` do
@@ -44,8 +52,10 @@ Worker — o Worker compara origens por string exata e um `www` não declarado b
 ### Pré-renderização (SSG)
 
 `angular.json` usa `outputMode: "static"`, o que gera um `index.html` real por rota
-(`/`, `/contactos`, `/careers`, `/privacidade`, `/cookies`, `/termos`). É isso que faz os deep links
-responderem HTTP 200 no GitHub Pages, que não tem reescrita de URLs.
+(`/`, `/contactos`, `/careers`, `/privacidade`, `/cookies`, `/termos`, e as mesmas em `/en`, `/fr`
+e `/es`). É isso que faz os deep links responderem HTTP 200 no GitHub Pages, que não tem reescrita
+de URLs. O workflow publica também `<rota>.html` (`en/careers.html`, `en.html`…), para a forma sem
+barra final — a dos canónicos — responder 200 sem salto.
 
 Duas consequências a ter em conta ao mexer no código:
 
@@ -56,7 +66,30 @@ Duas consequências a ter em conta ao mexer no código:
    no `TurnstileComponent` e nos `ngOnInit` das páginas.
 2. **As traduções são lidas do disco no servidor.** [`src/app/transloco-loader.server.ts`](src/app/transloco-loader.server.ts)
    importa os JSON para o bundle do servidor, e um `provideAppInitializer` carrega o `pt-PT` antes
-   do render. Sem isto o HTML estático saía com as chaves cruas em vez do texto.
+   do render. Sem isto o HTML estático saía com as chaves cruas em vez do texto. No browser, outro
+   `provideAppInitializer` ([`app.config.ts`](src/app/app.config.ts)) carrega a língua da morada
+   antes de o Angular pegar no HTML: sem ele o menu e o rodapé ficavam em branco até o JSON chegar.
+
+### Línguas
+
+O português fica na raiz (`/careers`) — as moradas que o Google já conhecia — e as outras línguas
+têm prefixo: `/en/careers`, `/fr/careers`, `/es/careers`. Cada uma é uma página pré-renderizada na
+sua língua, com `<html lang>`, canónico, `og:locale` e as alternativas `hreflang` (mais `x-default`,
+que aponta para o português). O sitemap lista as 24 com as mesmas alternativas, e o CI falha se uma
+página e o sitemap disserem coisas diferentes.
+
+- **A língua vem da morada.** Cada grupo de rotas tem uma guarda ([`app.routes.ts`](src/app/app.routes.ts))
+  que carrega as traduções antes de a página se desenhar.
+- **Ligações internas passam pelo pipe `naLingua`:** `[routerLink]="'/contactos' | naLingua"`. Um
+  `routerLink="/contactos"` escrito à mão leva o visitante inglês para o português. Nas traduções,
+  as ligações levam o prefixo à mão (`href='/en/privacidade'` no `en.json`).
+- **As páginas passam ao `SeoService` a morada portuguesa**; ele passa-a à língua em que se está.
+- **A preferência guardada é só a do seletor** (e só com o consentimento «Funcionais»). Quem
+  escolheu uma língua e entra por uma morada portuguesa é levado à sua, só na primeira página da
+  visita e sem deixar a portuguesa no histórico. Uma morada com prefixo é sempre respeitada.
+- **Uma página nova entra em três sítios:** `paginas()` em `app.routes.ts`, `ROTAS` em
+  [`_source/gerar-sitemap.mjs`](_source/gerar-sitemap.mjs) e a lista do passo «Confirmar que as 24
+  páginas…» do workflow.
 
 ## Estrutura
 
@@ -68,8 +101,8 @@ src/assets/i18n/        traduções pt-PT, en, fr, es (fonte única)
 src/assets/img|video/   imagens e o vídeo do hero
 public/                 CNAME, favicons — copiado para a raiz do output
 worker/                 Cloudflare Worker (API dos formulários)
-_dev/                   servidor local para o build (não é publicado)
-_source/                imagens originais em resolução alta (não é publicado)
+_dev/                   servidor local para o build e bateria do browser (não é publicado)
+_source/                sitemap, IndexNow, verificação das páginas e imagens originais (não é publicado)
 ```
 
 ## Worker (API dos formulários)
