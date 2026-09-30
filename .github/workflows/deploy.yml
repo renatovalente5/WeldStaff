@@ -24,11 +24,11 @@ jobs:
       # fetch-depth: 0 porque o sitemap é gerado a partir das datas dos commits
       # (ver _source/gerar-sitemap.mjs). Com a clonagem rasa só existe um commit e
       # as seis páginas ficariam todas com a mesma data — falsa.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -129,11 +129,14 @@ jobs:
           touch .nojekyll
           ls -la
 
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
 
-      - uses: actions/upload-pages-artifact@v3
+      # A partir da v4 os ficheiros com ponto (o .nojekyll) ficavam de fora por omissão;
+      # a v5 devolveu a opção. Publicar exatamente o que se construiu.
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist/weld-staff/browser
+          include-hidden-files: true
 
   deploy:
     needs: build
@@ -143,7 +146,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       # Só depois de o conteúdo novo estar no ar. Um aviso ao IndexNow antes do
       # deploy faria o Bing vir buscar a versão antiga.
