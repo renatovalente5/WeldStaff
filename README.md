@@ -77,7 +77,7 @@ _source/                imagens originais em resolução alta (não é publicado
 ```bash
 cd worker
 npm ci
-npm test               # o Worker verdadeiro contra um Hostinger e um Resend falsos — não envia email
+npm test               # o Worker verdadeiro contra um Hostinger falso — não envia email
 npm run dev            # http://localhost:8787
 npm run deploy         # confirma os segredos e só depois faz `wrangler deploy`
 ```
@@ -85,10 +85,9 @@ npm run deploy         # confirma os segredos e só depois faz `wrangler deploy`
 Endpoints: `POST /contact` (JSON) e `POST /apply` (multipart, até 3 anexos com menos de 5 MiB
 cada, dos tipos da lista `TIPOS_ANEXO`). Ambos validam o Turnstile e enviam email pela
 **Hostinger Mail API**, a partir da caixa `HOSTINGER_SENDER` (`geral@weldstaff.pt`) para
-`CONTACT_TO_EMAIL`. O Resend fica como caminho de volta: `EMAIL_PROVIDER` no `wrangler.jsonc`.
-Durante a transição há também uma **reserva** (`EMAIL_FALLBACK: "resend"`): se o Hostinger
-falhar, o email segue pelo Resend com um aviso amarelo à cabeça a dizer porquê. Nenhum
-formulário se perde, e a falha vê-se na própria caixa. Sai com o Resend.
+`CONTACT_TO_EMAIL`. O Resend, que se usava antes, foi retirado a 30 de setembro de 2026
+(código, segredos e registos DNS). Se o envio falhar, o formulário responde 502 e o motivo
+fica nos logs do Worker (Observability no painel da Cloudflare).
 
 **Não há Reply-To.** A API do Hostinger não o tem (nem `from`, nem cabeçalhos), por isso o
 «Responder» do programa de email vai para a própria caixa. Cada email traz um botão «Responder a
@@ -109,8 +108,8 @@ com `pbpaste | npx wrangler secret put <NOME>`. **Não estão neste repositório
 restrito à caixa que envia: não existe permissão «só enviar», e o token lê e apaga tudo nas caixas
 que abrange. `npm run deploy` recusa publicar se faltar um segredo de que o fornecedor precisa.
 
-Mudar `EMAIL_PROVIDER` só no painel da Cloudflare não dura: o `wrangler.jsonc` substitui as
-variáveis do painel a cada deploy.
+As variáveis do `wrangler.jsonc` substituem as do painel da Cloudflare a cada deploy: mudar
+uma só no painel não dura.
 
 ## Formulários
 

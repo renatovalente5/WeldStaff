@@ -1,6 +1,6 @@
 // Corre antes de `wrangler deploy` (ver "deploy" no package.json). Recusa publicar se
-// faltar um segredo de que o fornecedor escolhido precisa: publicar o código do
-// Hostinger sem HOSTINGER_API_TOKEN deixava os dois formulários a dar 502.
+// faltar um segredo de que o Worker precisa: publicar sem HOSTINGER_API_TOKEN deixava os
+// dois formulários a dar 502.
 
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -24,17 +24,8 @@ function lerJsonc(texto) {
 }
 
 const config = lerJsonc(readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
-const fornecedor = String(config.vars?.EMAIL_PROVIDER ?? 'hostinger').toLowerCase();
-
-const PRECISA = {
-    hostinger: ['TURNSTILE_SECRET', 'CONTACT_TO_EMAIL', 'HOSTINGER_API_TOKEN'],
-    resend: ['TURNSTILE_SECRET', 'CONTACT_TO_EMAIL', 'RESEND_API_KEY', 'CONTACT_FROM_EMAIL'],
-};
-if (!PRECISA[fornecedor]) {
-    console.error(`✗ EMAIL_PROVIDER desconhecido no wrangler.jsonc: «${fornecedor}»`);
-    process.exit(1);
-}
-if (fornecedor === 'hostinger' && !config.vars?.HOSTINGER_SENDER) {
+const PRECISA = ['TURNSTILE_SECRET', 'CONTACT_TO_EMAIL', 'HOSTINGER_API_TOKEN'];
+if (!config.vars?.HOSTINGER_SENDER) {
     console.error('✗ Falta HOSTINGER_SENDER nas vars do wrangler.jsonc.');
     process.exit(1);
 }
@@ -50,19 +41,17 @@ try {
     process.exit(1);
 }
 
-const reserva = String(config.vars?.EMAIL_FALLBACK ?? '').toLowerCase();
-if (reserva && reserva !== 'resend') {
-    console.error(`✗ EMAIL_FALLBACK desconhecido: «${reserva}» (só "resend" ou vazio)`);
-    process.exit(1);
-}
-const precisa = [...new Set([...PRECISA[fornecedor], ...(reserva === 'resend' ? PRECISA.resend : [])])];
-const faltam = precisa.filter((n) => !nomes.includes(n));
+const faltam = PRECISA.filter((n) => !nomes.includes(n));
 if (faltam.length) {
-    console.error(`✗ EMAIL_PROVIDER=${fornecedor}, mas faltam segredos no Worker: ${faltam.join(', ')}`);
+    console.error(`✗ Faltam segredos no Worker: ${faltam.join(', ')}`);
     console.error(`  Pôr primeiro, por exemplo: pbpaste | npx wrangler secret put ${faltam[0]}`);
     process.exit(1);
 }
-const deTeste = ['HOSTINGER_API_BASE', 'RESEND_API_BASE'].filter((n) => nomes.includes(n) || config.vars?.[n]);
-if (deTeste.length) console.warn(`⚠ ${deTeste.join(', ')} são só para testes locais; em produção o Worker ignora-os.`);
+const deTeste = ['HOSTINGER_API_BASE'].filter((n) => nomes.includes(n) || config.vars?.[n]);
+if (deTeste.length) console.warn(`⚠ ${deTeste.join(', ')} é só para testes locais; em produção o Worker ignora-o.`);
+// O Resend saiu em 30 set 2026. Um segredo dele que reapareça não faz nada — mas é sinal
+// de que alguém o foi buscar, e a chave devia estar revogada.
+const doResend = ['RESEND_API_KEY', 'CONTACT_FROM_EMAIL'].filter((n) => nomes.includes(n));
+if (doResend.length) console.warn(`⚠ ${doResend.join(', ')} ainda existe(m) no Worker e já não é usado(s): apagar com npx wrangler secret delete.`);
 
-console.log(`✓ EMAIL_PROVIDER=${fornecedor}${reserva ? `, reserva=${reserva}` : ''}; segredos presentes: ${precisa.join(', ')}`);
+console.log(`✓ Hostinger (${config.vars.HOSTINGER_SENDER}); segredos presentes: ${PRECISA.join(', ')}`);

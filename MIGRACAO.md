@@ -29,19 +29,13 @@ O histórico dos passos de DNS está no git, no commit que criou este ficheiro.
    ficaram exatamente iguais. O que muda é o remetente — `geral@weldstaff.pt`, com o nome
    «Formulário WeldStaff», em vez de `no-reply@weldstaff.pt`.
 
-3. **Retirar o Resend — só depois de o Hostinger estar provado** (umas duas semanas de
-   formulários a chegar), e por esta ordem, porque cada passo desliga o caminho de volta:
-   0. Procurar na caixa emails com o aviso amarelo «chegou pelo Resend (reserva)». Se houver,
-      o Hostinger falhou algures e a razão está no aviso — resolver antes de continuar.
-   1. Tirar o ramo `resend` e a reserva (`EMAIL_FALLBACK`) do Worker e publicar
-      (`npm run deploy`).
-   2. `npx wrangler secret delete RESEND_API_KEY` e `CONTACT_FROM_EMAIL`.
-   3. **Revogar** a chave no painel do Resend (apagar o segredo no Worker não a invalida).
-   4. Remover o domínio `weldstaff.pt` no Resend.
-   5. Só no fim, no DNS do Hostinger: o TXT `send`, o MX `send` e o TXT `resend._domainkey`.
-      Com o DNS apagado primeiro, o Resend dá o domínio como falhado ao fim de 72 horas e o
-      caminho de volta morre sem aviso. **Nunca** mexer no SPF do `@`, nos `hostingermail-a/b/c`,
-      no `_dmarc` nem no `google-site-verification`.
+3. **Resend retirado a 30 de setembro de 2026.** Nos seis dias com a reserva ligada nenhum
+   formulário precisou dela: as quatro candidaturas reais chegaram todas pelo Hostinger. Saiu o ramo
+   `resend` e a reserva do Worker (publicado, versão `b18c8a8d`), os segredos `RESEND_API_KEY`
+   e `CONTACT_FROM_EMAIL`, e os registos DNS `TXT send`, `MX send` e `TXT resend._domainkey`
+   (confirmado no servidor autoritativo). **Falta só do lado do Resend:** revogar a chave e
+   remover o domínio `weldstaff.pt` — a conta do Resend da WeldStaff não é a que está aberta no
+   Chrome. Sem os registos DNS, essa chave já não consegue enviar em nome da weldstaff.pt.
 
 ---
 

@@ -5,14 +5,6 @@ export interface Env {
     CONTACT_TO_EMAIL: string;
     ALLOWED_ORIGIN: string;
 
-    // Quem envia: "hostinger" (o normal) ou "resend" (o caminho de volta, enquanto o
-    // Hostinger não estiver provado em produção). Vive no wrangler.jsonc.
-    EMAIL_PROVIDER?: string;
-
-    // Durante a transição: "resend" faz com que uma falha do Hostinger seja reenviada pelo
-    // Resend, com um aviso no próprio email. Vazio desliga. Sai com o Resend (MIGRACAO.md).
-    EMAIL_FALLBACK?: string;
-
     // Hostinger Mail API. O token é da encomenda de email weldstaff.pt (hPanel >
     // Emails > weldstaff.pt > Programadores > Chaves de API) e é um segredo.
     HOSTINGER_API_TOKEN?: string;
@@ -20,12 +12,6 @@ export interface Env {
     HOSTINGER_SENDER?: string;
     // Só para testes locais contra um servidor falso; em produção fica vazio.
     HOSTINGER_API_BASE?: string;
-
-    // Resend (caminho de volta).
-    RESEND_API_KEY?: string;
-    CONTACT_FROM_EMAIL?: string;
-    // Só para testes locais; em produção fica vazio.
-    RESEND_API_BASE?: string;
 }
 
 // Os mesmos limites da interface (job-application-modal.ts): até 3 ficheiros, cada um
@@ -44,8 +30,8 @@ const MAX_CARACTERES_CAMPO = 300;
 
 // Tipos de anexo aceites, pela extensão. A MESMA lista está em
 // src/app/pages/careers/job-application-modal/job-application-modal.ts (EXTENSOES_ACEITES)
-// e no `accept` do .html — a bateria falha se divergirem. O Resend recusava executáveis por conta
-// própria; o Hostinger não o garante, e o email chega à caixa da empresa COM a
+// e no `accept` do .html — a bateria falha se divergirem. O serviço de envio anterior
+// recusava executáveis por conta própria; o Hostinger não o garante, e o email chega à caixa da empresa COM a
 // própria geral@ como remetente — um .exe ou um .html daqui seria phishing perfeito.
 // A lista é larga de propósito: o `accept` da interface só vale para o seletor, e
 // quem arrasta um ficheiro pode trazer um .jpeg, um .heic do iPhone ou um .odt.
@@ -76,12 +62,9 @@ const MAX_BYTES_CONTACTO = 128 * 1024;
 // a própria caixa — e com o nome do candidato à frente parecia ir para ele.
 const NOME_REMETENTE = 'Formulário WeldStaff';
 
-type Fornecedor = 'hostinger' | 'resend';
-
 type Anexo = { filename: string; contentType: string; bytes: ArrayBuffer };
 
 type Mensagem = {
-    replyTo: string;
     subject: string;
     html: string;
     text: string;
@@ -190,12 +173,6 @@ function baseDaApi(pedida: string | undefined, oficial: string) {
     return oficial;
 }
 
-function qualFornecedor(env: Env): Fornecedor {
-    const valor = (env.EMAIL_PROVIDER || "hostinger").trim().toLowerCase();
-    if (valor === "hostinger" || valor === "resend") return valor;
-    throw new ErroEnvio(`EMAIL_PROVIDER desconhecido: «${valor}»`);
-}
-
 /**
  * mailto: com o endereço do visitante e o assunto já preenchido. As duas metades do
  * endereço são codificadas à parte: um «?» ou um «&» na parte local (o isValidEmail
@@ -209,9 +186,9 @@ function ligacaoResponder(email: string, assunto: string) {
 }
 
 /**
- * O HTML e o texto simples saem dos mesmos dados, para dizerem sempre o mesmo.
- * O aviso sobre o «Responder» só aparece quando é verdade: no Resend o Reply-To
- * funciona e o aviso seria falso.
+ * O HTML e o texto simples saem dos mesmos dados, para dizerem sempre o mesmo. A API do
+ * Hostinger não tem Reply-To: o aviso diz que o «Responder» do programa vai para a
+ * própria caixa, e o botão à cabeça leva ao visitante.
  */
 function montarCorpo(opcoes: {
     titulo: string;
@@ -220,16 +197,15 @@ function montarCorpo(opcoes: {
     ip: string;
     visitante: { nome: string; email: string };
     assunto: string;
-    semReplyTo: boolean;
 }) {
-    const { titulo, campos, mensagem, ip, visitante, assunto, semReplyTo } = opcoes;
+    const { titulo, campos, mensagem, ip, visitante, assunto } = opcoes;
     const mailto = ligacaoResponder(visitante.email, assunto);
     const aviso = `Este email foi enviado pelo formulário do site. O «Responder» do programa de email responde para a própria caixa, não para ${visitante.nome}: use o botão acima ou escreva para ${visitante.email}.`;
 
     const html = `
     <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#1a1a1a">
     <p style="margin:0 0 12px"><a href="${escapeHtml(mailto)}" style="display:inline-block;background:#0b5cad;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:6px;font-weight:bold">Responder a ${escapeHtml(visitante.nome)}</a></p>
-    ${semReplyTo ? `<p style="margin:0 0 16px;font-size:12px;color:#8a1c1c">${escapeHtml(aviso)}</p>` : ""}
+    <p style="margin:0 0 16px;font-size:12px;color:#8a1c1c">${escapeHtml(aviso)}</p>
     <h2>${escapeHtml(titulo)}</h2>
     ${campos.map(([rotulo, valor]) => `<p><b>${escapeHtml(rotulo)}:</b> ${escapeHtml(valor)}</p>`).join("\n    ")}
     <hr />
@@ -243,7 +219,7 @@ function montarCorpo(opcoes: {
         titulo,
         "",
         `Responder a ${visitante.nome}: ${visitante.email}`,
-        ...(semReplyTo ? [aviso] : []),
+        aviso,
         "",
         ...campos.map(([rotulo, valor]) => `${rotulo}: ${valor}`),
         "",
@@ -312,8 +288,7 @@ async function handleContact(request: Request, env: Env, allowedOrigin: string):
     // O assunto fica exatamente como era: os filtros da caixa do Hostinger apanham-no.
     const assunto = umaLinha(`[WeldStaff] ${subject}`);
 
-    return enviar(env, allowedOrigin, (fornecedor) => ({
-        replyTo: email,
+    return enviar(env, allowedOrigin, {
         subject: assunto,
         anexos: [],
         ...montarCorpo({
@@ -328,9 +303,8 @@ async function handleContact(request: Request, env: Env, allowedOrigin: string):
             ip: ip ?? "-",
             visitante: { nome: name, email },
             assunto,
-            semReplyTo: fornecedor === "hostinger",
         }),
-    }));
+    });
 }
 
 async function handleApply(request: Request, env: Env, allowedOrigin: string): Promise<Response> {
@@ -410,8 +384,7 @@ async function handleApply(request: Request, env: Env, allowedOrigin: string): P
         ? anexos.map((a) => `${a.filename} (${(a.bytes.byteLength / 1024 / 1024).toFixed(1)} MB)`).join(", ")
         : "nenhum";
 
-    return enviar(env, allowedOrigin, (fornecedor) => ({
-        replyTo: email,
+    return enviar(env, allowedOrigin, {
         subject: assunto,
         anexos,
         ...montarCorpo({
@@ -427,56 +400,19 @@ async function handleApply(request: Request, env: Env, allowedOrigin: string): P
             ip: ip ?? "-",
             visitante: { nome: name, email },
             assunto,
-            semReplyTo: fornecedor === "hostinger",
         }),
-    }));
-}
-
-function querReserva(env: Env) {
-    return (env.EMAIL_FALLBACK || "").trim().toLowerCase() === "resend";
-}
-
-/**
- * A mensagem que segue pela reserva leva à cabeça a razão por que lá foi parar. Uma
- * reserva silenciosa escondia uma falha do Hostinger para sempre; assim, quem abre o
- * email vê-a — e sabe que, desta vez, o «Responder» vai mesmo para o visitante.
- */
-function comAvisoDeReserva(m: Mensagem, motivo: string): Mensagem {
-    const aviso = `Este email chegou pelo Resend (reserva) porque o envio pelo Hostinger falhou: ${umaLinha(motivo).slice(0, 200)}. O «Responder» vai para o visitante. Avisar quem mantém o site.`;
-    return {
-        ...m,
-        html: `<p style="margin:0 0 16px;padding:10px 12px;background:#fff4d6;border:1px solid #d9a400;border-radius:6px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5a4300">${escapeHtml(aviso)}</p>${m.html}`,
-        text: `${aviso}\n\n${m.text}`,
-    };
+    });
 }
 
 /**
  * Envia e responde ao browser. Os pormenores de uma falha vão para os logs do Worker
  * e não para a resposta: o erro do Hostinger pode listar as caixas que o token vê.
  */
-async function enviar(
-    env: Env,
-    allowedOrigin: string,
-    montar: (fornecedor: Fornecedor) => Mensagem,
-): Promise<Response> {
-    let fornecedor: Fornecedor | "?" = "?";
+async function enviar(env: Env, allowedOrigin: string, mensagem: Mensagem): Promise<Response> {
     try {
-        fornecedor = qualFornecedor(env);
-        const mensagem = montar(fornecedor);
-        if (fornecedor === "hostinger") await enviarPeloHostinger(env, mensagem);
-        else await enviarPeloResend(env, mensagem);
+        await enviarPeloHostinger(env, mensagem);
     } catch (erro) {
-        const motivo = erro instanceof Error ? erro.message : String(erro);
-        console.error(`Envio falhou (${fornecedor}):`, motivo);
-        if (fornecedor === "hostinger" && querReserva(env)) {
-            try {
-                await enviarPeloResend(env, comAvisoDeReserva(montar("resend"), motivo));
-                console.error("Entregue pela reserva (Resend) depois da falha do Hostinger.");
-                return json({ ok: true }, 200, corsHeaders(allowedOrigin));
-            } catch (erroReserva) {
-                console.error("A reserva (Resend) também falhou:", erroReserva instanceof Error ? erroReserva.message : erroReserva);
-            }
-        }
+        console.error("Envio falhou:", erro instanceof Error ? erro.message : erro);
         return json({ ok: false, error: "Falha ao enviar email" }, 502, corsHeaders(allowedOrigin));
     }
     return json({ ok: true }, 200, corsHeaders(allowedOrigin));
@@ -558,37 +494,6 @@ async function enviarPeloHostinger(env: Env, m: Mensagem): Promise<void> {
         if (resp.status === 401 || resp.status === 403 || resp.status === 404) caixaEmCache = null;
         const texto = await resp.text().catch(() => "");
         throw new ErroEnvio(`Hostinger /send respondeu ${resp.status}: ${texto.slice(0, 500)}`);
-    }
-}
-
-// O caminho de volta. Os anexos seguem em base64: como Buffer serializado em JSON
-// ({"type":"Buffer","data":[…]}) ocupavam ~3,6x, e 15 MB de CVs davam ~54 MB — acima
-// dos 40 MB que o Resend aceita. Já era assim em produção antes da troca.
-async function enviarPeloResend(env: Env, m: Mensagem): Promise<void> {
-    if (!env.RESEND_API_KEY) throw new ErroEnvio("RESEND_API_KEY não está definido");
-    const base = baseDaApi(env.RESEND_API_BASE, "https://api.resend.com");
-    const resp = await fetch(`${base}/emails`, {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${env.RESEND_API_KEY}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            from: env.CONTACT_FROM_EMAIL,
-            to: [env.CONTACT_TO_EMAIL],
-            reply_to: m.replyTo,
-            subject: m.subject,
-            html: m.html,
-            text: m.text,
-            attachments: m.anexos.length > 0
-                ? m.anexos.map((a) => ({ filename: a.filename, content: Buffer.from(a.bytes).toString("base64") }))
-                : undefined,
-        }),
-    });
-
-    if (!resp.ok) {
-        const texto = await resp.text().catch(() => "");
-        throw new ErroEnvio(`Resend respondeu ${resp.status}: ${texto.slice(0, 300)}`);
     }
 }
 

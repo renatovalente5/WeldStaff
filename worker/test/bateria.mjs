@@ -1,5 +1,5 @@
 // Bateria do Worker dos formulários: corre o Worker VERDADEIRO (wrangler unstable_dev)
-// contra um Hostinger e um Resend falsos, que gravam cada pedido. Nenhum email sai.
+// contra um Hostinger falso, que grava cada pedido. Nenhum email sai.
 //
 //   cd worker && npm test
 //
@@ -11,13 +11,13 @@ import { createHash, randomBytes } from 'node:crypto';
 import { unstable_dev } from 'wrangler';
 import { readFileSync } from 'node:fs';
 
-// ── O Hostinger e o Resend falsos ────────────────────────────────────────────
+// ── O Hostinger falso (e uma armadilha para qualquer pedido ao Resend) ─────────
 const CAIXAS_WELDSTAFF = [
     { resourceId: 'AC-jorge', address: 'jorgemaia@weldstaff.pt' },
     { resourceId: 'AC-geral', address: 'geral@weldstaff.pt' },
     { resourceId: 'AC-rh', address: 'rh@weldstaff.pt' },
 ];
-const estado = { caixas: CAIXAS_WELDSTAFF, respostaSend: 204, respostaMe: 200, respostaResend: 200 };
+const estado = { caixas: CAIXAS_WELDSTAFF, respostaSend: 204, respostaMe: 200 };
 const TOKEN_CERTO = 'Bearer token-de-teste';
 let registo = [];
 
@@ -45,8 +45,8 @@ const falso = createServer((req, res) => {
             res.writeHead(estado.respostaSend, { 'Content-Type': 'application/json' });
             return res.end(JSON.stringify({ code: 'ERR_TESTE', error: 'falha simulada com geral@carimbodigital.pt', params: {} }));
         }
+        // O Resend saiu; se alguma coisa ainda lhe bater, fica registado aqui.
         if (req.method === 'POST' && req.url === '/emails') {
-            if (estado.respostaResend !== 200) { res.writeHead(estado.respostaResend); return res.end('{"message":"falha simulada"}'); }
             res.writeHead(200, { 'Content-Type': 'application/json' });
             return res.end(JSON.stringify({ id: 'resend-teste' }));
         }
@@ -72,10 +72,6 @@ const SEGREDOS = {
     CONTACT_TO_EMAIL: 'geral@weldstaff.pt',
     HOSTINGER_API_TOKEN: 'token-de-teste',
     HOSTINGER_API_BASE: BASE_FALSA,
-    RESEND_API_KEY: 're_teste',
-    RESEND_API_BASE: BASE_FALSA,
-    CONTACT_FROM_EMAIL: 'no-reply@weldstaff.pt',
-    EMAIL_FALLBACK: '',
 };
 async function arrancar(extra = {}) {
     return unstable_dev('src/index.ts', {
@@ -337,38 +333,6 @@ try {
         'HOSTINGER_API_BASE fora da lista é ignorada: vai ao Hostinger verdadeiro (que recusa o token falso) e o falso, que estava ao alcance, não recebe nada', { status: r.status, pedidosAoFalso: registo.length });
     await w.stop();
 
-    console.log('\n7e. Reserva: o Hostinger falha e o email segue pelo Resend, com aviso');
-    registo = []; estado.respostaSend = 422;
-    w = await arrancar({ EMAIL_FALLBACK: 'resend' });
-    r = await contacto(w);
-    j = await r.json();
-    let e3 = registo.find((x) => x.caminho === '/emails');
-    certo(r.status === 200 && j.ok === true, 'o visitante vê sucesso: a mensagem foi entregue', { status: r.status, j });
-    certo(sends().length === 1 && registo.filter((x) => x.caminho === '/emails').length === 1, 'tentou o Hostinger uma vez e o Resend uma vez', registo.map((x) => x.caminho));
-    certo(e3?.corpo?.html.startsWith('<p') && e3.corpo.html.indexOf('chegou pelo Resend (reserva)') < e3.corpo.html.indexOf('Responder a João Silva'),
-        'o HTML abre com o aviso da reserva, antes de tudo', e3?.corpo?.html.slice(0, 160));
-    certo(e3?.corpo?.text.startsWith('Este email chegou pelo Resend (reserva) porque o envio pelo Hostinger falhou: Hostinger /send respondeu 422'),
-        'o texto simples abre com o mesmo aviso e diz porquê (422)', e3?.corpo?.text.slice(0, 140));
-    certo(e3?.corpo?.reply_to === 'joao.silva@exemplo.pt' && !e3.corpo.text.includes('própria caixa'),
-        'pela reserva há Reply-To, e por isso não leva o aviso do «Responder»', { reply_to: e3?.corpo?.reply_to });
-    registo = [];
-    r = await candidatura(w, [{ nome: 'cv.pdf', tipo: 'application/pdf', bytes: Buffer.from('%PDF-1.4 reserva') }]);
-    e3 = registo.find((x) => x.caminho === '/emails');
-    certo(r.status === 200 && Buffer.from(e3?.corpo?.attachments?.[0]?.content ?? '', 'base64').toString() === '%PDF-1.4 reserva',
-        'a candidatura chega pela reserva com o anexo intacto', r.status);
-    registo = []; estado.respostaResend = 500;
-    r = await contacto(w);
-    certo(r.status === 502, 'se a reserva também falha → 502', r.status);
-    estado.respostaResend = 200; estado.respostaSend = 204;
-    await w.stop();
-    registo = []; estado.respostaResend = 500;
-    w = await arrancar({ EMAIL_PROVIDER: 'resend', EMAIL_FALLBACK: 'resend' });
-    r = await contacto(w);
-    certo(r.status === 502 && registo.filter((x) => x.caminho === '/emails').length === 1 && sends().length === 0,
-        'com EMAIL_PROVIDER=resend a falhar, não há segunda tentativa nem Hostinger', registo.map((x) => x.caminho));
-    estado.respostaResend = 200;
-    await w.stop();
-
     console.log('\n7d. Turnstile a sério: com a chave que falha sempre');
     registo = [];
     w = await arrancar({ TURNSTILE_SECRET: '2x0000000000000000000000000000000AA' });
@@ -391,34 +355,20 @@ try {
     await w.stop();
     estado.caixas = CAIXAS_WELDSTAFF;
 
-    // ═══ 9. O caminho de volta: Resend ═══════════════════════════════════════
-    console.log('\n9. EMAIL_PROVIDER=resend (o caminho de volta)');
+    // ═══ 9. O Resend saiu: nem com as variáveis antigas lá postas ═══════════
+    // O código publica-se antes de os segredos do Resend serem apagados. Nesse intervalo
+    // (ou se alguém os voltar a pôr), o Worker tem de os ignorar.
+    console.log('\n9. Variáveis antigas do Resend ainda definidas não mudam nada');
     registo = [];
-    w = await arrancar({ EMAIL_PROVIDER: 'resend' });
+    w = await arrancar({ EMAIL_PROVIDER: 'resend', EMAIL_FALLBACK: 'resend', RESEND_API_KEY: 're_antiga',
+        RESEND_API_BASE: BASE_FALSA, CONTACT_FROM_EMAIL: 'no-reply@weldstaff.pt' });
     r = await contacto(w);
-    certo(r.status === 200, 'responde 200', r.status);
-    const e = registo.find((x) => x.caminho === '/emails');
-    certo(!!e && sends().length === 0 && mes().length === 0, 'vai ao Resend e não toca no Hostinger', registo.map((x) => x.caminho));
-    certo(e?.auth === 'Bearer re_teste' && e?.corpo?.from === 'no-reply@weldstaff.pt', 'leva a chave e o remetente do Resend', e && { auth: e.auth, from: e.corpo.from });
-    certo(e?.corpo?.reply_to === 'joao.silva@exemplo.pt', 'mantém o reply_to para o visitante', e?.corpo?.reply_to);
-    certo(e?.corpo?.subject === assuntoContacto, 'mesmo assunto', e?.corpo?.subject);
-    certo(e?.corpo?.html.includes(`href="${mailtoEsperado}"`), 'tem o botão «Responder» (é útil em qualquer fornecedor)');
-    certo(!e?.corpo?.html.includes('própria caixa') && !e?.corpo?.text.includes('própria caixa'),
-        'NÃO leva o aviso: no Resend o «Responder» funciona e o aviso seria falso', e?.corpo?.text);
-    registo = [];
-    r = await candidatura(w, [{ nome: 'cv.pdf', tipo: 'application/pdf', bytes: Buffer.from('%PDF-1.4 teste') }]);
-    const e2 = registo.find((x) => x.caminho === '/emails');
-    certo(r.status === 200 && e2?.corpo?.attachments?.[0]?.filename === 'cv.pdf'
-        && typeof e2.corpo.attachments[0].content === 'string'
-        && Buffer.from(e2.corpo.attachments[0].content, 'base64').toString() === '%PDF-1.4 teste',
-        'anexos em base64 (o Buffer em JSON ocupava 3,6x e passava os 40 MB do Resend)', e2?.corpo?.attachments?.[0]);
-    await w.stop();
-
-    console.log('\n10. EMAIL_PROVIDER com um valor desconhecido');
-    registo = [];
-    w = await arrancar({ EMAIL_PROVIDER: 'gmail' });
+    certo(r.status === 200 && sends().length === 1, 'envia pelo Hostinger', { status: r.status, sends: sends().length });
+    certo(!registo.some((x) => x.caminho === '/emails'), 'e nunca contacta o Resend', registo.map((x) => x.caminho));
+    estado.respostaSend = 422; registo = [];
     r = await contacto(w);
-    certo(r.status === 502 && registo.length === 0, 'recusa (502) e não contacta ninguém', { status: r.status, pedidos: registo.length });
+    certo(r.status === 502 && !registo.some((x) => x.caminho === '/emails'), 'nem quando o Hostinger falha (já não há reserva): 502', { status: r.status, pedidos: registo.map((x) => x.caminho) });
+    estado.respostaSend = 204;
     await w.stop();
 } catch (erro) {
     falhas++; falhouTudo.push(erro);
