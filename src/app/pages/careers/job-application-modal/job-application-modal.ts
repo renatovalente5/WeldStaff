@@ -181,16 +181,7 @@ export class JobApplicationModalComponent implements OnDestroy {
       // A mesma guarda do formulário de contacto: se o Turnstile nunca responder (script
       // bloqueado por uma extensão, rede que o corta, desafio que precisa de um clique), o
       // botão ficava em «A enviar…» para sempre e o candidato achava que estava a enviar.
-      clearTimeout(this.temporizadorToken);
-      this.temporizadorToken = setTimeout(() => {
-        if (!this.pendingSubmit) return;
-        this.pendingSubmit = false;
-        this.isSubmitting = false;
-        this.turnstileToken = '';
-        this.turnstileWidget?.reset();
-        this.cdr.markForCheck();
-        alert(this.translocoService.translate('careers.applicationModal.errorMessage'));
-      }, 20000);
+      this.armarGuardaDoToken();
     }
   }
 
@@ -248,6 +239,26 @@ export class JobApplicationModalComponent implements OnDestroy {
 
   aoFechar() {
     this.close.emit();
+  }
+
+  /** Com a caixa da Cloudflare à vista, a guarda pára; quando deixa de estar, volta a contar. */
+  aoPedirInteracao(aPedir: boolean) {
+    if (!this.pendingSubmit) return;
+    clearTimeout(this.temporizadorToken);
+    if (!aPedir) this.armarGuardaDoToken();
+  }
+
+  private armarGuardaDoToken() {
+    clearTimeout(this.temporizadorToken);
+    this.temporizadorToken = setTimeout(() => {
+      if (!this.pendingSubmit) return;
+      this.pendingSubmit = false;
+      this.isSubmitting = false;
+      this.turnstileToken = '';
+      this.turnstileWidget?.reset();
+      this.cdr.markForCheck();
+      alert(this.translocoService.translate('careers.applicationModal.errorMessage'));
+    }, 20000);
   }
 
   ngOnDestroy(): void {

@@ -336,7 +336,93 @@ try {
     certo(pedidosAoWorker.length === 0, 'e nada chegou ao Worker (sem token, nada se envia)', pedidosAoWorker);
     await enviar('Network.setBlockedURLs', { urls: [] }, s);
 
-    console.log('\n12. Sem erros');
+    // ═══ 12–14. A caixa do Turnstile só aparece quando a Cloudflare pede um clique ═══
+    // Com as chaves de teste da Cloudflare (valem em qualquer domínio), trocadas só neste
+    // Chrome: 3x…FF força o desafio interactivo, 1x…AA passa sem interação. Eu não marco a
+    // caixa (é um anti-robô): prova-se que ela aparece e que o formulário espera. O Worker
+    // fica bloqueado — nada chega a ser enviado.
+    // Nada de definir window.turnstile de antemão: o script do Turnstile vê que já existe e
+    // não carrega. Espera-se que ele apareça e embrulha-se o render (é gravável).
+    const trocarChave = (chave) => enviar('Page.addScriptToEvaluateOnNewDocument', { source: `(() => {
+        const t = setInterval(() => { const ts = window.turnstile;
+          if (ts && typeof ts.render === 'function' && !ts.__trocado) { const r = ts.render.bind(ts);
+            ts.render = (el, o) => r(el, { ...o, sitekey: '${chave}' }); ts.__trocado = true; clearInterval(t); } }, 5);
+        window.__alertas = []; window.alert = (m) => window.__alertas.push(String(m)); })();` }, s);
+    const pedidosAoWorker2 = [];
+    enviar.ouvintes.add((m) => { if (m.sessionId === s && m.method === 'Network.requestWillBeSent' && /weld-staff-api/.test(m.params.request.url)) pedidosAoWorker2.push(m.params.request.url); });
+    await enviar('Network.setBlockedURLs', { urls: ['*weld-staff-api*'] }, s);
+    const alturaDoWidget = (onde) => js(`const t = document.querySelector('${onde} app-turnstile'); return t ? { altura: t.getBoundingClientRect().height, classe: t.classList.contains('a-pedir-interacao') } : null;`);
+    async function candidaturaPreenchida() {
+        await enviar('Page.navigate', { url: `${BASE}/careers` }, s);
+        for (let i = 0; i < 60; i++) {
+            if (await js(`return !!document.querySelector('app-root')?.getAttribute('ng-version') && document.querySelectorAll('.apply-cta').length === 6;`).catch(() => false)) break;
+            await esperar(250);
+        }
+        await esperar(800);
+        await js(`document.querySelector('.apply-cta').focus(); return true;`);
+        await tecla('Enter'); await esperar(400);
+        for (const [id, texto] of [['name', 'Teste Teclado'], ['phone', '912345678'], ['email', 'teste@exemplo.pt']]) {
+            await js(`document.querySelector('dialog #${id}').focus(); return true;`);
+            await enviar('Input.insertText', { text: texto }, s); await esperar(60);
+        }
+        await js(`document.querySelector('dialog #candidatura-consentimento').focus(); return true;`);
+        await tecla('Espaco');
+        await js(`document.querySelector('dialog .btn-primary').focus(); return true;`);
+    }
+
+    console.log('\n12. A Cloudflare pede um clique: a caixa aparece na candidatura e o formulário espera');
+    let ident = (await trocarChave('3x00000000000000000000FF')).identifier;
+    await candidaturaPreenchida();
+    const antes = await alturaDoWidget('dialog');
+    certo(antes && antes.altura === 0, 'antes de enviar, o widget não ocupa espaço nenhum', antes);
+    await tecla('Enter');
+    let widget = null;
+    for (let i = 0; i < 20; i++) { await esperar(500); widget = await alturaDoWidget('dialog'); if (widget?.altura > 0) break; }
+    certo(widget?.altura > 40 && widget.classe, `ao enviar, a caixa aparece dentro da candidatura (${Math.round(widget?.altura || 0)} px)`, widget);
+    await esperar(25000);
+    const estado12 = await js(`return { alertas: window.__alertas, botao: document.querySelector('dialog .btn-primary')?.getAttribute('aria-disabled'), aberto: !!document.querySelector('dialog.modal-overlay[open]') };`);
+    certo(estado12.alertas.length === 0 && estado12.botao === 'true' && estado12.aberto,
+        'passados 25 s não há erro: com a caixa à vista, a guarda de 20 s está parada à espera da pessoa', estado12);
+    await enviar('Page.removeScriptToEvaluateOnNewDocument', { identifier: ident }, s);
+
+    console.log('\n13. A Cloudflare não pede nada: o widget fica com 0 px e o envio segue');
+    ident = (await trocarChave('1x00000000000000000000AA')).identifier;
+    pedidosAoWorker2.length = 0;
+    await candidaturaPreenchida();
+    await tecla('Enter');
+    const alturas = [];
+    for (let i = 0; i < 16 && !pedidosAoWorker2.length; i++) { await esperar(500); alturas.push((await alturaDoWidget('dialog'))?.altura); }
+    certo(pedidosAoWorker2.length === 1, 'o token chega e a candidatura segue para o Worker (bloqueado neste teste)', pedidosAoWorker2);
+    certo(alturas.length > 0 && alturas.every((a) => a === 0), 'e o widget nunca ocupou espaço — o formulário não mexeu', alturas);
+    await enviar('Page.removeScriptToEvaluateOnNewDocument', { identifier: ident }, s);
+
+    console.log('\n14. O mesmo no formulário de contacto');
+    ident = (await trocarChave('3x00000000000000000000FF')).identifier;
+    await enviar('Page.navigate', { url: `${BASE}/contactos` }, s);
+    for (let i = 0; i < 60; i++) {
+        if (await js(`return !!document.querySelector('app-root')?.getAttribute('ng-version') && !!document.querySelector('form app-turnstile');`).catch(() => false)) break;
+        await esperar(250);
+    }
+    await esperar(800);
+    const campos = await js(`return [...document.querySelectorAll('form input, form textarea')].map((e) => e.getAttribute('formcontrolname') || e.id || e.type);`);
+    for (const [controlo, texto] of [['name', 'Teste Teclado'], ['email', 'teste@exemplo.pt'], ['phone', '912345678'], ['message', 'Mensagem de teste com mais de vinte caracteres.']]) {
+        await js(`document.querySelector('form [formcontrolname="${controlo}"]').focus(); return true;`);
+        await enviar('Input.insertText', { text: texto }, s); await esperar(60);
+    }
+    await js(`document.querySelector('form [formcontrolname="consent"]').focus(); return true;`);
+    await tecla('Espaco');
+    await js(`document.querySelector('form [type="submit"]').focus(); return true;`);
+    await tecla('Enter');
+    let widgetC = null;
+    for (let i = 0; i < 20; i++) { await esperar(500); widgetC = await alturaDoWidget('form'); if (widgetC?.altura > 0) break; }
+    certo(widgetC?.altura > 40 && widgetC.classe, `no contacto, a caixa aparece no formulário (${Math.round(widgetC?.altura || 0)} px)`, { widgetC, campos });
+    await esperar(25000);
+    const erroC = await js(`return document.querySelector('.alert.alert-error')?.innerText?.trim() || null;`);
+    certo(erroC === null, 'e passados 25 s não aparece a mensagem de erro (.alert-error)', erroC);
+    await enviar('Page.removeScriptToEvaluateOnNewDocument', { identifier: ident }, s);
+    await enviar('Network.setBlockedURLs', { urls: [] }, s);
+
+    console.log('\n15. Sem erros');
     certo(excecoes.length === 0, 'nenhuma excepção por apanhar em toda a corrida', excecoes);
 } catch (erro) {
     falhas++; console.error('\nA bateria rebentou:', erro);

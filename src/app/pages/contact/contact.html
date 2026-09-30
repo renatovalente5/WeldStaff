@@ -139,8 +139,9 @@
                             <input id="website" type="text" formControlName="website" autocomplete="off" tabindex="-1">
                         </div>
 
-                        <!-- Turnstile (hidden) -->
-                        <app-turnstile [siteKey]="siteKey" (tokenChange)="onTokenChange($event)"></app-turnstile>
+                        <!-- Turnstile: invisível; só aparece se a Cloudflare pedir um clique -->
+                        <app-turnstile [siteKey]="siteKey" (tokenChange)="onTokenChange($event)"
+                            (interacao)="aoPedirInteracao($event)"></app-turnstile>
 
                         <div class="form-actions">
                             <app-button type="submit" variant="primary"

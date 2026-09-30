@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, Output, ViewChild, afterNextRender } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, NgZone, OnDestroy, Output, ViewChild, afterNextRender } from '@angular/core';
 
 declare global {
     interface Window {
@@ -11,13 +11,21 @@ declare global {
     }
 }
 
+// O widget fica no sítio, invisível e com 0 px de altura, até a Cloudflare pedir um
+// clique (appearance: 'interaction-only'). Antes vivia fora do ecrã: o widget está em modo
+// «managed», e quando a Cloudflare pedia a caixa a quem a devia marcar, ela não se via.
 @Component({
     selector: 'app-turnstile',
-    template: `<div #container style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;"></div>`,
+    template: `<div #container></div>`,
+    styles: [`:host { display: block; } :host(.a-pedir-interacao) { margin: 0 0 1rem; }`],
 })
 export class TurnstileComponent implements OnDestroy {
     @Input({ required: true }) siteKey!: string;
     @Output() tokenChange = new EventEmitter<string>();
+    /** true quando a Cloudflare mostra a caixa e espera um clique; false quando deixa de esperar. */
+    @Output() interacao = new EventEmitter<boolean>();
+
+    @HostBinding('class.a-pedir-interacao') aPedirInteracao = false;
 
     @ViewChild('container', { static: true }) container!: ElementRef<HTMLElement>;
 
@@ -51,10 +59,10 @@ export class TurnstileComponent implements OnDestroy {
             this.widgetId = window.turnstile!.render(this.container.nativeElement, {
                 sitekey: this.siteKey,
                 theme: 'light',
-                // Sem `size`: o Turnstile só aceita normal, flexible ou compact, e o «invisible»
-                // que aqui estava lançava um TurnstileError em todas as páginas com formulário
-                // (o browser mostrava-o como «Script error.»). O widget já vive num contentor
-                // escondido; o modo invisível decide-se no painel da Cloudflare, não aqui.
+                // «invisible» não existe no Turnstile (só normal, flexible e compact) e lançava um
+                // TurnstileError em todas as páginas. Flexible ocupa a largura do formulário.
+                size: 'flexible',
+                appearance: 'interaction-only',
                 execution: 'execute', // Do NOT challenge automatically on render
                 callback: (token: string) => {
                     this.zone.run(() => this.tokenChange.emit(token));
@@ -65,8 +73,23 @@ export class TurnstileComponent implements OnDestroy {
                 'error-callback': () => {
                     this.zone.run(() => this.tokenChange.emit(''));
                 },
+                'before-interactive-callback': () => {
+                    this.zone.run(() => this.mudarInteracao(true));
+                },
+                'after-interactive-callback': () => {
+                    this.zone.run(() => this.mudarInteracao(false));
+                },
+                // A pessoa não marcou a caixa a tempo: o desafio caducou.
+                'timeout-callback': () => {
+                    this.zone.run(() => { this.mudarInteracao(false); this.tokenChange.emit(''); });
+                },
             });
         });
+    }
+
+    private mudarInteracao(valor: boolean) {
+        this.aPedirInteracao = valor;
+        this.interacao.emit(valor);
     }
 
     /** Trigger the Turnstile challenge manually (call on form submit) */

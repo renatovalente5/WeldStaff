@@ -154,14 +154,7 @@ export class ContactComponent implements OnInit, OnDestroy {
 
     // Se o Turnstile nunca responder (script bloqueado, hostname não autorizado),
     // não deixar o botão preso em «a enviar» para sempre.
-    clearTimeout(this.temporizadorToken);
-    this.temporizadorToken = setTimeout(() => {
-      if (!this.aEsperarToken) return;
-      this.aEsperarToken = false;
-      this.isSubmitting = false;
-      this.errorMessage = 'contacts.form.error';
-      this.cdr.markForCheck();
-    }, 20000);
+    this.armarGuardaDoToken();
 
     this.cdr.markForCheck();
   }
@@ -193,6 +186,28 @@ export class ContactComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  /**
+   * Enquanto a Cloudflare espera que a pessoa marque a caixa, a guarda de 20 s fica parada:
+   * senão dava erro com a caixa ainda à vista. Quando deixa de esperar (marcou, ou o desafio
+   * caducou), a guarda volta a contar — se o token não chegar, o erro aparece na mesma.
+   */
+  aoPedirInteracao(aPedir: boolean): void {
+    if (!this.aEsperarToken) return;
+    clearTimeout(this.temporizadorToken);
+    if (!aPedir) this.armarGuardaDoToken();
+  }
+
+  private armarGuardaDoToken(): void {
+    clearTimeout(this.temporizadorToken);
+    this.temporizadorToken = setTimeout(() => {
+      if (!this.aEsperarToken) return;
+      this.aEsperarToken = false;
+      this.isSubmitting = false;
+      this.errorMessage = 'contacts.form.error';
+      this.cdr.markForCheck();
+    }, 20000);
   }
 
   private limparTurnstile(): void {
