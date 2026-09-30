@@ -33,9 +33,11 @@ O histórico dos passos de DNS está no git, no commit que criou este ficheiro.
    formulário precisou dela: as quatro candidaturas reais chegaram todas pelo Hostinger. Saiu o ramo
    `resend` e a reserva do Worker (publicado, versão `b18c8a8d`), os segredos `RESEND_API_KEY`
    e `CONTACT_FROM_EMAIL`, e os registos DNS `TXT send`, `MX send` e `TXT resend._domainkey`
-   (confirmado no servidor autoritativo). **Falta só do lado do Resend:** revogar a chave e
-   remover o domínio `weldstaff.pt` — a conta do Resend da WeldStaff não é a que está aberta no
-   Chrome. Sem os registos DNS, essa chave já não consegue enviar em nome da weldstaff.pt.
+   (confirmado no servidor autoritativo). Do lado do Resend, o dono removeu o domínio e a chave;
+   confirmado a 30 de setembro: a conta ficou sem domínios, chaves, webhooks nem contactos. Ficam
+   os 8 envios antigos e os respetivos logs (até 24 de setembro), que o Resend apaga sozinho ao
+   fim de 30 dias — por volta de 24 de outubro. Não há botão nem API para os apagar antes; só
+   pedindo ao suporte do Resend.
 
 4. **Línguas com morada própria (30 de setembro de 2026).** Até aqui o inglês, o francês e o
    espanhol só existiam no browser, depois de escolhidos no seletor: o Google via uma página em
@@ -43,6 +45,14 @@ O histórico dos passos de DNS está no git, no commit que criou este ficheiro.
    `hreflang` nas páginas e no sitemap. O Bing recebe-as pelo IndexNow no deploy; o Google volta a
    ler o sitemap sozinho (a última leitura tinha sido a 29 de setembro). No Search Console, em
    Páginas, as 24 devem aparecer nas semanas seguintes.
+
+5. **DMARC em quarentena (30 de setembro de 2026).** O `_dmarc` passou de `p=none` a
+   `v=DMARC1; p=quarantine; rua=mailto:geral@weldstaff.pt`: um email que finja ser da weldstaff.pt
+   sem o ser vai para o Spam de quem o recebe. Antes de mudar confirmou-se que só a Hostinger envia
+   em nome do domínio (o SPF só inclui `_spf.mail.hostinger.com`, e o DKIM é o `hostingermail-*`).
+   Os relatórios agregados (XML, de Google, Microsoft…) chegam à `geral@`. Um serviço novo que
+   passe a enviar em nome da weldstaff.pt tem de entrar no SPF e assinar com DKIM, senão os
+   emails dele vão para o Spam.
 
 ---
 
@@ -73,9 +83,10 @@ dono do site pode fazer, e todas foram deixadas como estavam.
    `home.seo.title`, que é o que fica no separador). Decidir qual é o canónico. (O terceiro, o
    `title` da rota, saiu a 30 de setembro de 2026: repunha-se por cima do traduzido.)
 
-6. **Localização das vagas.** As 6 chaves `careers.jobs.*.location` estão vazias e o
-   `locationKey` nunca é preenchido. Três das vagas dizem a localização no próprio título
-   (Ribatejo, Setúbal, Aveiro); as outras três não a têm em lado nenhum, e não a inventei.
+6. **Localização das vagas — decidido a 30 de setembro de 2026.** As 6 chaves
+   `careers.jobs.*.location` estão vazias e o `locationKey` nunca é preenchido. O dono decidiu não
+   publicar localidade, tipo de contrato nem salário, e não quer as vagas no Google Jobs: por isso
+   não há `JobPosting` nos dados estruturados, e não deve haver.
 
 7. **Mensagens de validação do modal de candidatura.** Estão traduzidas nas 4 línguas mas o
    template nunca as mostra: o candidato vê a borda vermelha e o botão desativado sem saber o
