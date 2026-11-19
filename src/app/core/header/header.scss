@@ -36,13 +36,10 @@
         }
 
         .logo-img {
-            height: 44px;
-            transform: scale(1.20);
-            transform-origin: left center;
+            height: 40px;
 
             @media (max-width: 768px) {
-                height: 46px;
-                transform: none;
+                height: 34px;
             }
         }
     }
@@ -69,23 +66,30 @@
         font-size: 1.25rem;
     }
 
+    /* Logótipo completo em vetor, sempre com «Industrial Services» (é o setor da empresa), a uma altura em
+       que o descritor se lê: a versão negativa por cima do vídeo do início, a cores no cabeçalho branco. */
     .logo-img {
-        filter: brightness(0) invert(1);
-        transform: scale(1);
-        transform-origin: left center;
-        transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-            filter 0.35s ease,
-            transform 0.35s ease;
+        display: block;
+        height: 44px;
+        width: auto;
+        transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 
         @media (max-width: 768px) {
-            height: 56px !important;
+            height: 36px;
         }
+    }
+
+    .logo-cor {
+        display: none;
     }
 }
 
-/* When scrolled: logo returns to its original colors */
-.header.scrolled .logo-img {
-    filter: none;
+.header.scrolled .logo .logo-neg {
+    display: none;
+}
+
+.header.scrolled .logo .logo-cor {
+    display: block;
 }
 
 /* ========================================
@@ -407,7 +411,7 @@
         margin-bottom: 2.5rem;
 
         .logo-img-mobile {
-            height: 52px;
+            height: 36px;
             width: auto;
             object-fit: contain;
         }

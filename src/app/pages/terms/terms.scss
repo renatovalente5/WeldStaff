@@ -65,7 +65,7 @@
     font-size: 0.875rem;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #E1E1DC;
 }
 
 .legal-card h2 {
@@ -138,7 +138,7 @@
     overflow-x: auto;
     margin: 1rem 0;
     border-radius: var(--radius-md);
-    border: 1px solid #e2e8f0;
+    border: 1px solid #E1E1DC;
 }
 
 .cookie-table {
@@ -149,7 +149,7 @@
     th, td {
         padding: 0.75rem 1rem;
         text-align: left;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid #E1E1DC;
     }
 
     th {
@@ -171,7 +171,7 @@
     }
 
     tbody tr:hover {
-        background: rgba(59, 130, 246, 0.03);
+        background: rgba(247, 138, 29, 0.03);
     }
 }
 
@@ -182,7 +182,7 @@
 .legal-back {
     margin-top: 2.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid #E1E1DC;
     text-align: center;
 }
 
@@ -199,7 +199,7 @@
     font-weight: 600;
     text-decoration: none !important;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+    box-shadow: 0 4px 12px rgba(247, 138, 29, 0.2);
 
     svg {
         transition: transform 0.3s ease;
@@ -209,7 +209,7 @@
         background: var(--secondary-color);
         color: #000000 !important;
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+        box-shadow: 0 6px 16px rgba(247, 138, 29, 0.3);
         filter: brightness(1.08);
 
         svg {

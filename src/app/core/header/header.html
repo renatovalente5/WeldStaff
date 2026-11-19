@@ -2,7 +2,8 @@
     <div class="container flex justify-between items-center">
         <!-- Logo -->
         <a [routerLink]="'/' | naLingua" class="logo logo-centered">
-            <img src="assets/img/weldstaff_full_logo.png" alt="WeldStaff" class="logo-img">
+            <img src="assets/img/marca/weldstaff-horizontal-negativo.svg" alt="WeldStaff Industrial Services" class="logo-img logo-neg" width="686" height="101">
+            <img src="assets/img/marca/weldstaff-horizontal-cor.svg" alt="WeldStaff Industrial Services" class="logo-img logo-cor" width="686" height="101">
         </a>
 
         <!-- Desktop Navigation -->
@@ -84,7 +85,7 @@
     <div class="mobile-menu" [class.open]="isMobileMenuOpen" role="navigation" [attr.aria-label]="'a11y.mobileNav' | transloco">
         <div class="mobile-menu-header flex justify-between items-center">
             <span class="logo-mobile">
-                <img src="assets/img/weldstaff_full_logo.png" alt="WeldStaff" class="logo-img-mobile">
+                <img src="assets/img/marca/weldstaff-horizontal-cor.svg" alt="WeldStaff Industrial Services" class="logo-img-mobile" width="686" height="101">
             </span>
             <button class="close-btn" (click)="toggleMobileMenu()" [attr.aria-label]="'a11y.closeMenu' | transloco">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

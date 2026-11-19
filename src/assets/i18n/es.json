@@ -44,7 +44,7 @@
         "about": {
             "title": "Quiénes Somos",
             "subtitle": "Especialistas en servicios industriales",
-            "text": "Nuestra empresa presta servicios tanto en la ejecución de trabajos industriales como en la cesión de profesionales cualificados, apoyando a empresas y proyectos que necesitan refuerzo técnico especializado. Disponemos de profesionales experimentados en los diversos ámbitos de la metalmecánica, preparados para intervenir en trabajos de fabricación, montaje y mantenimiento industrial, siempre con elevado rigor técnico, profesionalidad y cumplimiento de las normas de seguridad."
+            "text": "Nuestra empresa presta servicios tanto en la ejecución de trabajos industriales como en el refuerzo de equipos con profesionales cualificados, apoyando a empresas y proyectos que necesitan apoyo técnico especializado. Disponemos de profesionales experimentados en los diversos ámbitos de la metalmecánica, preparados para intervenir en trabajos de fabricación, montaje y mantenimiento industrial, siempre con elevado rigor técnico, profesionalidad y cumplimiento de las normas de seguridad."
         },
         "services": {
             "title": "Lo Que Hacemos",
@@ -71,7 +71,7 @@
             },
             "s6": {
                 "title": "Ejecución de Trabajos",
-                "desc": "Además de proporcionar mano de obra, también ejecutamos trabajos y proyectos completos de soldadura."
+                "desc": "Además de reforzar equipos, también ejecutamos trabajos y proyectos completos de soldadura."
             }
         },
         "whyUs": {

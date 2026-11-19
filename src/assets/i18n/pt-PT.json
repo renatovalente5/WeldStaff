@@ -44,7 +44,7 @@
         "about": {
             "title": "Quem Somos",
             "subtitle": "Especialistas em serviços industriais",
-            "text": "A nossa empresa presta serviços tanto na execução de trabalhos industriais como na cedência de profissionais qualificados, apoiando empresas e projetos que necessitam de reforço técnico especializado. Dispomos de profissionais experientes nas diversas vertentes da metalomecânica, preparados para atuar em trabalhos de fabrico, montagem e manutenção industrial, sempre com elevado rigor técnico, profissionalismo e cumprimento das normas de segurança."
+            "text": "A nossa empresa presta serviços tanto na execução de trabalhos industriais como no reforço de equipas com profissionais qualificados, apoiando empresas e projetos que necessitam de apoio técnico especializado. Dispomos de profissionais experientes nas diversas vertentes da metalomecânica, preparados para atuar em trabalhos de fabrico, montagem e manutenção industrial, sempre com elevado rigor técnico, profissionalismo e cumprimento das normas de segurança."
         },
         "services": {
             "title": "O Que Fazemos",
@@ -71,7 +71,7 @@
             },
             "s6": {
                 "title": "Execução de Trabalhos",
-                "desc": "Para além de cedermos mão de obra, também executamos trabalhos e projetos completos de soldadura."
+                "desc": "Para além de reforçarmos equipas, também executamos trabalhos e projetos completos de soldadura."
             }
         },
         "whyUs": {

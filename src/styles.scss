@@ -1,7 +1,13 @@
 /* Global Styles for WeldStaff */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-/* Added Roboto for variety */
+/* Letra da marca (Fira Sans e Fira Sans Condensed, licença OFL), servida pelo próprio site:
+   só os caracteres latinos (pt, en, fr, es), ~15 KB por ficheiro, sem pedidos a terceiros. */
+@font-face { font-family: 'Fira Sans'; font-weight: 400; font-style: normal; font-display: swap; src: url('assets/fonts/FiraSans-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Fira Sans'; font-weight: 400; font-style: italic; font-display: swap; src: url('assets/fonts/FiraSans-Italic.woff2') format('woff2'); }
+@font-face { font-family: 'Fira Sans'; font-weight: 500; font-style: normal; font-display: swap; src: url('assets/fonts/FiraSans-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Fira Sans'; font-weight: 600; font-style: normal; font-display: swap; src: url('assets/fonts/FiraSans-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'Fira Sans'; font-weight: 700; font-style: normal; font-display: swap; src: url('assets/fonts/FiraSans-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'Fira Sans Condensed'; font-weight: 700; font-style: italic; font-display: swap; src: url('assets/fonts/FiraSansCondensed-BoldItalic.woff2') format('woff2'); }
+@font-face { font-family: 'Fira Sans Condensed'; font-weight: 800; font-style: italic; font-display: swap; src: url('assets/fonts/FiraSansCondensed-ExtraBoldItalic.woff2') format('woff2'); }
 
 *,
 *::before,
@@ -17,36 +23,36 @@ body {
 
 :root {
     /* Brand Colors */
-    --primary-color: #0f172a;
-    /* Slate 900 - Deep Industrial */
-    --primary-light: #1e293b;
-    /* Slate 800 */
+    --primary-color: #282826;
+    /* Grafite (logótipo) */
+    --primary-light: #3A3A36;
+    /* Grafite mais claro */
 
-    --secondary-color: #f59e0b;
-    /* Amber 500 - Warning/Attention */
-    --secondary-dark: #d97706;
-    /* Amber 600 */
+    --secondary-color: #F78A1D;
+    /* Laranja Faísca (logótipo) */
+    --secondary-dark: #E07A12;
+    /* Laranja do «hover» */
 
-    --accent-color: #3b82f6;
-    /* Blue 500 - Information/Action */
-    --accent-dark: #2563eb;
-    /* Blue 600 */
+    --accent-color: #B35C00;
+    /* Laranja escuro: ligações e foco (4,7:1 em branco) */
+    --accent-dark: #8F4A00;
+    
 
     /* Text Colors */
-    --text-main: #1e293b;
+    --text-main: #282826;
     /* Slate 800 */
-    --text-muted: #64748b;
-    /* Slate 500 */
-    --text-light: #f8fafc;
-    /* Slate 50 */
+    --text-muted: #5E5E5A;
+    /* 6,4:1 em branco */
+    --text-light: #F4F4F2;
+    
     --text-inverse: #ffffff;
 
     /* Background Colors */
-    --bg-body: #f8fafc;
-    /* Slate 50 - Lighter background */
+    --bg-body: #F4F4F2;
+    /* Névoa */
     --bg-surface: #ffffff;
-    --bg-light-gray: #f1f5f9;
-    /* Slate 100 */
+    --bg-light-gray: #EDEDE9;
+    
 
     /* Spacing System */
     --spacing-2xs: 0.25rem;
@@ -67,8 +73,8 @@ body {
     /* 96px */
 
     /* Typography */
-    --font-family: 'Inter', system-ui, sans-serif;
-    --font-heading: 'Roboto', sans-serif;
+    --font-family: 'Fira Sans', Arial, Helvetica, sans-serif;
+    --font-heading: 'Fira Sans Condensed', 'Arial Narrow', Arial, sans-serif;
 
     --text-xs: 0.75rem;
     --text-sm: 0.875rem;
@@ -106,7 +112,7 @@ body {
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     /* Glow effect for dark mode/premium feel */
-    --shadow-glow: 0 0 15px rgba(37, 99, 235, 0.15);
+    --shadow-glow: 0 0 15px rgba(247, 138, 29, 0.18);
 }
 
 * {
@@ -125,6 +131,7 @@ body {
     min-height: 100%;
     margin: 0;
     font-family: var(--font-family);
+    font-variant-numeric: lining-nums;
     color: var(--text-main);
     background: var(--bg-body);
     line-height: 1.6;
@@ -147,19 +154,31 @@ h4,
 h5,
 h6 {
     font-family: var(--font-heading);
+    font-style: italic;
     color: var(--primary-color);
-    line-height: 1.2;
+    line-height: 1.1;
     margin-bottom: var(--spacing-sm);
+}
+
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-family);
+    font-style: normal;
+    line-height: 1.25;
 }
 
 h1 {
     font-size: var(--text-4xl);
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: -0.005em;
 }
 
 h2 {
     font-size: var(--text-3xl);
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: -0.005em;
 }
 
 h3 {
@@ -174,11 +193,14 @@ h3 {
 }
 
 .section-title {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 2.75rem;
+    font-weight: 800;
+    font-style: italic;
+    text-transform: uppercase;
+    line-height: 1;
     color: var(--primary-color);
     margin-bottom: var(--spacing-sm);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.005em;
 
     @media (max-width: 768px) {
         font-size: 1.875rem;
@@ -362,9 +384,10 @@ html {
     border-radius: var(--radius-md);
     transition: all var(--transition-fast);
     font-size: var(--text-base);
-    letter-spacing: 0.025em;
+    letter-spacing: 0.01em;
     position: relative;
     overflow: hidden;
+    border-radius: var(--radius-full);
 
     // aria-disabled conta como disabled: os formulários usam-no para o botão não perder o
     // foco enquanto envia, e sem isto ele levantava e brilhava ao passar o rato.
@@ -401,7 +424,7 @@ html {
     &:hover:not(:disabled):not([aria-disabled="true"]) {
         background-color: var(--secondary-color);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        box-shadow: 0 4px 14px rgba(247, 138, 29, 0.35);
 
         &::after {
             left: 100%;
@@ -437,7 +460,7 @@ textarea,
 select {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid #cbd5e1;
+    border: 1px solid #CFCFCF;
     border-radius: var(--radius-md);
     font-family: inherit;
     font-size: var(--text-base);
@@ -448,7 +471,7 @@ select {
     &:focus {
         outline: none;
         border-color: var(--accent-color);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        box-shadow: 0 0 0 3px rgba(247, 138, 29, 0.18);
     }
 
     &.ng-invalid.ng-touched {

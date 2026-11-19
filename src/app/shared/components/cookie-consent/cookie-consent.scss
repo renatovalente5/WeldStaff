@@ -89,7 +89,7 @@
     text-underline-offset: 2px;
 
     &:hover {
-        color: #fbbf24 !important;
+        color: #FFA54D !important;
     }
 }
 
@@ -128,9 +128,9 @@
     color: var(--primary-color);
 
     &:hover {
-        background: #fbbf24;
+        background: #FFA54D;
         transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        box-shadow: 0 2px 8px rgba(247, 138, 29, 0.3);
     }
 }
 

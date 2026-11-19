@@ -2,9 +2,9 @@
    VARIABLES
    ======================================== */
 
-$border-color: #e2e8f0;
+$border-color: #E1E1DC;
 $bg-surface: #ffffff;
-$bg-input: #f8fafc;
+$bg-input: #F4F4F2;
 $text-main: var(--text-main);
 $text-muted: var(--text-muted);
 $radius-modal: 20px;
@@ -28,7 +28,7 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(15, 23, 42, 0.6);
+    background-color: rgba(40, 40, 38, 0.6);
     backdrop-filter: blur(8px);
     z-index: 1000;
     display: flex;
@@ -94,8 +94,8 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(15, 23, 42, 0.04);
-    border: 1px solid rgba(15, 23, 42, 0.06);
+    background: rgba(40, 40, 38, 0.04);
+    border: 1px solid rgba(40, 40, 38, 0.06);
     border-radius: 10px;
     color: var(--primary-color);
     flex-shrink: 0;
@@ -117,7 +117,7 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     display: block;
     font-size: 0.75rem;
     font-weight: 500;
-    color: #64748b;
+    color: #5E5E5A;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     line-height: 1.2;
@@ -135,9 +135,9 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
 .close-btn {
-    background: rgba(15, 23, 42, 0.04);
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    color: #64748b;
+    background: rgba(40, 40, 38, 0.04);
+    border: 1px solid rgba(40, 40, 38, 0.06);
+    color: #5E5E5A;
     cursor: pointer;
     width: 36px;
     height: 36px;
@@ -180,7 +180,7 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: #cbd5e1;
+        background-color: #CFCFCF;
         border-radius: 3px;
     }
 }
@@ -213,7 +213,7 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         margin-bottom: 0.375rem;
         font-weight: 600;
         font-size: 0.8125rem;
-        color: #334155;
+        color: #3F3F3B;
     }
 
     input[type="text"],
@@ -231,19 +231,19 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         transition: all 0.2s ease;
 
         &::placeholder {
-            color: #94a3b8;
+            color: #8E8E89;
             font-weight: 400;
         }
 
         &:hover {
-            border-color: #cbd5e1;
+            border-color: #CFCFCF;
         }
 
         &:focus {
             outline: none;
             border-color: var(--primary-color);
             background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 0 0 3px rgba(40, 40, 38, 0.06);
         }
 
         &.invalid {
@@ -285,17 +285,17 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 
     &:hover {
         border-color: var(--primary-color);
-        background-color: #eff6ff;
+        background-color: #FFF4E8;
 
         .drop-icon-wrapper {
-            background: rgba(15, 23, 42, 0.08);
+            background: rgba(40, 40, 38, 0.08);
             color: var(--primary-color);
         }
     }
 
     &.dragging {
         border-color: var(--primary-color);
-        background-color: #eff6ff;
+        background-color: #FFF4E8;
         transform: scale(0.99);
     }
 
@@ -322,10 +322,10 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(15, 23, 42, 0.04);
+    background: rgba(40, 40, 38, 0.04);
     border-radius: 8px;
     flex-shrink: 0;
-    color: #64748b;
+    color: #5E5E5A;
     transition: all 0.25s ease;
 }
 
@@ -352,7 +352,7 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 
 .drop-hint {
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: #8E8E89;
     margin: 0.125rem 0 0;
 }
 
@@ -372,12 +372,12 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 0.75rem;
-    background-color: #f1f5f9;
+    background-color: #EDEDE9;
     border-radius: 8px;
     transition: background-color 0.2s ease;
 
     &:hover {
-        background-color: #e2e8f0;
+        background-color: #E1E1DC;
     }
 
     .file-info {
@@ -406,7 +406,7 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 
 .file-size {
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: #8E8E89;
     margin-left: 0.25rem;
     flex-shrink: 0;
 }
@@ -415,7 +415,7 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     background: none;
     border: none;
     cursor: pointer;
-    color: #94a3b8;
+    color: #8E8E89;
     padding: 5px; // 14 + 2×5 = 24 px, o alvo mínimo para um dedo (WCAG 2.5.8)
     border-radius: 50%;
     display: flex;
@@ -477,25 +477,25 @@ $shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 
 .btn-ghost {
     background: transparent;
-    color: #64748b;
+    color: #5E5E5A;
     border: 1px solid $border-color;
 
     &:hover {
-        background: #f1f5f9;
-        color: #0f172a;
-        border-color: #cbd5e1;
+        background: #EDEDE9;
+        color: #282826;
+        border-color: #CFCFCF;
     }
 }
 
 .btn-primary {
     background: var(--secondary-color);
-    color: #0f172a;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+    color: #282826;
+    box-shadow: 0 2px 8px rgba(247, 138, 29, 0.25);
 
     &:hover:not(:disabled):not([aria-disabled="true"]) {
         filter: brightness(1.08);
         transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+        box-shadow: 0 6px 16px rgba(247, 138, 29, 0.3);
     }
 
     &:active:not(:disabled):not([aria-disabled="true"]) {

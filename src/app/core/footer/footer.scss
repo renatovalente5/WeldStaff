@@ -77,13 +77,12 @@
 }
 
 .logo-img-footer {
-    height: 36px;
+    display: block;
+    height: 40px;
     width: auto;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
 
     @media (min-width: 768px) {
-        height: 40px;
+        height: 46px;
     }
 }
 
@@ -201,8 +200,8 @@
             color: rgba(255, 255, 255, 0.85);
 
             .contact-icon {
-                background: rgba(245, 158, 11, 0.15);
-                border-color: rgba(245, 158, 11, 0.3);
+                background: rgba(247, 138, 29, 0.15);
+                border-color: rgba(247, 138, 29, 0.3);
             }
         }
     }

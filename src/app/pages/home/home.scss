@@ -36,9 +36,9 @@
         width: 100%;
         height: 100%;
         background: linear-gradient(180deg,
-                rgba(15, 23, 42, 0.87) 0%,
-                rgba(15, 23, 42, 0.70) 50%,
-                rgba(15, 23, 42, 0.92) 100%);
+                rgba(40, 40, 38, 0.87) 0%,
+                rgba(40, 40, 38, 0.70) 50%,
+                rgba(40, 40, 38, 0.92) 100%);
         z-index: 1;
     }
 }
@@ -57,21 +57,30 @@
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: 4.5rem;
     font-weight: 800;
-    line-height: 1.08;
+    font-style: italic;
+    text-transform: uppercase;
+    line-height: 0.95;
     color: #ffffff;
     margin-bottom: var(--spacing-md);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.005em;
 
     @media (max-width: 768px) {
-        font-size: 2rem;
-        line-height: 1.2;
+        font-size: 2.75rem;
+        line-height: 0.98;
         margin-bottom: var(--spacing-sm);
     }
 
     @media (max-width: 480px) {
-        font-size: 1.75rem;
+        font-size: 2.35rem;
+    }
+
+    /* A palavra soldada (da marca): por baixo do destaque, um cordão de TIG com a ponta ainda em brasa. */
+    ::ng-deep .text-secondary {
+        display: inline-block;
+        padding-bottom: 0.34em;
+        background: url('/assets/img/marca/cordao-tig.webp') no-repeat left bottom / 100% auto;
     }
 }
 
@@ -203,7 +212,7 @@
         height: 1px;
         background: linear-gradient(90deg,
                 transparent,
-                rgba(245, 158, 11, 0.3),
+                rgba(247, 138, 29, 0.3),
                 transparent);
     }
 }
@@ -234,8 +243,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    background: rgba(247, 138, 29, 0.1);
+    border: 1px solid rgba(247, 138, 29, 0.2);
     border-radius: 50%;
     margin-bottom: 1.25rem;
     transition: all 0.3s ease;
@@ -247,14 +256,14 @@
     }
 
     .stat-item:hover & {
-        background: rgba(245, 158, 11, 0.15);
-        border-color: rgba(245, 158, 11, 0.35);
+        background: rgba(247, 138, 29, 0.15);
+        border-color: rgba(247, 138, 29, 0.35);
         transform: scale(1.05);
     }
 }
 
 .stat-number {
-    color: #f8fafc;
+    color: #F4F4F2;
     font-size: 3rem;
     font-weight: 800;
     line-height: 1;
@@ -300,17 +309,17 @@
     padding: 1.75rem;
     background: white;
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(15, 23, 42, 0.06);
+    border: 1px solid rgba(40, 40, 38, 0.06);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
-        border-color: rgba(245, 158, 11, 0.2);
+        box-shadow: 0 12px 32px rgba(40, 40, 38, 0.08);
+        border-color: rgba(247, 138, 29, 0.2);
 
         .service-icon {
-            background: rgba(245, 158, 11, 0.12);
-            border-color: rgba(245, 158, 11, 0.25);
+            background: rgba(247, 138, 29, 0.12);
+            border-color: rgba(247, 138, 29, 0.25);
         }
     }
 
@@ -345,8 +354,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(15, 23, 42, 0.04);
-    border: 1px solid rgba(15, 23, 42, 0.06);
+    background: rgba(40, 40, 38, 0.04);
+    border: 1px solid rgba(40, 40, 38, 0.06);
     border-radius: var(--radius-md);
     transition: all 0.3s ease;
     flex-shrink: 0;
@@ -400,8 +409,8 @@
 
         .sector-overlay {
             background: linear-gradient(to bottom,
-                    rgba(15, 23, 42, 0.2) 0%,
-                    rgba(15, 23, 42, 0.7) 100%);
+                    rgba(40, 40, 38, 0.2) 0%,
+                    rgba(40, 40, 38, 0.7) 100%);
         }
 
         .sector-name {
@@ -445,8 +454,8 @@
     right: 0;
     bottom: 0;
     background: linear-gradient(to bottom,
-            rgba(15, 23, 42, 0.3) 0%,
-            rgba(15, 23, 42, 0.75) 100%);
+            rgba(40, 40, 38, 0.3) 0%,
+            rgba(40, 40, 38, 0.75) 100%);
     transition: background 0.4s ease;
 }
 
@@ -496,7 +505,7 @@
         width: 600px;
         height: 300px;
         background: radial-gradient(ellipse,
-                rgba(245, 158, 11, 0.08) 0%,
+                rgba(247, 138, 29, 0.08) 0%,
                 transparent 70%);
         pointer-events: none;
     }
