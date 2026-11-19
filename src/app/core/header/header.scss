@@ -36,10 +36,10 @@
         }
 
         .logo-img {
-            height: 40px;
+            height: 30px;
 
             @media (max-width: 768px) {
-                height: 34px;
+                height: 28px;
             }
         }
     }
@@ -53,8 +53,12 @@
     font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.025em;
-    display: flex;
+    /* As duas versões do logótipo na mesma célula, uma por cima da outra: ao descer, encolhem juntas e a
+       negativa dá lugar à de cores; ao voltar ao topo, crescem outra vez. Com display: none em vez de
+       opacidade, a que aparecia já vinha no tamanho final e não se via encolher. */
+    display: grid;
     align-items: center;
+    justify-items: start;
     transition: opacity 0.3s ease;
     flex-shrink: 0;
 
@@ -66,30 +70,36 @@
         font-size: 1.25rem;
     }
 
-    /* Logótipo completo em vetor, sempre com «Industrial Services» (é o setor da empresa), a uma altura em
-       que o descritor se lê: a versão negativa por cima do vídeo do início, a cores no cabeçalho branco. */
+    /* Logótipo completo em vetor, sempre com «Industrial Services» (é o setor da empresa). O descritor
+       ocupa 24 % da altura: a 30 px tem letras de 7,3 px, o mínimo para se ler. No topo do início
+       fica maior (40 px; o PNG antigo desenhava 35 px no topo e 26 px ao descer). */
     .logo-img {
+        grid-area: 1 / 1;
         display: block;
-        height: 44px;
+        height: 40px;
         width: auto;
-        transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
 
         @media (max-width: 768px) {
-            height: 36px;
+            height: 32px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
         }
     }
 
     .logo-cor {
-        display: none;
+        opacity: 0;
     }
 }
 
 .header.scrolled .logo .logo-neg {
-    display: none;
+    opacity: 0;
 }
 
 .header.scrolled .logo .logo-cor {
-    display: block;
+    opacity: 1;
 }
 
 /* ========================================
@@ -411,9 +421,9 @@
         margin-bottom: 2.5rem;
 
         .logo-img-mobile {
-            height: 36px;
+            display: block;
+            height: 32px;
             width: auto;
-            object-fit: contain;
         }
 
         .close-btn {

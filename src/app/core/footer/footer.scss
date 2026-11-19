@@ -76,14 +76,12 @@
     }
 }
 
+/* 30 px, como o cabeçalho ao descer: o PNG antigo desenhava 24 px aqui (a caixa tinha 48, metade era
+   margem); o SVG novo não tem margem, e a 46 px ficava quase o dobro. */
 .logo-img-footer {
     display: block;
-    height: 40px;
+    height: 30px;
     width: auto;
-
-    @media (min-width: 768px) {
-        height: 46px;
-    }
 }
 
 .footer-tagline {

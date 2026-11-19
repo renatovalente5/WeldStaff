@@ -490,23 +490,9 @@ select {
     /* Hide close button */
 }
 
-/* Logo Styles */
-.logo-img {
-    height: 70px;
-    width: auto;
-    object-fit: contain;
-    margin-top: 12px;
-    transition: all var(--transition-normal);
-    /* Lowered slightly */
-}
-
-.logo-img-footer {
-    height: 48px;
-    /* Increased size */
-    width: auto;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
-}
+/* Os tamanhos do logótipo vivem no cabeçalho e no rodapé (header.scss, footer.scss). As regras que estavam
+   aqui eram do PNG antigo: a margem de 12 px baixava o logótipo novo em relação ao menu, e o filtro
+   pintava de branco o laranja do logótipo do rodapé. */
 
 /* Consent Checkbox */
 .consent-group {
