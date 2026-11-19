@@ -51,6 +51,13 @@ const { enviar, fechar } = await abrirChrome();
 const excecoes = [];
 try {
     const { sessionId: s } = await novoSeparador(enviar);
+    // O separador tem de continuar «à frente». No Chrome 158 sem interface, a página passa a
+    // visibilityState 'hidden' assim que o primeiro <dialog> fecha, e deixa de haver quadros:
+    // o Angular (provideAnimationsAsync) só tira o diálogo do DOM no quadro seguinte, a
+    // transição entre páginas é saltada e o scroll suave pára a meio. Eram 7 falhas falsas
+    // (19 nov 2026); no Chrome a sério, o site fazia tudo bem.
+    await enviar('Emulation.setFocusEmulationEnabled', { enabled: true }, s);
+    await enviar('Page.setWebLifecycleState', { state: 'active' }, s);
     enviar.ouvintes.add((m) => { if (m.method === 'Runtime.exceptionThrown' && m.sessionId === s) excecoes.push(m.params.exceptionDetails?.exception?.description || m.params.exceptionDetails?.text); });
     await enviar('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false }, s);
     await enviar('DOM.enable', {}, s);
@@ -94,6 +101,15 @@ try {
                  cartao: [...document.querySelectorAll('.apply-cta')].indexOf(a) };`);
     const dialogo = () => js(`const d = document.querySelector('dialog.modal-overlay');
         return d ? { aberto: d.open, modal: d.matches(':modal') } : null;`);
+    /** O Chrome ainda desenha? Quadros em 300 ms, com prazo: um rAF numa página parada nunca responde. */
+    const aDesenhar = () => js(`let n = 0, vivo = true; const f = () => { if (vivo) { n++; requestAnimationFrame(f); } };
+        requestAnimationFrame(f); await new Promise((r) => setTimeout(r, 300)); vivo = false;
+        return { vis: document.visibilityState, quadros: n };`);
+    /** Uma falha do medidor diz-se uma vez, em vez de se disfarçar de falhas do site. */
+    async function ambiente(onde) {
+        const a = await aDesenhar();
+        certo(a.vis === 'visible' && a.quadros > 3, `o Chrome continua a desenhar ${onde} (senão o que se segue não mede o site)`, a);
+    }
 
     await enviar('Page.navigate', { url: `${BASE}/careers` }, s);
     // Esperar pelo Angular: os botões existem no HTML pré-renderizado, mas só respondem
@@ -216,6 +232,7 @@ try {
 
     // ═══ 7. Espaço abre; o × fecha ══════════════════════════════════════════
     console.log('\n7. Espaço e o botão ×');
+    await ambiente('depois de o primeiro diálogo fechar');
     await tecla('Tab'); await tecla('Tab');
     f = await foco();
     certo(f.cartao === 2, 'dois Tabs depois, está no terceiro cartão', f);
@@ -434,6 +451,7 @@ try {
     // /en/careers é uma página: o seletor leva à mesma página na outra língua, as ligações
     // ficam na língua, e quem ESCOLHEU uma língua (e autorizou guardá-la) volta a ela.
     console.log('\n15. Cada língua tem a sua morada');
+    await ambiente('depois de tantas páginas e diálogos');
     const errosNaConsola = [];
     const ouvirConsola = (m) => { if (m.sessionId === s && m.method === 'Runtime.consoleAPICalled' && m.params.type === 'error') errosNaConsola.push(m.params.args.map((a) => a.value ?? a.description).join(' ').slice(0, 200)); };
     enviar.ouvintes.add(ouvirConsola);
