@@ -254,8 +254,9 @@ button {
 
 /* O cabeçalho e o aviso de cookies são fixos. Sem folga, o Tab punha o foco debaixo deles:
    no telemóvel, com o aviso aberto (309 px de 700), metade das vagas recebia o foco
-   completamente tapada (WCAG 2.4.11). O cabeçalho mede 77 px no computador e 85 no
-   telemóvel; o aviso publica a sua altura em --altura-aviso-cookies enquanto está à vista. */
+   completamente tapada (WCAG 2.4.11). Com o fundo branco, o cabeçalho mede 62 px no computador
+   e 52 no telemóvel (96 e 72 no topo do início, transparente); o aviso publica a sua altura em
+   --altura-aviso-cookies enquanto está à vista. */
 html {
     scroll-padding-top: 96px;
     scroll-padding-bottom: calc(var(--altura-aviso-cookies, 0px) + 12px);

@@ -3,10 +3,13 @@
    Transparent on homepage, solid dark on scroll/other pages
    ======================================== */
 
+/* O logótipo novo não tem margem própria (o PNG antigo tinha metade da altura em margem) e encostava ao
+   topo e à esquerda. No topo do início fica a 28 px do cimo e a 48 px da esquerda; com o fundo branco,
+   a 16 px. No telemóvel, 20 px e 24 px, onde também fica o do menu aberto. */
 .header {
     background: transparent;
     border-bottom: 1px solid transparent;
-    padding: 1rem 0;
+    padding: 1.75rem 0;
     position: fixed;
     top: 0;
     left: 0;
@@ -20,7 +23,15 @@
         box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 
     @media (max-width: 768px) {
-        padding: 0.75rem 0;
+        padding: 1.25rem 0;
+    }
+
+    > .container {
+        padding-inline: 3rem;
+
+        @media (max-width: 768px) {
+            padding-inline: 1.5rem;
+        }
     }
 
     &.scrolled {
@@ -29,10 +40,10 @@
         -webkit-backdrop-filter: blur(12px);
         box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
         border-bottom-color: rgba(0, 0, 0, 0.08);
-        padding: 0.625rem 0;
+        padding: 1rem 0;
 
         @media (max-width: 768px) {
-            padding: 0.5rem 0;
+            padding: 0.75rem 0;
         }
 
         .logo-img {
@@ -393,7 +404,9 @@
     height: 100dvh;
     background: var(--bg-surface);
     z-index: 9999;
-    padding: 1.5rem;
+    /* 16 px em cima: com o × de 40 px, o logótipo fica a 20 px, onde está no cabeçalho, e o × no lugar
+       do botão do menu. Abrir o menu não faz saltar nada. */
+    padding: 1rem 1.5rem 1.5rem;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
